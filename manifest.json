@@ -1,9 +1,8 @@
 {
-    "$schema": "https://json.schemastore.org/chrome-manifest",
     "name": "iMIS Experience Plus",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "manifest_version": 3,
-    "description": "A browser extension to improve the user experience within the iMIS Staff Site. Made with ❤️ at CSI.",
+    "description": "A browser extension to improve the user experience within the iMIS Staff Site. Made with ❤️ by the iMIS community and CSI.",
     "permissions": [
         "https://*/*"
     ],
