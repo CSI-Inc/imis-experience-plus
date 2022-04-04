@@ -1,11 +1,11 @@
-# iMIS Browser Extension
+# iMIS Experience Plus
 
-A browser extension for power users to make the Staff Site better and easier to use!
+A browser extension to improve the iMIS Staff Site experience.
 
-## Name Ideas
+## Installing
 
-* iMIS Experience Plus (EP)
-* iMIS User Experience Extensions (UEX)
-* RiSE Enhancement/Experience Suite (RES...familiar?)
-* RiSE...
-* ?
+Available *very soon* in the Chrome and Edge extension stores!
+
+## Contributing
+
+Have an idea for a feature to include in the extension? Submit a pull request, or file a new idea on the "Issues" tab!
