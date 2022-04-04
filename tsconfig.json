@@ -1,0 +1,14 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "none",
+        "outFile": "./imis-plus.js",
+        "strict": true,
+        "target": "es5",
+        "noImplicitAny": true,
+        "allowJs": false
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

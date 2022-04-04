@@ -1,0 +1,35 @@
+{
+    "$schema": "https://json.schemastore.org/chrome-manifest",
+    "name": "iMIS Experience Plus",
+    "version": "0.0.1",
+    "manifest_version": 3,
+    "description": "A browser extension to improve the user experience within the iMIS Staff Site. Made with ❤️ at CSI.",
+    "permissions": [
+        "https://*/*"
+    ],
+    "incognito": "split",
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*/*"
+            ],
+            "js": [
+                "lib/jquery/jquery-3.6.0.js",
+                "imis-plus.js"
+            ],
+            "css": [
+                "imis-plus.css"
+            ],
+            "run_at": "document_end",
+            "all_frames": true
+        }
+    ],
+    "icons": {
+        "16": "icons/imis-plus-16.png",
+        "32": "icons/imis-plus-32.png",
+        "48": "icons/imis-plus-48.png",
+        "64": "icons/imis-plus-64.png",
+        "128": "icons/imis-plus-128.png",
+        "256": "icons/imis-plus-256.png"
+    }
+}
