@@ -2,9 +2,12 @@
 
 A browser extension to improve the iMIS Staff Site experience.
 
+Latest Version: 1.1.0 (Published on 2022-07-20)
+
 ## Installing
 
-Available *very soon* in the Chrome and Edge extension stores!
+* **Microsoft Edge:** <https://microsoftedge.microsoft.com/addons/detail/imis-experience-plus/aggkakldaeijmndiconjpmcmhjdfflna>
+* **Google Chrome:** <https://chrome.google.com/webstore/detail/imis-experience-plus/nlodbfllahecdjenoogblmhphkjmekhj>
 
 ## Contributing
 
