@@ -100,7 +100,7 @@ var ImisExtensions = /** @class */ (function () {
      */
     ImisExtensions.prototype.initIqaExtensions = function () {
         var _this = this;
-        var _a, _b;
+        var _a, _b, _c;
         console.log.apply(console, __spreadArrays([ImisExtensions.VERSION_STRING + "Loaded: IQA Extensions"], ImisExtensions.VERSION_STYLES));
         var isImis2017 = this.$('.SubTabStrip .rtsLevel.rtsLevel1 .rtsTxt:contains("Template")').length === 0;
         // Inject Font Awesome 
@@ -201,6 +201,10 @@ var ImisExtensions = /** @class */ (function () {
         ft.find('table.Grid tr.GridHeader td:last-child').css('min-width', '140px');
         ft.find('table.Grid tr.GridHeader td:nth-last-child(2)').css('min-width', '180px');
         ft.find('table.Grid tr.GridHeader td:contains("Function")').parent('tr').find('td:nth-last-child(2)').text('Prompt Label');
+        ft.find('table.Grid tr.GridRow td:nth-child(7) input').css('width', '100%');
+        ft.find('table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', '100%');
+        ft.find('table.Grid tr.GridRow td:nth-child(5) input').css('width', '100%');
+        ft.find('table.Grid tr.GridAlternateRow td:nth-child(5) input').css('width', '100%');
         if (isImis2017) {
             ft.find('td.PanelTablePrompt').parent().find('td').filter(':empty').remove();
             ft.find('td.PanelTablePrompt').parent().find('td').css('border', '0').css('background-color', 'transparent');
@@ -266,79 +270,151 @@ var ImisExtensions = /** @class */ (function () {
             dt.find('table.Grid tr:first-child select').val() === 'Defaults';
         // Find custom rows
         dt.find('input[type=checkbox]').filter(':checked').parents('tr').each(function (_, el) {
-            if ($(el).find('td:nth-child(3) select option').length === 1
-                && _this.$(el).find('td:nth-child(6) input').length === 0) {
-                _this.$(el).find('td').css('background-color', '#effaff');
+            if (isImis2017 && ($(el).find('td:nth-child(3) select option').length === 1
+                && _this.$(el).find('td:nth-child(8) input').is(':disabled'))
+                || !isImis2017 && ($(el).find('td:nth-child(3) select option').length === 1
+                    && _this.$(el).find('td:nth-child(6) input').length === 0)) {
+                _this.$(el).find('td')
+                    .css('background-color', '#effaff')
+                    .css('vertical-align', 'middle');
                 _this.$(el).find('td:nth-child(2)').css('white-space', 'pre-wrap').css('font-family', 'Consolas, monospace').css('font-size', '13px');
                 if (advMode) {
-                    _this.$(el).find('td:nth-child(3)').empty().css('text-align', 'center').append('<a data-index="' + (_this.$(el).index() + 1) + '" class="btn PrimaryButton ex-button-edit-customsql-row" style="background-color: #e3da6f;"><i class="fas fa-fw fa-pencil"></i> Edit</a>');
+                    _this.$(el).find('td:nth-child(3)').empty().css('text-align', 'center')
+                        .append('<a data-index="' + (_this.$(el).index() + 1) + '" class="btn PrimaryButton ex-button-edit-customsql-row" style="background-color: #e3da6f;"><i class="fas fa-fw fa-pencil"></i> Edit</a>');
                 }
             }
         });
-        if (advMode && isImis2017) {
-            dt.find('table.Grid:last-child tr.GridHeader > td:first-child').css('width', '75%');
-        }
-        if (advMode && !isImis2017) {
-            dt.find('table.Grid').first().css('margin-bottom', '200px');
-            var gridRowCount_1 = dt.find('table.Grid tr').length;
-            var qfr = dt.find('table.Grid td:contains("Available")').first();
-            if (parseInt((_b = qfr.attr('colspan'), (_b !== null && _b !== void 0 ? _b : "0"))) > 3 && qfr.find('input').length > 0) {
-                qfr.find('input').css({
-                    width: '500px',
-                    display: 'inline-block',
-                    float: 'none',
-                    margin: '5px 20px'
+        if (advMode) {
+            if (isImis2017) {
+                // Advanced Display Editor for iMIS 2017
+                dt.find('table.Grid:last-child tr.GridHeader > td:first-child').css('width', '75%');
+                dt.find('table.Grid').first().css('margin-bottom', '200px');
+                var gridRowCount_1 = dt.find('table.Grid tr').length;
+                var qfr = dt.find('table.Grid td:contains("Available")').first();
+                if (parseInt((_b = qfr.attr('colspan'), (_b !== null && _b !== void 0 ? _b : "0"))) > 3 && qfr.find('input').length > 0) {
+                    qfr.find('input').css({
+                        width: '500px',
+                        display: 'inline-block',
+                        float: 'none',
+                        margin: '5px 20px'
+                    });
+                }
+                // Move the last three table rows to a separate table, for styling.
+                var customRows = dt.find('table.Grid tr').filter(function (i) { return i >= gridRowCount_1 - 3; });
+                dt.find('table.Grid').last().after('<table class="csi__iep__customsql Grid align-middle"></table>');
+                var newTable_1 = dt.find('table.csi__iep__customsql');
+                newTable_1.append('<tbody>');
+                newTable_1.css('position', 'fixed').css('bottom', '8px').css('box-shadow', '0px -20px 20px 10px #fff');
+                newTable_1.find('tbody').append(customRows);
+                newTable_1.find('tr:nth-child(2) td:first-child').css('width', '60%');
+                newTable_1.find('tr:nth-child(2) td:nth-child(2)').css('width', '30%');
+                newTable_1.find('tr:nth-child(2) td:nth-child(3)').css('width', '140px');
+                newTable_1.find('tr:nth-child(3) td:first-child input').changeElementType('textarea').attr('rows', '4').css('font-family', 'Consolas, monospace').css('font-size', '13px');
+                newTable_1.find('tr:nth-child(3) td:nth-child(2) input').css('width', '94%').before('<span>AS </span>').parent().css('vertical-align', 'middle');
+                newTable_1.find('tr:nth-child(3) td:nth-child(3)').css('vertical-align', 'middle').css('position', 'relative');
+                newTable_1.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]')
+                    .css('background-image', 'none')
+                    .css('background-position', '-9999px -9999px')
+                    .css('position', 'absolute')
+                    .css('top', '0')
+                    .css('left', '0')
+                    .css('width', '100%')
+                    .css('height', '100%')
+                    .css('z-index', '99');
+                newTable_1.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]').parent().css('position', 'relative')
+                    .append('<a class="btn PrimaryButton ex-commit-button"><i class="fas fa-fw fa-plus"></i> Add</a>');
+                // Edit Event Handler
+                this.$('.ex-button-edit-customsql-row').on('click', function (e) {
+                    var _a, _b;
+                    var editBtn = $(e.currentTarget);
+                    if (editBtn.hasClass('disabled')) {
+                        return;
+                    }
+                    var i = parseInt(editBtn.data('index'));
+                    var row = dt.find('tr:nth-child(' + i + ')');
+                    var sql = row.find('td:nth-child(2)').text();
+                    var name = (_b = (_a = row.find('td:nth-child(4) input').val()) === null || _a === void 0 ? void 0 : _a.toString(), (_b !== null && _b !== void 0 ? _b : ""));
+                    newTable_1.find('tr:nth-child(3) td:nth-child(1) textarea').val(sql);
+                    newTable_1.find('tr:nth-child(3) td:nth-child(2) input').val(name);
+                    row.find('td').first().find('input').prop('checked', false);
+                    _this.$('.ex-button-edit-customsql-row').addClass('disabled').css('cursor', 'default');
+                    editBtn.hide().after('<a class="btn PrimaryButton ex-button-undo-customsql-row"><i class="fas fa-fw fa-undo"></i> Undo</a>');
+                    _this.$('.ex-button-undo-customsql-row').on('click', function () {
+                        row.find('td').first().find('input').prop('checked', true);
+                        newTable_1.find('tr:nth-child(3) td:nth-child(1) textarea').val('');
+                        newTable_1.find('tr:nth-child(3) td:nth-child(2) input').val('');
+                        $('.ex-button-undo-customsql-row').remove();
+                        editBtn.show();
+                        _this.$('.ex-button-edit-customsql-row').removeClass('disabled').css('cursor', '');
+                    });
                 });
             }
-            // Move the last three table rows to a separate table, for styling.
-            var customRows = dt.find('table.Grid tr').filter(function (i) { return i >= gridRowCount_1 - 3; });
-            dt.find('table.Grid').after('<table class="csi__iep__customsql Grid align-middle"></table>');
-            var newTable_1 = dt.find('table.csi__iep__customsql');
-            newTable_1.append('<tbody>');
-            newTable_1.css('position', 'fixed').css('bottom', '8px').css('box-shadow', '0px -20px 20px 10px #fff');
-            newTable_1.find('tbody').append(customRows);
-            newTable_1.find('tr:nth-child(2) td:first-child').css('width', '60%');
-            newTable_1.find('tr:nth-child(2) td:nth-child(2)').css('width', '30%');
-            newTable_1.find('tr:nth-child(2) td:nth-child(3)').css('width', '140px');
-            newTable_1.find('tr:nth-child(3) td:first-child input').changeElementType('textarea').attr('rows', '4').css('font-family', 'Consolas, monospace').css('font-size', '13px');
-            newTable_1.find('tr:nth-child(3) td:nth-child(2) input').css('width', '94%').before('<span>AS </span>').parent().css('vertical-align', 'middle');
-            newTable_1.find('tr:nth-child(3) td:nth-child(3)').css('vertical-align', 'middle');
-            newTable_1.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]')
-                .css('background-image', 'none')
-                .css('background-position', '-9999px -9999px')
-                .css('position', 'absolute')
-                .css('top', '0')
-                .css('left', '0')
-                .css('width', '100%')
-                .css('height', '100%')
-                .css('z-index', '99');
-            newTable_1.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]').parent().css('position', 'relative')
-                .append('<a class="btn PrimaryButton ex-commit-button"><i class="fas fa-fw fa-plus"></i> Add</a>');
-            // Edit Event Handler
-            this.$('.ex-button-edit-customsql-row').on('click', function (e) {
-                var _a, _b;
-                var editBtn = $(e.currentTarget);
-                if (editBtn.hasClass('disabled')) {
-                    return;
+            else {
+                // Advanced Display Editor for iMIS EMS
+                dt.find('table.Grid').first().css('margin-bottom', '200px');
+                var gridRowCount_2 = dt.find('table.Grid tr').length;
+                var qfr = dt.find('table.Grid td:contains("Available")').first();
+                if (parseInt((_c = qfr.attr('colspan'), (_c !== null && _c !== void 0 ? _c : "0"))) > 3 && qfr.find('input').length > 0) {
+                    qfr.find('input').css({
+                        width: '500px',
+                        display: 'inline-block',
+                        float: 'none',
+                        margin: '5px 20px'
+                    });
                 }
-                var i = parseInt(editBtn.data('index'));
-                var row = dt.find('tr:nth-child(' + i + ')');
-                var sql = row.find('td:nth-child(2)').text();
-                var name = (_b = (_a = row.find('td:nth-child(4) input').val()) === null || _a === void 0 ? void 0 : _a.toString(), (_b !== null && _b !== void 0 ? _b : ""));
-                newTable_1.find('tr:nth-child(3) td:nth-child(1) textarea').val(sql);
-                newTable_1.find('tr:nth-child(3) td:nth-child(2) input').val(name);
-                row.find('td').first().find('input').prop('checked', false);
-                _this.$('.ex-button-edit-customsql-row').addClass('disabled').css('cursor', 'default');
-                editBtn.hide().after('<a class="btn PrimaryButton ex-button-undo-customsql-row"><i class="fas fa-fw fa-undo"></i> Undo</a>');
-                _this.$('.ex-button-undo-customsql-row').on('click', function () {
-                    row.find('td').first().find('input').prop('checked', true);
-                    newTable_1.find('tr:nth-child(3) td:nth-child(1) textarea').val('');
-                    newTable_1.find('tr:nth-child(3) td:nth-child(2) input').val('');
-                    $('.ex-button-undo-customsql-row').remove();
-                    editBtn.show();
-                    _this.$('.ex-button-edit-customsql-row').removeClass('disabled').css('cursor', '');
+                // Move the last three table rows to a separate table, for styling.
+                var customRows = dt.find('table.Grid tr').filter(function (i) { return i >= gridRowCount_2 - 3; });
+                dt.find('table.Grid').after('<table class="csi__iep__customsql Grid align-middle"></table>');
+                var newTable_2 = dt.find('table.csi__iep__customsql');
+                newTable_2.append('<tbody>');
+                newTable_2.css('position', 'fixed').css('bottom', '8px').css('box-shadow', '0px -20px 20px 10px #fff');
+                newTable_2.find('tbody').append(customRows);
+                newTable_2.find('tr:nth-child(2) td:first-child').css('width', '60%');
+                newTable_2.find('tr:nth-child(2) td:nth-child(2)').css('width', '30%');
+                newTable_2.find('tr:nth-child(2) td:nth-child(3)').css('width', '140px');
+                newTable_2.find('tr:nth-child(3) td:first-child input').changeElementType('textarea').attr('rows', '4').css('font-family', 'Consolas, monospace').css('font-size', '13px');
+                newTable_2.find('tr:nth-child(3) td:nth-child(2) input').css('width', '94%').before('<span>AS </span>').parent().css('vertical-align', 'middle');
+                newTable_2.find('tr:nth-child(3) td:nth-child(3)').css('vertical-align', 'middle');
+                newTable_2.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]')
+                    .css('background-image', 'none')
+                    .css('background-position', '-9999px -9999px')
+                    .css('position', 'absolute')
+                    .css('top', '0')
+                    .css('left', '0')
+                    .css('width', '100%')
+                    .css('height', '100%')
+                    .css('z-index', '99');
+                // Switched to :after... so we get creative
+                // Cast to any because TS complains it can't find 'insertRule' for some reason
+                document.styleSheets[0].insertRule("#" + newTable_2.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]').attr('id') + " { background: none; opacity: 0.001; }");
+                newTable_2.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]').parent().css('position', 'relative')
+                    .append('<a class="btn PrimaryButton ex-commit-button"><i class="fas fa-fw fa-plus"></i> Add</a>');
+                // Edit Event Handler
+                this.$('.ex-button-edit-customsql-row').on('click', function (e) {
+                    var _a, _b;
+                    var editBtn = $(e.currentTarget);
+                    if (editBtn.hasClass('disabled')) {
+                        return;
+                    }
+                    var i = parseInt(editBtn.data('index'));
+                    var row = dt.find('tr:nth-child(' + i + ')');
+                    var sql = row.find('td:nth-child(2)').text();
+                    var name = (_b = (_a = row.find('td:nth-child(4) input').val()) === null || _a === void 0 ? void 0 : _a.toString(), (_b !== null && _b !== void 0 ? _b : ""));
+                    newTable_2.find('tr:nth-child(3) td:nth-child(1) textarea').val(sql);
+                    newTable_2.find('tr:nth-child(3) td:nth-child(2) input').val(name);
+                    row.find('td').first().find('input').prop('checked', false);
+                    _this.$('.ex-button-edit-customsql-row').addClass('disabled').css('cursor', 'default');
+                    editBtn.hide().after('<a class="btn PrimaryButton ex-button-undo-customsql-row"><i class="fas fa-fw fa-undo"></i> Undo</a>');
+                    _this.$('.ex-button-undo-customsql-row').on('click', function () {
+                        row.find('td').first().find('input').prop('checked', true);
+                        newTable_2.find('tr:nth-child(3) td:nth-child(1) textarea').val('');
+                        newTable_2.find('tr:nth-child(3) td:nth-child(2) input').val('');
+                        $('.ex-button-undo-customsql-row').remove();
+                        editBtn.show();
+                        _this.$('.ex-button-edit-customsql-row').removeClass('disabled').css('cursor', '');
+                    });
                 });
-            });
+            }
         }
     };
     /**
@@ -367,7 +443,7 @@ var ImisExtensions = /** @class */ (function () {
             return $(newElements);
         };
     };
-    ImisExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.1.0 %c ";
+    ImisExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.2.0 %c ";
     ImisExtensions.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
