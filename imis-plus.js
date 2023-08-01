@@ -1,10 +1,12 @@
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var ImisExtensions = /** @class */ (function () {
     function ImisExtensions($) {
@@ -36,7 +38,7 @@ var ImisExtensions = /** @class */ (function () {
      */
     ImisExtensions.prototype.initIqaBrowserExtensions = function () {
         var _this = this;
-        console.log.apply(console, __spreadArrays([ImisExtensions.VERSION_STRING + "Loaded: IQA Browser Extensions"], ImisExtensions.VERSION_STYLES));
+        console.log.apply(console, __spreadArray([ImisExtensions.VERSION_STRING + "Loaded: IQA Browser Extensions"], ImisExtensions.VERSION_STYLES, false));
         // Inject Font Awesome 
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
         var qf = this.$('div[id*=ObjectQuickFindPanel');
@@ -53,15 +55,15 @@ var ImisExtensions = /** @class */ (function () {
         this.$('#__csi__iep__iqapath').css('width', 'calc(100% - 550px)');
         this.$('.__csi__iep__copybutton').css('display', 'inline-block').css('margin-right', '10px');
         this.$('.__csi__iep__copybutton a.btn').on('click', function (e) {
-            var _a, _b;
+            var _a;
             _this.$(e.currentTarget).addClass('disabled').css('pointerEvents', 'none');
             var iqaBox = _this.$('#__csi__iep__iqapath');
             var iqaPath = iqaBox.val();
-            navigator.clipboard.writeText((_b = (_a = iqaPath) === null || _a === void 0 ? void 0 : _a.toString(), (_b !== null && _b !== void 0 ? _b : ""))).then(function () {
+            navigator.clipboard.writeText((_a = iqaPath === null || iqaPath === void 0 ? void 0 : iqaPath.toString()) !== null && _a !== void 0 ? _a : "").then(function () {
                 iqaBox.val('Copied!');
                 window.setTimeout(function () {
                     _this.$(e.currentTarget).removeClass('disabled').css('pointerEvents', '');
-                    iqaBox.val((iqaPath !== null && iqaPath !== void 0 ? iqaPath : ""));
+                    iqaBox.val(iqaPath !== null && iqaPath !== void 0 ? iqaPath : "");
                 }, 2000);
             });
         });
@@ -101,7 +103,7 @@ var ImisExtensions = /** @class */ (function () {
     ImisExtensions.prototype.initIqaExtensions = function () {
         var _this = this;
         var _a, _b, _c;
-        console.log.apply(console, __spreadArrays([ImisExtensions.VERSION_STRING + "Loaded: IQA Extensions"], ImisExtensions.VERSION_STYLES));
+        console.log.apply(console, __spreadArray([ImisExtensions.VERSION_STRING + "Loaded: IQA Extensions"], ImisExtensions.VERSION_STYLES, false));
         var isImis2017 = this.$('.SubTabStrip .rtsLevel.rtsLevel1 .rtsTxt:contains("Template")').length === 0;
         // Inject Font Awesome 
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
@@ -119,7 +121,7 @@ var ImisExtensions = /** @class */ (function () {
         this.$('.SubTabStrip .rtsLevel.rtsLevel1 .rtsTxt:contains("Template")').parent().prepend('<i class="fas fa-fw fa-code"></i>');
         this.$('input[id$=_SaveButton], input[id$=_SaveAsButton], input[id$=_CloseButton]').each(function (_, element) {
             var _a, _b;
-            var text = (_b = (_a = _this.$(element).attr('title')) === null || _a === void 0 ? void 0 : _a.toString(), (_b !== null && _b !== void 0 ? _b : ""));
+            var text = (_b = (_a = _this.$(element).attr('title')) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : "";
             _this.$(element).changeElementType('a').text(text);
         });
         this.$('a[id$=_SaveButton]').prepend('<i class="fas fa-fw fa-save"></i> ');
@@ -291,7 +293,7 @@ var ImisExtensions = /** @class */ (function () {
                 dt.find('table.Grid').first().css('margin-bottom', '200px');
                 var gridRowCount_1 = dt.find('table.Grid tr').length;
                 var qfr = dt.find('table.Grid td:contains("Available")').first();
-                if (parseInt((_b = qfr.attr('colspan'), (_b !== null && _b !== void 0 ? _b : "0"))) > 3 && qfr.find('input').length > 0) {
+                if (parseInt(((_b = qfr.attr('colspan')) !== null && _b !== void 0 ? _b : "0")) > 3 && qfr.find('input').length > 0) {
                     qfr.find('input').css({
                         width: '500px',
                         display: 'inline-block',
@@ -333,7 +335,7 @@ var ImisExtensions = /** @class */ (function () {
                     var i = parseInt(editBtn.data('index'));
                     var row = dt.find('tr:nth-child(' + i + ')');
                     var sql = row.find('td:nth-child(2)').text();
-                    var name = (_b = (_a = row.find('td:nth-child(4) input').val()) === null || _a === void 0 ? void 0 : _a.toString(), (_b !== null && _b !== void 0 ? _b : ""));
+                    var name = (_b = (_a = row.find('td:nth-child(4) input').val()) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : "";
                     newTable_1.find('tr:nth-child(3) td:nth-child(1) textarea').val(sql);
                     newTable_1.find('tr:nth-child(3) td:nth-child(2) input').val(name);
                     row.find('td').first().find('input').prop('checked', false);
@@ -354,7 +356,7 @@ var ImisExtensions = /** @class */ (function () {
                 dt.find('table.Grid').first().css('margin-bottom', '200px');
                 var gridRowCount_2 = dt.find('table.Grid tr').length;
                 var qfr = dt.find('table.Grid td:contains("Available")').first();
-                if (parseInt((_c = qfr.attr('colspan'), (_c !== null && _c !== void 0 ? _c : "0"))) > 3 && qfr.find('input').length > 0) {
+                if (parseInt(((_c = qfr.attr('colspan')) !== null && _c !== void 0 ? _c : "0")) > 3 && qfr.find('input').length > 0) {
                     qfr.find('input').css({
                         width: '500px',
                         display: 'inline-block',
@@ -386,7 +388,7 @@ var ImisExtensions = /** @class */ (function () {
                     .css('z-index', '99');
                 // Switched to :after... so we get creative
                 // Cast to any because TS complains it can't find 'insertRule' for some reason
-                document.styleSheets[0].insertRule("#" + newTable_2.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]').attr('id') + " { background: none; opacity: 0.001; }");
+                document.styleSheets[0].insertRule("#".concat(newTable_2.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]').attr('id'), " { background: none; opacity: 0.001; }"));
                 newTable_2.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]').parent().css('position', 'relative')
                     .append('<a class="btn PrimaryButton ex-commit-button"><i class="fas fa-fw fa-plus"></i> Add</a>');
                 // Edit Event Handler
@@ -399,7 +401,7 @@ var ImisExtensions = /** @class */ (function () {
                     var i = parseInt(editBtn.data('index'));
                     var row = dt.find('tr:nth-child(' + i + ')');
                     var sql = row.find('td:nth-child(2)').text();
-                    var name = (_b = (_a = row.find('td:nth-child(4) input').val()) === null || _a === void 0 ? void 0 : _a.toString(), (_b !== null && _b !== void 0 ? _b : ""));
+                    var name = (_b = (_a = row.find('td:nth-child(4) input').val()) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : "";
                     newTable_2.find('tr:nth-child(3) td:nth-child(1) textarea').val(sql);
                     newTable_2.find('tr:nth-child(3) td:nth-child(2) input').val(name);
                     row.find('td').first().find('input').prop('checked', false);
@@ -448,7 +450,7 @@ var ImisExtensions = /** @class */ (function () {
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
         "background-color: #00a4e0; color: white;",
-        "background-color: inherit; color: inherit;",
+        "background-color: inherit; color: inherit;", // Message
     ];
     return ImisExtensions;
 }());
