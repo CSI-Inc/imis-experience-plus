@@ -449,7 +449,7 @@ var ImisExtensions = /** @class */ (function () {
             return $(newElements);
         };
     };
-    ImisExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.2.0 %c ";
+    ImisExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
     ImisExtensions.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
@@ -556,7 +556,7 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    SearchBar.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.2.0 %c ";
+    SearchBar.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
     SearchBar.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
