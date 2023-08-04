@@ -33,6 +33,8 @@ class SearchBar
      */
     init(): void
     {
+        console.log(SearchBar.VERSION_STRING + "Loaded: Work Bar", ...SearchBar.VERSION_STYLES);
+        
         let keysPressed: { [key: string]: boolean } = {};
         document.addEventListener('keydown', (event) =>
         {

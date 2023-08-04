@@ -522,6 +522,7 @@ var SearchBar = /** @class */ (function () {
      */
     SearchBar.prototype.init = function () {
         var _this = this;
+        console.log.apply(console, __spreadArray([SearchBar.VERSION_STRING + "Loaded: Work Bar"], SearchBar.VERSION_STYLES, false));
         var keysPressed = {};
         document.addEventListener('keydown', function (event) {
             keysPressed[event.key] = true;
