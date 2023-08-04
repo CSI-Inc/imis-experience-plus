@@ -30,5 +30,9 @@
         "64": "icons/imis-plus-64.png",
         "128": "icons/imis-plus-128.png",
         "256": "icons/imis-plus-256.png"
-    }
+    },
+    "web_accessible_resources": [{
+        "resources": ["assets/components/*.html"],
+        "matches": ["<all_urls>"]
+    }]
 }

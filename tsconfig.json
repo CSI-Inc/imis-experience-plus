@@ -6,7 +6,8 @@
         "strict": true,
         "target": "es5",
         "noImplicitAny": true,
-        "allowJs": false
+        "allowJs": false,
+        "lib": [ "es2015", "DOM" ]
     },
     "include": [
         "src/**/*"
