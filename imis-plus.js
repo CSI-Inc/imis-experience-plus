@@ -28,6 +28,10 @@ var ImisExtensions = /** @class */ (function () {
     ImisExtensions.prototype.init = function () {
         if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1) {
             this.initIqaExtensions();
+            chrome.storage.sync.set({ message: "Hello, World!" });
+            chrome.storage.sync.get(['message']).then(function (result) {
+                alert("Value is: " + result.message);
+            });
         }
         if (window.location.pathname.indexOf('/AsiCommon/Controls/IQA/Default.aspx') > -1) {
             this.initIqaBrowserExtensions();

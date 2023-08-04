@@ -1,10 +1,11 @@
 {
     "name": "iMIS Experience Plus",
-    "version": "1.2.1",
+    "version": "1.3.0",
     "manifest_version": 3,
     "description": "A browser extension to improve the user experience within the iMIS Staff Site. Made with ❤️ by the iMIS community and CSI.",
     "permissions": [
-        "https://*/*"
+        "https://*/*",
+        "storage"
     ],
     "incognito": "split",
     "content_scripts": [
