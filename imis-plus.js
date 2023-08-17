@@ -945,15 +945,123 @@ var SearchBar = /** @class */ (function () {
                         url = chrome.runtime.getURL(SearchBar.ConfigPath);
                         return [4 /*yield*/, $.get({ url: url, dataType: 'json', type: 'GET' })];
                     case 1:
-                        _b.apply(_a, [_c.sent()]);
-                        $('#commandBarInput').trigger("focus");
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ShiftButtonBadge)];
-                    case 2:
-                        resource = _c.sent();
-                        console.log("resource", resource);
-                        $('body').prepend(resource);
-                        return [2 /*return*/];
+                        json = _a.sent();
+                        result = [];
+                        // need to build each Config model so that search can be computed
+                        json.forEach(function (i) { return result.push(new Config(i.category, i.displayName, i.altName, i.action, i.destination, i.isShortcut)); });
+                        return [2 /*return*/, result];
                 }
+            });
+        });
+    };
+    SearchBar.SetDocumentationInput = function (content) {
+        $('#commandBarDocumentationInput').html(content);
+    };
+    SearchBar.CaptureInput = function () {
+        console.log('capture input...');
+        // TODO: not sure why this isnt working...
+        // $('#commandBarInput').on('keyup', $.debounce(500, SearchBar.Stuff));
+        // @ts-ignore
+        // $('#commandBarInput').on('input', Cowboy.debounce(500, debouceFn));
+        $('#commandBarInput').on('input', Cowboy.debounce(500, function (event) {
+            var currentActionBarValue = $(event.target).val();
+            var currentActionBarValueUriEncoded = encodeURIComponent(currentActionBarValue);
+            var isActionBarNumeric = $.isNumeric(currentActionBarValue);
+            // Filter the results
+            $('#CommandBarSelectTab li').each(function (i, e) {
+                var search = $(e).attr('data-search');
+                $(e).toggle(search.toLowerCase().indexOf(currentActionBarValue.toLowerCase()) > -1);
+            });
+            // skipping "Organize Results"
+            // Populate Documentation Area and Links
+            var content = SearchBar.GetDocumentationInput(currentActionBarValue.length > 0, currentActionBarValueUriEncoded, currentActionBarValue);
+            SearchBar.SetDocumentationInput(content);
+            // // Populate Profile Jump Information
+            if (isActionBarNumeric === true) {
+                SearchBar.ActivateTab('');
+                $('.loaderParent').show();
+                setTimeout(function () {
+                    $('.loaderParent').hide();
+                    SearchBar.SetUserDetails();
+                    SearchBar.ActivateTab(SearchBar.UserDetailsTab);
+                }, 2 * 1000); // 2 seconds
+            }
+            else {
+                if ($('.loaderParent').is(":visible")) {
+                    console.log('loaderParent is visible and not numeric... hide...');
+                    $('.loaderParent').hide();
+                }
+                SearchBar.ActivateTab(SearchBar.CommandBarSelectTab);
+                SearchBar.RemoveUserDetailsInfo();
+            }
+        }));
+    };
+    SearchBar.showOverlay = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                console.log('showOverlay called...');
+                //if already showing
+                if ($("#commandBarOverlay").is(":hidden")) {
+                    this.hideOverlay();
+                    console.log('showing...');
+                    // console.log('show overlay...');
+                    SearchBar.ActivateTab(SearchBar.CommandBarSelectTab);
+                    $('#commandBarOverlay').show();
+                    $('#commandBarExitButton').on("click", function () {
+                        return __awaiter(this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        console.log('exit clicked...');
+                                        return [4 /*yield*/, SearchBar.hideOverlay()];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        });
+                    });
+                    /*************** ABOUT WORK BAR */
+                    $('#workBarAboutButton').on('mouseenter', function () { $('#commandBarAboutOverlay').show(); });
+                    $('#workBarAboutButton').on('mouseleave', function () { $('#commandBarAboutOverlay').hide(); });
+                    SearchBar.CaptureInput();
+                    $('#commandBarInput').trigger("focus");
+                    // TODO: fix extra handlers being made
+                    // @ts-ignore
+                    console.log($._data($('#commandBarExitButton')[0], 'events'));
+                    // @ts-ignore
+                    console.log($._data($('.commandBarListItem')[0], 'events'));
+                    // @ts-ignore
+                    console.log($._data($('#commandBarInput')[0], 'events'));
+                    // @ts-ignore
+                    console.log($._data($('#workBarAboutButton')[0], 'events'));
+                }
+                else {
+                    console.log('already showing... do nothing...');
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    // todo: ESCAPE DOESNT CALL THIS....
+    SearchBar.hideOverlay = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                console.log('hideOverlay called...');
+                $('#commandBarOverlay').hide();
+                // remove handlers
+                $('#commandBarExitButton').off("click");
+                $('#commandBarInput').off('input');
+                $('#workBarAboutButton').off('mouseenter');
+                $('#workBarAboutButton').off('mouseleave');
+                // reset whatever view we left off on back to the original
+                $('#commandBarInput').val('');
+                $('#CommandBarSelectTab li').each(function () {
+                    $(this).show();
+                });
+                SearchBar.RemoveUserDetailsInfo();
+                SearchBar.SetDocumentationInput(SearchBar.GetDocumentationInput(false, '', ''));
+                return [2 /*return*/];
             });
         });
     };
