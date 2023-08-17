@@ -8,8 +8,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-var ImisExtensions = /** @class */ (function () {
-    function ImisExtensions($) {
+var IqaExtensions = /** @class */ (function () {
+    function IqaExtensions($) {
         var _a, _b;
         this.$ = $;
         // Run some checks to determine if we are inside of the iMIS staff site
@@ -25,7 +25,7 @@ var ImisExtensions = /** @class */ (function () {
     /**
      * Initializes the various elements of this module.
      */
-    ImisExtensions.prototype.init = function () {
+    IqaExtensions.prototype.init = function () {
         if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1) {
             this.initIqaExtensions();
             chrome.storage.sync.set({ message: "Hello, World!" });
@@ -40,9 +40,9 @@ var ImisExtensions = /** @class */ (function () {
     /**
      * Initializes the IQA Browser extensions.
      */
-    ImisExtensions.prototype.initIqaBrowserExtensions = function () {
+    IqaExtensions.prototype.initIqaBrowserExtensions = function () {
         var _this = this;
-        console.log.apply(console, __spreadArray([ImisExtensions.VERSION_STRING + "Loaded: IQA Browser Extensions"], ImisExtensions.VERSION_STYLES, false));
+        console.log.apply(console, __spreadArray([IqaExtensions.VERSION_STRING + "Loaded: IQA Browser Extensions"], IqaExtensions.VERSION_STYLES, false));
         // Inject Font Awesome 
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
         var qf = this.$('div[id*=ObjectQuickFindPanel');
@@ -104,10 +104,10 @@ var ImisExtensions = /** @class */ (function () {
     /**
      * Initializes the IQA editor extensions.
      */
-    ImisExtensions.prototype.initIqaExtensions = function () {
+    IqaExtensions.prototype.initIqaExtensions = function () {
         var _this = this;
         var _a, _b, _c;
-        console.log.apply(console, __spreadArray([ImisExtensions.VERSION_STRING + "Loaded: IQA Extensions"], ImisExtensions.VERSION_STYLES, false));
+        console.log.apply(console, __spreadArray([IqaExtensions.VERSION_STRING + "Loaded: IQA Extensions"], IqaExtensions.VERSION_STYLES, false));
         var isImis2017 = this.$('.SubTabStrip .rtsLevel.rtsLevel1 .rtsTxt:contains("Template")').length === 0;
         // Inject Font Awesome 
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
@@ -427,7 +427,7 @@ var ImisExtensions = /** @class */ (function () {
      * Sources:
      * https://stackoverflow.com/questions/8584098/how-to-change-an-element-type-using-jquery
      */
-    ImisExtensions.prototype.addJQueryExtensions = function () {
+    IqaExtensions.prototype.addJQueryExtensions = function () {
         this.$.fn.changeElementType = function (newType) {
             var newElements = [];
             var attrs;
@@ -449,16 +449,16 @@ var ImisExtensions = /** @class */ (function () {
             return $(newElements);
         };
     };
-    ImisExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
-    ImisExtensions.VERSION_STYLES = [
+    IqaExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
+    IqaExtensions.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
         "background-color: #00a4e0; color: white;",
         "background-color: inherit; color: inherit;", // Message
     ];
-    return ImisExtensions;
+    return IqaExtensions;
 }());
-new ImisExtensions(jQuery);
+new IqaExtensions(jQuery);
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {

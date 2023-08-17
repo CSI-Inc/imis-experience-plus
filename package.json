@@ -2,8 +2,5 @@
     "name": "imis-experience-plus",
     "devDependencies": {
         "@types/jquery": "^3.5.14"
-    },
-    "dependencies": {
-        "@types/chrome": "^0.0.243"
     }
 }

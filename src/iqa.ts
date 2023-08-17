@@ -1,4 +1,4 @@
-class ImisExtensions
+class IqaExtensions
 {
     private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
     private static readonly VERSION_STYLES = [
@@ -51,7 +51,7 @@ class ImisExtensions
      */
     initIqaBrowserExtensions(): void
     {
-        console.log(ImisExtensions.VERSION_STRING + "Loaded: IQA Browser Extensions", ...ImisExtensions.VERSION_STYLES);
+        console.log(IqaExtensions.VERSION_STRING + "Loaded: IQA Browser Extensions", ...IqaExtensions.VERSION_STYLES);
 
         // Inject Font Awesome 
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
@@ -141,7 +141,7 @@ class ImisExtensions
      */
     initIqaExtensions(): void
     {
-        console.log(ImisExtensions.VERSION_STRING + "Loaded: IQA Extensions", ...ImisExtensions.VERSION_STYLES);
+        console.log(IqaExtensions.VERSION_STRING + "Loaded: IQA Extensions", ...IqaExtensions.VERSION_STYLES);
 
         let isImis2017 = this.$('.SubTabStrip .rtsLevel.rtsLevel1 .rtsTxt:contains("Template")').length === 0;
 
@@ -602,4 +602,4 @@ class ImisExtensions
     }
 }
 
-new ImisExtensions(jQuery);
+new IqaExtensions(jQuery);
