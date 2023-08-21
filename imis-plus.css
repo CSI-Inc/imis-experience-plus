@@ -97,84 +97,167 @@ table div.WebPartZoneDesignTimeEmptyZoneText
 
 .WebPartsTitleBar > table > tbody > tr > td > span
 {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-style: italic;
+    vertical-align: text-bottom !important;
+    line-height: 1;
 }
 
 .WebPartsTitleBar a.WebPartsTitleBarVerb
 {
     font-size: 18px !important;
     display: inline-block;
-    margin: 0 0.5 .rem;
+    margin: 0 0.5.rem;
+}
+
+.WebPartsTitleBar.__csi__iep__preview
+{
+    display: none;
+}
+
+.WebPartZoneDesignTime.__csi__iep__preview,
+.WebPartZoneDesignTime.__csi__iep__preview table[class*=WebPartControl_Zone]
+{
+    border: none !important;
+}
+
+.WebPartZoneDesignTime.__csi__iep__preview .WebPartZoneDesignTimeAction
+{
+    display: none !important;
+}
+
+/* Drag and drop improvements */
+.droppable.ui-droppable-active
+{
+    border: 2px dotted #CCC;
+    display: block;
+    margin: 1rem 1px;
+    height: 3em !important;
+    background: none;
+}
+.droppable.ui-droppable-active:after
+{
+    content: 'Drop Here';
+    display: flex;
+    position: relative;
+    font-style: italic;
+    color: #AAA;
+    font-weight: 600;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.droppable.ui-droppable.ui-droppable-hover
+{
+    border: 2px dotted #AAA;
+    display: block;
+    margin: 1rem 1px;
+    height: 3em !important;
+    background-color: #EAEAEA;
+}
+.droppable.ui-droppable.ui-droppable-hover:after
+{
+    color: #222;
+}
+
+.__csi__iep__verb_configure
+{
+    margin: 2px 0.5rem 6px 0;
+    padding: 4px 0 2px 0;
+    vertical-align: middle;
+    line-height: 1
 }
 
 /* Font Awesome Colors */
-.fas.fc-yellow
+.fas.fc-yellow,
+.far.fc-yellow
 {
     color: #ffa600;
 }
 
-.fas.fc-green
+.fas.fc-green,
+.far.fc-green
 {
     color: #5cb85c;
 }
 
-.fas.fc-red
+.fas.fc-red,
+.far.fc-red
 {
     color: #da5f51;
 }
 
-.fas.fc-blue
+.fas.fc-blue,
+.far.fc-blue
 {
     color: #5bc0de;
 }
 
-.fas.fc-dark-teal
+.fas.fc-imis-blue,
+.far.fc-imis-blue
+{
+    color: #005e7d;
+}
+
+.fas.fc-dark-teal,
+.far.fc-dark-teal
 {
     color: #336472;
 }
 
-.fas.fc-teal
+.fas.fc-teal,
+.far.fc-teal
 {
     color: #15838b;
 }
 
-.fas.fc-purple
+.fas.fc-purple,
+.far.fc-purple
 {
     color: #424077;
 }
 
-.fas.fc-pink
+.fas.fc-pink,
+.far.fc-pink
 {
     color: #954a87;
 }
 
-.fas.fc-orange
+.fas.fc-orange,
+.far.fc-orange
 {
     color: #f38f1a;
 }
 
-.fas.fc-black
+.fas.fc-black,
+.far.fc-black
 {
     color: #000;
 }
 
-.fas.fc-white
+.fas.fc-white,
+.far.fc-white
 {
     color: #fff;
 }
 
-.fas.fc-gray
+.fas.fc-gray,
+.far.fc-gray
 {
     color: #ccc;
 }
 
-.fas.fc-light-gray
+.fas.fc-light-gray,
+.far.fc-light-gray
 {
     color: #eee;
 }
 
-.fas.fc-dark-gray
+.fas.fc-dark-gray,
+.far.fc-dark-gray
 {
     color: #444;
 }

@@ -514,25 +514,39 @@ var RiseExtensions = /** @class */ (function () {
         // iPart controls / icons
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Configure")')
             .addClass('__csi__iep__verb_configure')
-            .html('<i class="fas fa-cog fa-fw"></i>');
+            .html('<i class="fas fa-cog fa-fw fc-imis-blue"></i>');
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Copy To")')
             .addClass('__csi__iep__verb_copy')
-            .html('<i class="fas fa-copy fa-fw fc-teal"></i>');
+            .html('<i class="far fa-clone fa-fw fc-orange"></i>');
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Move To")')
             .addClass('__csi__iep__verb_move')
-            .html('<i class="fas fa-file-export fa-fw fc-orange"></i>');
+            .html('<i class="fas fa-arrow-up-right-from-square fa-fw fc-yellow"></i>');
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Connect")')
             .addClass('__csi__iep__verb_connect')
             .html('<i class="fas fa-link fa-fw fc-green"></i>');
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Minimize")')
             .addClass('__csi__iep__verb_minimize')
-            .html('<i class="fas fa-arrows-up-to-line fa-fw fc-purple"></i>');
+            .html('<i class="fas fa-window-minimize fa-fw fc-purple"></i>');
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Restore")')
             .addClass('__csi__iep__verb_restore')
-            .html('<i class="fas fa-arrows-down-to-line fa-fw fc-purple"></i>');
+            .html('<i class="fas fa-window-restore fa-fw fc-purple"></i>');
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Remove")')
             .addClass('__csi__iep__verb_remove')
             .html('<i class="fas fa-trash-can fa-fw fc-red"></i>');
+        // Move the configure button to a better spot
+        this.$('.WebPartsTitleBar a.__csi__iep__verb_configure').each(function (_, e) {
+            _this.$(e).prependTo(_this.$(e).closest('td').prev('td'));
+        });
+        // Preview Mode
+        this.$('div[id$=FieldsPanel]').append("\n            <div class=\"PanelColumn\">\n                <input type=\"checkbox\" id=\"__csi__iep__previewMode\" />\n                <label for=\"__csi__iep__previewMode\">Preview Mode</label>\n            </div>\n        ");
+        this.$('#__csi__iep__previewMode').on('change', function (e) {
+            if (_this.$(e.target).is(':checked')) {
+                _this.$('.WebPartsTitleBar, .WebPartZoneDesignTime').addClass('__csi__iep__preview');
+            }
+            else {
+                _this.$('.WebPartsTitleBar, .WebPartZoneDesignTime').removeClass('__csi__iep__preview');
+            }
+        });
     };
     /**
      * Sources:

@@ -1,4 +1,5 @@
-class RiseExtensions {
+class RiseExtensions
+{
     private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
     private static readonly VERSION_STYLES = [
         "background-color: #e6b222; color: white;", // CSI
@@ -7,9 +8,11 @@ class RiseExtensions {
         "background-color: inherit; color: inherit;", // Message
     ]
 
-    constructor(private $: JQueryStatic) {
+    constructor(private $: JQueryStatic)
+    {
         // Run some checks to determine if we are inside of the iMIS staff site
-        if (this.$('head').get(0)?.id !== 'ctl00_Head1' && this.$('form').get(0)?.id !== 'aspnetForm') {
+        if (this.$('head').get(0)?.id !== 'ctl00_Head1' && this.$('form').get(0)?.id !== 'aspnetForm')
+        {
             // Not iMIS - do nothing
             return;
         }
@@ -24,9 +27,12 @@ class RiseExtensions {
     /**
      * Initializes the various elements of this module.
      */
-    init(): void {
-        if (window.location.pathname.indexOf('/ContentManagement/ContentDesigner/ContentRecordEdit.aspx') > -1) {
-            this.$(() => {
+    init(): void
+    {
+        if (window.location.pathname.indexOf('/ContentManagement/ContentDesigner/ContentRecordEdit.aspx') > -1)
+        {
+            this.$(() =>
+            {
                 this.initRiseEditorExtensions();
             });
         }
@@ -35,25 +41,30 @@ class RiseExtensions {
     /**
      * Initializes the IQA Browser extensions.
      */
-    initRiseEditorExtensions(): void {
+    initRiseEditorExtensions(): void
+    {
         console.log(RiseExtensions.VERSION_STRING + "Loaded: RiSE Module", ...RiseExtensions.VERSION_STYLES);
 
         // Inject Font Awesome 
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
 
         // Zone style tidying / organization
-        this.$('.WebPartZoneDesignTimeAction').each((_, e) => {
+        this.$('.WebPartZoneDesignTimeAction').each((_, e) =>
+        {
             this.$(e).closest('tr').appendTo(this.$(e).closest('table'));
         });
 
-        this.$('.WebPartZoneDesignTimeAction').each((_, e) => {
+        this.$('.WebPartZoneDesignTimeAction').each((_, e) =>
+        {
             this.$(e).children().wrapAll(
                 $('<div />').addClass('__csi__iep__addButton')
             );
         });
 
-        this.$('.__csi__iep__addButton').each((_, e) => {
-            this.$(e).find('br + div').each((_, e) => {
+        this.$('.__csi__iep__addButton').each((_, e) =>
+        {
+            this.$(e).find('br + div').each((_, e) =>
+            {
                 this.$(e).insertBefore(this.$(e).closest('table'));
                 this.$(e).find('span').addClass('__csi__iep__zoneName');
             });
@@ -71,18 +82,18 @@ class RiseExtensions {
             .html('<i class="fas fa-gear fa-fw"></i>Zone Properties');
 
         // iPart controls / icons
-        
+
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Configure")')
             .addClass('__csi__iep__verb_configure')
-            .html('<i class="fas fa-cog fa-fw"></i>');
+            .html('<i class="fas fa-cog fa-fw fc-imis-blue"></i>');
 
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Copy To")')
             .addClass('__csi__iep__verb_copy')
-            .html('<i class="fas fa-copy fa-fw fc-teal"></i>');
+            .html('<i class="far fa-clone fa-fw fc-orange"></i>');
 
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Move To")')
             .addClass('__csi__iep__verb_move')
-            .html('<i class="fas fa-file-export fa-fw fc-orange"></i>');
+            .html('<i class="fas fa-arrow-up-right-from-square fa-fw fc-yellow"></i>');
 
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Connect")')
             .addClass('__csi__iep__verb_connect')
@@ -90,31 +101,60 @@ class RiseExtensions {
 
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Minimize")')
             .addClass('__csi__iep__verb_minimize')
-            .html('<i class="fas fa-arrows-up-to-line fa-fw fc-purple"></i>');
+            .html('<i class="fas fa-window-minimize fa-fw fc-purple"></i>');
 
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Restore")')
             .addClass('__csi__iep__verb_restore')
-            .html('<i class="fas fa-arrows-down-to-line fa-fw fc-purple"></i>');
+            .html('<i class="fas fa-window-restore fa-fw fc-purple"></i>');
 
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Remove")')
             .addClass('__csi__iep__verb_remove')
             .html('<i class="fas fa-trash-can fa-fw fc-red"></i>');
+
+        // Move the configure button to a better spot
+        this.$('.WebPartsTitleBar a.__csi__iep__verb_configure').each((_, e) => {
+            this.$(e).prependTo(this.$(e).closest('td').prev('td'));
+        });
+
+        // Preview Mode
+        this.$('div[id$=FieldsPanel]').append(`
+            <div class="PanelColumn">
+                <input type="checkbox" id="__csi__iep__previewMode" />
+                <label for="__csi__iep__previewMode">Preview Mode</label>
+            </div>
+        `);
+
+        this.$('#__csi__iep__previewMode').on('change', (e) => 
+        {
+            if (this.$(e.target).is(':checked'))
+            {
+                this.$('.WebPartsTitleBar, .WebPartZoneDesignTime').addClass('__csi__iep__preview');
+            }
+            else
+            {
+                this.$('.WebPartsTitleBar, .WebPartZoneDesignTime').removeClass('__csi__iep__preview');
+            }
+        });
     }
 
     /**
      * Sources: 
      * https://stackoverflow.com/questions/8584098/how-to-change-an-element-type-using-jquery 
      */
-    addJQueryExtensions(): void {
-        this.$.fn.changeElementType = function (newType) {
+    addJQueryExtensions(): void
+    {
+        this.$.fn.changeElementType = function (newType)
+        {
             var newElements: ArrayLike<HTMLElement> = [];
             var attrs: any;
             var newElement: JQuery<HTMLElement>;
 
-            this.each(function () {
+            this.each(function ()
+            {
                 attrs = {};
 
-                $.each(this.attributes, function () {
+                $.each(this.attributes, function ()
+                {
                     attrs[this.nodeName] = this.nodeValue;
                 });
 
@@ -122,9 +162,11 @@ class RiseExtensions {
 
                 $(this).replaceWith(newElement);
 
-                if (!newElements) {
+                if (!newElements)
+                {
                     newElements = newElement;
-                } else {
+                } else
+                {
                     $.merge(newElements, newElement);
                 }
             });
