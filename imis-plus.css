@@ -1,109 +1,235 @@
+/* RiSE Content Editor Styles */
+
+.__csi__iep__addButton
+{
+    display: inline-flex;
+    flex-direction: 'row';
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    top: -9px;
+    position: relative;
+    background-color: #F3F3F3;
+    padding: 0.25rem 2rem;
+    border: 1px solid #E5E5E5;
+}
+
+.__csi__iep__addButton > a[id=AddContentLink]
+{
+    color: #36ad4b !important;
+}
+
+.__csi__iep__addButton > br + div
+{
+    width: 100%;
+    text-align: center;
+}
+
+.__csi__iep__addButton > a[id=AddContentLink],
+.__csi__iep__addButton > a[id=AddContentLink] + span + a
+{
+    text-decoration: none !important;
+}
+
+.__csi__iep__addButton > a[id=AddContentLink]:hover,
+.__csi__iep__addButton > a[id=AddContentLink] + span + a:hover
+{
+    text-decoration: underline !important;
+}
+
+.__csi__iep__addButton > a[id=AddContentLink] + span
+{
+    display: inline-block;
+    margin: 0 1rem;
+}
+
+.__csi__iep__zoneName
+{
+    position: absolute;
+    border-top: 2px dashed rgba(0, 0, 0, 0.2);
+    border-bottom: none;
+    border-left: 2px dashed rgba(0, 0, 0, 0.2);
+    border-right: 2px dashed rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 7px;
+    padding: 0.2rem 2rem 0 2rem;
+    font-size: 1.7rem;
+    font-weight: 500;
+    border-top-right-radius: 7px;
+    margin-top: -0.5rem;
+    background-color: white;
+}
+
+table div.WebPartZoneDesignTimeEmptyZoneText
+{
+    margin-bottom: 1rem;
+}
+
+.panel-body .WebPartZoneDesignTime
+{
+    border: 2px dashed;
+    margin: 2rem 0;
+}
+
+.panel-body .WebPartZoneDesignTime,
+.panel-body .__csi__iep__zoneName
+{
+    border-color: rgba(0, 0, 0, 0.1);
+    transition: border-color 0.2s ease-in-out;
+}
+
+.panel-body .WebPartZoneDesignTime:hover
+{
+    border-color: rgba(35, 116, 157, 0.7);
+    transition: border-color 0.2s ease-in-out;
+}
+
+.panel-body .WebPartZoneDesignTime .__csi__iep__addButton
+{
+    opacity: 0.2;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.panel-body .WebPartZoneDesignTime:hover .__csi__iep__addButton
+{
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.WebPartsTitleBar > table > tbody > tr > td > span
+{
+    font-size: 1.4rem;
+    font-style: italic;
+}
+
+.WebPartsTitleBar a.WebPartsTitleBarVerb
+{
+    font-size: 18px !important;
+    display: inline-block;
+    margin: 0 0.5 .rem;
+}
+
 /* Font Awesome Colors */
-:root {
-  --my-color: #ff00ff;
+.fas.fc-yellow
+{
+    color: #ffa600;
 }
 
-.fas.fc-yellow {
-  color: var(--my-color);
+.fas.fc-green
+{
+    color: #5cb85c;
 }
 
-.fas.fc-green {
-  color: var(--my-color);
+.fas.fc-red
+{
+    color: #da5f51;
 }
 
-.fas.fc-red {
-  color: var(--my-color);
+.fas.fc-blue
+{
+    color: #5bc0de;
 }
 
-.fas.fc-blue {
-  color: var(--my-color);
+.fas.fc-dark-teal
+{
+    color: #336472;
 }
 
-.fas.fc-dark-teal {
-  color: var(--my-color);
+.fas.fc-teal
+{
+    color: #15838b;
 }
 
-.fas.fc-teal {
-  color: var(--my-color);
+.fas.fc-purple
+{
+    color: #424077;
 }
 
-.fas.fc-purple {
-  color: var(--my-color);
+.fas.fc-pink
+{
+    color: #954a87;
 }
 
-.fas.fc-pink {
-  color: var(--my-color);
+.fas.fc-orange
+{
+    color: #f38f1a;
 }
 
-.fas.fc-orange {
-  color: var(--my-color);
+.fas.fc-black
+{
+    color: #000;
 }
 
-.fas.fc-black {
-  color: var(--my-color);
+.fas.fc-white
+{
+    color: #fff;
 }
 
-.fas.fc-white {
-  color: var(--my-color);
+.fas.fc-gray
+{
+    color: #ccc;
 }
 
-.fas.fc-gray {
-  color: var(--my-color);
+.fas.fc-light-gray
+{
+    color: #eee;
 }
 
-.fas.fc-light-gray {
-  color: var(--my-color);
-}
-
-.fas.fc-dark-gray {
-  color: var(--my-color);
+.fas.fc-dark-gray
+{
+    color: #444;
 }
 
 /* SEARCH BAR STYLES */
-.buttonBadge {
-  font-weight: 500;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  background-color: #F4F5F7;
-  font-size: 11px;
-  padding: 2px .5ch;
-  color: black;
+.buttonBadge
+{
+    font-weight: 500;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    background-color: #F4F5F7;
+    font-size: 11px;
+    padding: 2px .5ch;
+    color: black;
 }
 
-.shift {
-  margin-left: 5px;
+.shift
+{
+    margin-left: 5px;
 }
 
-.plus {
-  margin: 0px 1px;
+.plus
+{
+    margin: 0px 1px;
 }
 
-#commandBarOverlay {
-  background-color: rgba(200, 200, 200, 0.5);
-  z-index: 999;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+#commandBarOverlay
+{
+    background-color: rgba(200, 200, 200, 0.5);
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
-#commandBarExit {
-  background-color: rgba(200, 200, 200, 0.5);
-  z-index: 50;
-  width: 100%;
-  height: 100%;
+#commandBarExit
+{
+    background-color: rgba(200, 200, 200, 0.5);
+    z-index: 50;
+    width: 100%;
+    height: 100%;
 }
 
-#commandBarPalette {
-  width: 60%;
-  background-color: rgba(242, 242, 243, 1);
-  height: 460px;
-  position: fixed;
-  top: 20%;
-  left: 25%;
-  margin: 10px;
-  border: solid 15px rgb(242, 242, 243);
+#commandBarPalette
+{
+    width: 60%;
+    background-color: rgba(242, 242, 243, 1);
+    height: 460px;
+    position: fixed;
+    top: 20%;
+    left: 25%;
+    margin: 10px;
+    border: solid 15px rgb(242, 242, 243);
 }
 
 /* #commandBarExitButton {
@@ -112,178 +238,201 @@
   right: 10px;
 } */
 
-#commandBarInput {
-  width: 100%;
-  height: 50px;
-  font-size: 140%;
-  font-weight: 500;
+#commandBarInput
+{
+    width: 100%;
+    height: 50px;
+    font-size: 140%;
+    font-weight: 500;
 }
 
-#commandBarPartyUrl {
-  position: absolute;
-  right: 57px;
-  top: 13px;
-  display: none;
+#commandBarPartyUrl
+{
+    position: absolute;
+    right: 57px;
+    top: 13px;
+    display: none;
 }
 
-#commandBarOptionsArea {
-  width: 100%;
-  margin-top: 6px;
-  /* height: 315px; */
-  height: auto;
+#commandBarOptionsArea
+{
+    width: 100%;
+    margin-top: 6px;
+    /* height: 315px; */
+    height: auto;
 }
 
-#commandBarOptions {
-  width: 100%;
-  background-color: white;
-  padding: 5px;
+#commandBarOptions
+{
+    width: 100%;
+    background-color: white;
+    padding: 5px;
 }
 
-#commandBarUl {
-  -webkit-padding-start: 0;
-  height: 300px;
-  overflow-y: auto;
+#commandBarUl
+{
+    -webkit-padding-start: 0;
+    height: 300px;
+    overflow-y: auto;
 }
 
-#commandBarDocumentationSearchArea {
-  width: 100%;
-  /* height: 30px;
+#commandBarDocumentationSearchArea
+{
+    width: 100%;
+    /* height: 30px;
   display: inline; */
-  display: block;
-  height: 36px;
+    display: block;
+    height: 36px;
 }
 
-#commandBarDocumentationInput {
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  padding: 4px;
-  font-size: 90%;
-  font-weight: 500;
-  color: #005e7d;
-  border-top: 6px solid rgb(242, 242, 243);
+#commandBarDocumentationInput
+{
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    padding: 4px;
+    font-size: 90%;
+    font-weight: 500;
+    color: #005e7d;
+    border-top: 6px solid rgb(242, 242, 243);
 }
 
-.stack {
-  height: 300px;
-  overflow-y: auto;
-  margin: 0 4px 4px 4px;
-  border-top: solid 4px white;
+.stack
+{
+    height: 300px;
+    overflow-y: auto;
+    margin: 0 4px 4px 4px;
+    border-top: solid 4px white;
 }
 
-#userCardProfile {
-  width: 64%;
-  border: solid 1px rgba(231, 231, 231, .9);
-  border-radius: 2px;
-  padding: 0 4px;
-  float: left;
-  height: 100%;
+#userCardProfile
+{
+    width: 64%;
+    border: solid 1px rgba(231, 231, 231, .9);
+    border-radius: 2px;
+    padding: 0 4px;
+    float: left;
+    height: 100%;
 }
 
-.userActionCard {
-  vertical-align: middle;
-  font-weight: 500;
-  font-size: 13px;
+.userActionCard
+{
+    vertical-align: middle;
+    font-weight: 500;
+    font-size: 13px;
 }
 
-.userCardActionArea {
-  width: 92%;
-  height: 40px;
-  margin: 0 auto;
-  margin-top: 7px;
-  border: solid 1px rgba(231, 231, 231, .9);
-  background-color: white;
-  padding: 8px;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
-  vertical-align: middle;
+.userCardActionArea
+{
+    width: 92%;
+    height: 40px;
+    margin: 0 auto;
+    margin-top: 7px;
+    border: solid 1px rgba(231, 231, 231, .9);
+    background-color: white;
+    padding: 8px;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
+    vertical-align: middle;
 }
 
-#destinationUsersName {
-  color: #005e7d;
-  /* margin: 2px */
+#destinationUsersName
+{
+    color: #005e7d;
+    /* margin: 2px */
 }
 
-.userDetailsBadge {
-  text-decoration: none;
-  display: inline-block;
-  font-weight: 500;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  background-color: #F4F5F7;
-  font-size: 11px;
-  padding: 2px .5ch;
-  margin-left: 5px;
-  color: black;
-  vertical-align: middle;
+.userDetailsBadge
+{
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 500;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    background-color: #F4F5F7;
+    font-size: 11px;
+    padding: 2px .5ch;
+    margin-left: 5px;
+    color: black;
+    vertical-align: middle;
 }
 
-#destinationUsersCompanyName {
-  margin-top: 3rem
+#destinationUsersCompanyName
+{
+    margin-top: 3rem
 }
 
-#userCardActions {
-  width: 35%;
-  border: solid 1px rgba(231, 231, 231, .9);
-  border-radius: 2px;
-  padding: 0 4px;
-  /* padding: 6px; */
-  float: right;
-  height: 100%;
-  background-color: rgb(242, 242, 243);
+#userCardActions
+{
+    width: 35%;
+    border: solid 1px rgba(231, 231, 231, .9);
+    border-radius: 2px;
+    padding: 0 4px;
+    /* padding: 6px; */
+    float: right;
+    height: 100%;
+    background-color: rgb(242, 242, 243);
 }
 
-#userCardChangeDetails {
-  width: 100%;
-  /* padding: 3px; */
-  font-size: 90%;
-  text-align: right;
-  color: #686868;
-  /* margin-top: -27px; */
+#userCardChangeDetails
+{
+    width: 100%;
+    /* padding: 3px; */
+    font-size: 90%;
+    text-align: right;
+    color: #686868;
+    /* margin-top: -27px; */
 }
 
-#commandBarSupportButtons {
-  width: 100%;
-  background-color: rgb(242, 242, 243);
-  height: 32px;
-  padding: 6px;
-  text-align: center;
+#commandBarSupportButtons
+{
+    width: 100%;
+    background-color: rgb(242, 242, 243);
+    height: 32px;
+    padding: 6px;
+    text-align: center;
 }
 
-.commandBarButton {
-  margin-left: 1rem
+.commandBarButton
+{
+    margin-left: 1rem
 }
 
-span.badge {
-  background-color: #23B4E8
+span.badge
+{
+    background-color: #23B4E8
 }
 
-#commandBarAboutOverlay {
-  width: 100%;
-  height: 350px;
-  background-color: white;
-  position: absolute;
-  top: 50px;
-  border: solid 1px lightgray;
-  border-radius: 2px;
-  display: none;
+#commandBarAboutOverlay
+{
+    width: 100%;
+    height: 350px;
+    background-color: white;
+    position: absolute;
+    top: 50px;
+    border: solid 1px lightgray;
+    border-radius: 2px;
+    display: none;
 }
 
-span.userDetails.displayBlock {
-  display: block;
+span.userDetails.displayBlock
+{
+    display: block;
 }
 
-.commandBarListItem {
-  font-family: 'Poppins';
-  font-weight: 500;
-  list-style: none;
-  margin: 0;
-  padding: 4px;
+.commandBarListItem
+{
+    font-family: 'Poppins';
+    font-weight: 500;
+    list-style: none;
+    margin: 0;
+    padding: 4px;
 }
 
-.commandBarListItem>a {
-  display: inline-block;
-  width: 100%;
-  height: 100%;
+.commandBarListItem > a
+{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
 }
 
 /* #commandBarExitButton {
@@ -292,63 +441,71 @@ span.userDetails.displayBlock {
   position: absolute;
   z-index: 9999999;
 } */
-#commandBarExitButton {
-  position: absolute;
-  top: 20%;
-  padding: 4px 10px;
-  right: 14%;
-  z-index: 99999;
+#commandBarExitButton
+{
+    position: absolute;
+    top: 20%;
+    padding: 4px 10px;
+    right: 14%;
+    z-index: 99999;
 }
 
-#documentationLinkDestination>span {
-  vertical-align: middle;
+#documentationLinkDestination > span
+{
+    vertical-align: middle;
 }
 
-.textBadge {
-  font-weight: 500;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  background-color: #F4F5F7;
-  font-size: 11px;
-  padding: 2px .5ch;
-  margin: 2px 0px;
-  vertical-align: middle;
-  color: black
+.textBadge
+{
+    font-weight: 500;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    background-color: #F4F5F7;
+    font-size: 11px;
+    padding: 2px .5ch;
+    margin: 2px 0px;
+    vertical-align: middle;
+    color: black
 }
 
-.textBadgeNoMargin {
-  font-weight: 500;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  background-color: #F4F5F7;
-  font-size: 11px;
-  padding: 2px .5ch;
-  vertical-align: middle;
-  color: black
+.textBadgeNoMargin
+{
+    font-weight: 500;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    background-color: #F4F5F7;
+    font-size: 11px;
+    padding: 2px .5ch;
+    vertical-align: middle;
+    color: black
 }
 
-.loader {
-  width: 48px;
-  height: 48px;
-  border: 5px solid #FFF;
-  border-bottom-color: #7c7c7c;
-  border-radius: 50%;
-  display: inline-block;
-  animation: rotation 1s linear infinite;
-  margin: auto;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  position: absolute;
+.loader
+{
+    width: 48px;
+    height: 48px;
+    border: 5px solid #FFF;
+    border-bottom-color: #7c7c7c;
+    border-radius: 50%;
+    display: inline-block;
+    animation: rotation 1s linear infinite;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
 }
 
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
+@keyframes rotation
+{
+    0%
+    {
+        transform: rotate(0deg);
+    }
 
-  100% {
-    transform: rotate(360deg);
-  }
+    100%
+    {
+        transform: rotate(360deg);
+    }
 }

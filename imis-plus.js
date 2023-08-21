@@ -42,7 +42,7 @@ var IqaExtensions = /** @class */ (function () {
      */
     IqaExtensions.prototype.initIqaBrowserExtensions = function () {
         var _this = this;
-        console.log.apply(console, __spreadArray([IqaExtensions.VERSION_STRING + "Loaded: IQA Browser Extensions"], IqaExtensions.VERSION_STYLES, false));
+        console.log.apply(console, __spreadArray([IqaExtensions.VERSION_STRING + "Loaded: IQA Module"], IqaExtensions.VERSION_STYLES, false));
         // Inject Font Awesome 
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
         var qf = this.$('div[id*=ObjectQuickFindPanel');
@@ -96,7 +96,6 @@ var IqaExtensions = /** @class */ (function () {
         // Hook into DOM changes since the DOM elements change when navigation occurs
         var mObs = window.MutationObserver || window.WebKitMutationObserver;
         var observer = new mObs(function (_, __) {
-            //console.log("Mutation detected!", {m, obs});
             bindClickListener();
         });
         observer.observe(this.$('div[id$=ContentListUpdatePanel]').get(0), { subtree: true, childList: true });
@@ -459,6 +458,118 @@ var IqaExtensions = /** @class */ (function () {
     return IqaExtensions;
 }());
 new IqaExtensions(jQuery);
+var RiseExtensions = /** @class */ (function () {
+    function RiseExtensions($) {
+        var _a, _b;
+        this.$ = $;
+        // Run some checks to determine if we are inside of the iMIS staff site
+        if (((_a = this.$('head').get(0)) === null || _a === void 0 ? void 0 : _a.id) !== 'ctl00_Head1' && ((_b = this.$('form').get(0)) === null || _b === void 0 ? void 0 : _b.id) !== 'aspnetForm') {
+            // Not iMIS - do nothing
+            return;
+        }
+        // Add jQuery extensions
+        this.addJQueryExtensions();
+        // Initialize the module
+        this.init();
+    }
+    /**
+     * Initializes the various elements of this module.
+     */
+    RiseExtensions.prototype.init = function () {
+        var _this = this;
+        if (window.location.pathname.indexOf('/ContentManagement/ContentDesigner/ContentRecordEdit.aspx') > -1) {
+            this.$(function () {
+                _this.initRiseEditorExtensions();
+            });
+        }
+    };
+    /**
+     * Initializes the IQA Browser extensions.
+     */
+    RiseExtensions.prototype.initRiseEditorExtensions = function () {
+        var _this = this;
+        console.log.apply(console, __spreadArray([RiseExtensions.VERSION_STRING + "Loaded: RiSE Module"], RiseExtensions.VERSION_STYLES, false));
+        // Inject Font Awesome 
+        this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
+        // Zone style tidying / organization
+        this.$('.WebPartZoneDesignTimeAction').each(function (_, e) {
+            _this.$(e).closest('tr').appendTo(_this.$(e).closest('table'));
+        });
+        this.$('.WebPartZoneDesignTimeAction').each(function (_, e) {
+            _this.$(e).children().wrapAll($('<div />').addClass('__csi__iep__addButton'));
+        });
+        this.$('.__csi__iep__addButton').each(function (_, e) {
+            _this.$(e).find('br + div').each(function (_, e) {
+                _this.$(e).insertBefore(_this.$(e).closest('table'));
+                _this.$(e).find('span').addClass('__csi__iep__zoneName');
+            });
+        });
+        this.$('.WebPartZoneDesignTimeAction').css('fontSize', '2rem');
+        this.$('a[id=AddContentLink]')
+            .html('<i class="fas fa-plus-circle fa-fw"></i>Add Content');
+        this.$('a[id=AddContentLink] + span')
+            .html(' ');
+        this.$('a[id=AddContentLink] + span + a')
+            .html('<i class="fas fa-gear fa-fw"></i>Zone Properties');
+        // iPart controls / icons
+        this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Configure")')
+            .addClass('__csi__iep__verb_configure')
+            .html('<i class="fas fa-cog fa-fw"></i>');
+        this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Copy To")')
+            .addClass('__csi__iep__verb_copy')
+            .html('<i class="fas fa-copy fa-fw fc-teal"></i>');
+        this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Move To")')
+            .addClass('__csi__iep__verb_move')
+            .html('<i class="fas fa-file-export fa-fw fc-orange"></i>');
+        this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Connect")')
+            .addClass('__csi__iep__verb_connect')
+            .html('<i class="fas fa-link fa-fw fc-green"></i>');
+        this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Minimize")')
+            .addClass('__csi__iep__verb_minimize')
+            .html('<i class="fas fa-arrows-up-to-line fa-fw fc-purple"></i>');
+        this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Restore")')
+            .addClass('__csi__iep__verb_restore')
+            .html('<i class="fas fa-arrows-down-to-line fa-fw fc-purple"></i>');
+        this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Remove")')
+            .addClass('__csi__iep__verb_remove')
+            .html('<i class="fas fa-trash-can fa-fw fc-red"></i>');
+    };
+    /**
+     * Sources:
+     * https://stackoverflow.com/questions/8584098/how-to-change-an-element-type-using-jquery
+     */
+    RiseExtensions.prototype.addJQueryExtensions = function () {
+        this.$.fn.changeElementType = function (newType) {
+            var newElements = [];
+            var attrs;
+            var newElement;
+            this.each(function () {
+                attrs = {};
+                $.each(this.attributes, function () {
+                    attrs[this.nodeName] = this.nodeValue;
+                });
+                newElement = $("<" + newType + "/>", attrs).append($(this).contents());
+                $(this).replaceWith(newElement);
+                if (!newElements) {
+                    newElements = newElement;
+                }
+                else {
+                    $.merge(newElements, newElement);
+                }
+            });
+            return $(newElements);
+        };
+    };
+    RiseExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
+    RiseExtensions.VERSION_STYLES = [
+        "background-color: #e6b222; color: white;",
+        "background-color: #374ea2; color: white;",
+        "background-color: #00a4e0; color: white;",
+        "background-color: inherit; color: inherit;", // Message
+    ];
+    return RiseExtensions;
+}());
+new RiseExtensions(jQuery);
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
