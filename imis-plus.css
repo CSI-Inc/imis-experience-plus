@@ -263,15 +263,34 @@ table div.WebPartZoneDesignTimeEmptyZoneText
 }
 
 /* SEARCH BAR STYLES */
-.buttonBadge
-{
-    font-weight: 500;
-    border: 1px solid lightgray;
-    border-radius: 3px;
-    background-color: #F4F5F7;
-    font-size: 11px;
-    padding: 2px .5ch;
-    color: black;
+@font-face {
+  font-family: 'CSI Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: 100%;
+  src: url(https://fonts.gstatic.com/s/opensans/v35/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVI.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+#commandBarOverlay {
+  font-family: 'CSI Open Sans' !important;
+  background-color: rgba(200, 200, 200, 0.5);
+  z-index: 999999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.buttonBadge {
+  font-weight: 500;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  background-color: #F4F5F7;
+  font-size: 11px;
+  padding: 2px .5ch;
+  color: black;
 }
 
 .shift
@@ -284,49 +303,22 @@ table div.WebPartZoneDesignTimeEmptyZoneText
     margin: 0px 1px;
 }
 
-#commandBarOverlay
-{
-    background-color: rgba(200, 200, 200, 0.5);
-    z-index: 999;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-#commandBarExit
-{
-    background-color: rgba(200, 200, 200, 0.5);
-    z-index: 50;
-    width: 100%;
-    height: 100%;
-}
-
-#commandBarPalette
-{
-    width: 60%;
-    background-color: rgba(242, 242, 243, 1);
-    height: 460px;
-    position: fixed;
-    top: 20%;
-    left: 25%;
-    margin: 10px;
-    border: solid 15px rgb(242, 242, 243);
-}
-
-/* #commandBarExitButton {
+#commandBarPalette {
+  width: 60%;
+  background-color: rgba(242, 242, 243, 1);
+  height: 490px;
   position: fixed;
-  top: 10px;
-  right: 10px;
-} */
+  top: 20%;
+  left: 25%;
+  margin: 10px;
+  border: solid 15px rgb(242, 242, 243);
+}
 
-#commandBarInput
-{
-    width: 100%;
-    height: 50px;
-    font-size: 140%;
-    font-weight: 500;
+#commandBarInput {
+  width: 100%;
+  height: 50px;
+  font-size: 140%;
+  font-weight: 500;
 }
 
 #commandBarPartyUrl
@@ -337,12 +329,10 @@ table div.WebPartZoneDesignTimeEmptyZoneText
     display: none;
 }
 
-#commandBarOptionsArea
-{
-    width: 100%;
-    margin-top: 6px;
-    /* height: 315px; */
-    height: auto;
+#commandBarOptionsArea {
+  width: 100%;
+  margin-top: 6px;
+  height: auto;
 }
 
 #commandBarOptions
@@ -352,20 +342,17 @@ table div.WebPartZoneDesignTimeEmptyZoneText
     padding: 5px;
 }
 
-#commandBarUl
-{
-    -webkit-padding-start: 0;
-    height: 300px;
-    overflow-y: auto;
+#commandBarUl {
+  -webkit-padding-start: 0;
+  height: 340px;
+  overflow-y: auto;
+  margin: 0 4px 4px 4px;
 }
 
-#commandBarDocumentationSearchArea
-{
-    width: 100%;
-    /* height: 30px;
-  display: inline; */
-    display: block;
-    height: 36px;
+#commandBarDocumentationSearchArea {
+  width: 100%;
+  display: block;
+  height: 36px;
 }
 
 #commandBarDocumentationInput
@@ -380,12 +367,11 @@ table div.WebPartZoneDesignTimeEmptyZoneText
     border-top: 6px solid rgb(242, 242, 243);
 }
 
-.stack
-{
-    height: 300px;
-    overflow-y: auto;
-    margin: 0 4px 4px 4px;
-    border-top: solid 4px white;
+.stack {
+  height: 340px;
+  overflow-y: auto;
+  margin: 0 4px 4px 4px;
+  border-top: solid 4px white;
 }
 
 #userCardProfile
@@ -418,10 +404,8 @@ table div.WebPartZoneDesignTimeEmptyZoneText
     vertical-align: middle;
 }
 
-#destinationUsersName
-{
-    color: #005e7d;
-    /* margin: 2px */
+#destinationUsersName {
+  color: #005e7d;
 }
 
 .userDetailsBadge
@@ -439,31 +423,25 @@ table div.WebPartZoneDesignTimeEmptyZoneText
     vertical-align: middle;
 }
 
-#destinationUsersCompanyName
-{
-    margin-top: 3rem
+#destinationUsersCompanyName {
+  margin-top: 1.5rem;
+  font-weight: 700;
 }
 
-#userCardActions
-{
-    width: 35%;
-    border: solid 1px rgba(231, 231, 231, .9);
-    border-radius: 2px;
-    padding: 0 4px;
-    /* padding: 6px; */
-    float: right;
-    height: 100%;
-    background-color: rgb(242, 242, 243);
+#userCardActions {
+  width: 35%;
+  border: solid 1px rgba(231, 231, 231, .9);
+  border-radius: 2px;
+  padding: 0 4px;
+  float: right;
+  height: 100%;
+  background-color: rgb(242, 242, 243);
 }
 
-#userCardChangeDetails
-{
-    width: 100%;
-    /* padding: 3px; */
-    font-size: 90%;
-    text-align: right;
-    color: #686868;
-    /* margin-top: -27px; */
+#userCardChangeDetails {
+  width: 100%;
+  text-align: right;
+  color: #686868;
 }
 
 #commandBarSupportButtons
@@ -475,9 +453,13 @@ table div.WebPartZoneDesignTimeEmptyZoneText
     text-align: center;
 }
 
-.commandBarButton
-{
-    margin-left: 1rem
+.commandBarButton {
+  margin-left: 1rem;
+  display: inline-block;
+}
+
+.commandBarButton>.badge {
+  background-color: #23B4E8
 }
 
 span.badge
@@ -485,16 +467,15 @@ span.badge
     background-color: #23B4E8
 }
 
-#commandBarAboutOverlay
-{
-    width: 100%;
-    height: 350px;
-    background-color: white;
-    position: absolute;
-    top: 50px;
-    border: solid 1px lightgray;
-    border-radius: 2px;
-    display: none;
+#commandBarAboutOverlay {
+  width: 100%;
+  height: 346px;
+  background-color: white;
+  position: absolute;
+  top: 50px;
+  border: solid 1px lightgray;
+  border-radius: 2px;
+  display: none;
 }
 
 span.userDetails.displayBlock
@@ -502,13 +483,11 @@ span.userDetails.displayBlock
     display: block;
 }
 
-.commandBarListItem
-{
-    font-family: 'Poppins';
-    font-weight: 500;
-    list-style: none;
-    margin: 0;
-    padding: 4px;
+.commandBarListItem {
+  font-weight: 500;
+  list-style: none;
+  margin: 0;
+  padding: 4px;
 }
 
 .commandBarListItem > a
@@ -518,20 +497,33 @@ span.userDetails.displayBlock
     height: 100%;
 }
 
-/* #commandBarExitButton {
-  top: -7%;
-  right: -3%;
+#commandBarExitButton {
   position: absolute;
+  cursor: pointer;
+  padding: 0;
+  right: -30px;
+  top: -30px;
+  z-index: 9999999;
+}
+
+#searchDocumentation {
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  background-color: #F4F5F7;
+  font-size: 11px;
+  padding: 2px .5ch;
+  /* margin-right: 5px; */
+  color: #005e7d;
+}
+
+/*
+#commandBarExitButton {
+  position: absolute;
+  top: 20%;
+  padding: 4px 10px;
+  right: 14%;
   z-index: 9999999;
 } */
-#commandBarExitButton
-{
-    position: absolute;
-    top: 20%;
-    padding: 4px 10px;
-    right: 14%;
-    z-index: 99999;
-}
 
 #documentationLinkDestination > span
 {

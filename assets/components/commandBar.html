@@ -1,28 +1,37 @@
-<div id="commandBarOverlay" class="commandBarPanelShadow"
-    style="background-color: rgba(200,200,200,0.5);  z-index: 999; position: fixed; top: 0; left: 0; width: 100%; height: 100%; box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%); display: none;">
-    <input id="commandBarExitButton" class="TextButton PrimaryButton btn" type="button" value="x" />
-    <div id="commandBarPalette"
-        style="width:60%; background-color: rgba(242,242,243,1); height: 450px; position: fixed; top: 20%; left: 25%; margin: 10px; border: solid 15px rgb(242,242,243);">
+<div id="commandBarOverlay" class="commandBarPanelShadow" style="display: none;">
+    <a href="https://www.csiinc.com/" target="_blank">
+        <img src="https://www.csiinc.com/wp-content/uploads/2022/02/csi-logo-3.svg"
+            data-src="https://www.csiinc.com/wp-content/uploads/2022/02/csi-logo-3.svg" title="" alt="CSI logo" style="
+            position: absolute;
+            right: 10px;
+            width: 150px;
+            bottom: 10px;
+            box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+            background-color: white;
+            border-radius: 35px;
+            PADDING: 20px;
+        ">
+    </a>
+    <!-- <input id="commandBarExitButton" class="TextButton PrimaryButton btn" type="button" value="x" /> -->
+    <div id="commandBarPalette">
+        <div id="commandBarExitButton"></div>
         <div id=" commandBarInputDiv">
             <input id="commandBarInput" placeholder="Let's get to work." autocomplete="off" />
         </div>
         <div id="commandBarOptionsArea" style="width: 100%; margin-top: 6px; display: flex;">
             <div id="commandBarOptions" style="height: 100%; padding:0px;">
-                <div class="loaderParent" style="height: 340px; display: none;">
+                <div class="loaderParent" style="height: 380px; display: none;">
                     <span class="loader"></span>
                 </div>
                 <div id="CommandBarSelectTab">
-                    <ul id="commandBarUl"
-                        style="height: 300px; overflow-y: auto; margin: 0 4px 4px 4px; border-top: solid 4px white;">
+                    <ul id="commandBarUl">
                     </ul>
                     <div id="commandBarDocumentationSearchArea">
                         <div id="commandBarDocumentationInput">
                             <a id="documentationLinkDestination" href="https://help.imis.com/enterprise/index.htm"
-                                target="_blank" style="display: block;">
-                                <span class="TextButton"
-                                    style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
-                                    Search iMIS Documentation
-                                    <i class="externalIconBlue"></i>
+                                target="_blank">
+                                <span id="searchDocumentation" class="TextButton">
+                                    Search iMIS Documentation<i class="externalIconBlue"></i>
                                 </span>
                             </a>
                         </div>
@@ -39,7 +48,6 @@
                     </div>
                 </div>
                 <div id="commandBarAboutOverlayCsi" style="width: 30%; float: right; padding: 2rem; ">
-                    <!-- style="width: 30%; height: auto; float: right; padding: 1rem; vertical-align: bottom;  margin-top: 155px; "> -->
                     <h6 style="margin-left: 8px;">Imagined By</h6>
                     <hr style="margin-top: 0px;" />
                     <div style="margin: 0 auto; text-align: center">
@@ -51,31 +59,35 @@
         </div>
         <div id="commandBarSupportButtons"
             style="background-color: rgb(242,242,243); padding: 6px; text-align: center; display:block;">
-            <a class="commandBarButton" style="margin-left: 1rem;"
-                href="https://www.advsol.com/ASI_Learning_Hub/SSO-LearningHub.aspx" target="_blank">
-                <span class="badge" style="background-color:#23B4E8">iMIS Learning Hub<i
-                        class="externalIcon"></i></span>
-            </a>
-            <a class="commandBarButton" style="margin-left: 1rem;" href="https://www.imismarketplace.com/"
+            <a class="commandBarButton" href="https://www.advsol.com/ASI_Learning_Hub/SSO-LearningHub.aspx"
                 target="_blank">
-                <span class="badge" style="background-color:#23B4E8">iMIS Marketplace<i class="externalIcon"></i></span>
+                <span class="badge">
+                    iMIS Learning Hub<i class="externalIcon"></i>
+                </span>
             </a>
-            <a class="commandBarButton" style="margin-left: 1rem;"
-                href="https://www.advsol.com/IMIS20/partners/Partners/product_partners.aspx" target="_blank">
-                <span class="badge" style="background-color:#23B4E8">iMIS Product Partners<i
-                        class="externalIcon"></i></span>
+            <a class="commandBarButton" href="https://www.imismarketplace.com/" target="_blank">
+                <span class="badge">
+                    iMIS Marketplace<i class="externalIcon"></i>
+                </span>
             </a>
-            <a class="commandBarButton" style="margin-left: 1rem;"
+            <a class="commandBarButton" href="https://www.advsol.com/IMIS20/partners/Partners/product_partners.aspx"
+                target="_blank">
+                <span class="badge">
+                    iMIS Product Partners<i class="externalIcon"></i>
+                </span>
+            </a>
+            <!-- <a class="commandBarButton" style="margin-left: 1rem;"
                 href="https://help.imis.com/enterprise/features/glossary.htm" target="_blank">
                 <span class="badge" style="background-color:#23B4E8">iMIS Glossary<i class="externalIcon"></i></span>
+            </a> -->
+            <a class="commandBarButton" href="https://www.advsol.com/SupportPortal" target="_blank">
+                <span class="badge">
+                    iMIS Support<i class="externalIcon"></i>
+                </span>
             </a>
-            <a class="commandBarButton" style="margin-left: 1rem;" href="https://www.advsol.com/SupportPortal"
-                target="_blank">
-                <span class="badge" style="background-color:#23B4E8">iMIS Support<i class="externalIcon"></i></span>
-            </a>
-            <a id="workBarAboutButton" style="margin-left: 1rem;" class="commandBarButton" href="#">
+            <!-- <a id="workBarAboutButton" style="margin-left: 1rem;" class="commandBarButton" href="#">
                 <span class="badge bg-success">About</span>
-            </a>
+            </a> -->
         </div>
     </div>
 </div>
