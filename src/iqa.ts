@@ -32,13 +32,6 @@ class IqaExtensions
         if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1)
         {
             this.initIqaExtensions();
-
-            chrome.storage.sync.set({message: "Hello, World!"});
-
-            chrome.storage.sync.get(['message']).then((result: any) =>
-                {
-                    alert("Value is: " + result.message);
-                })
         }
         if (window.location.pathname.indexOf('/AsiCommon/Controls/IQA/Default.aspx') > -1)
         {
@@ -53,7 +46,7 @@ class IqaExtensions
     {
         console.log(IqaExtensions.VERSION_STRING + "Loaded: IQA Module", ...IqaExtensions.VERSION_STYLES);
 
-        // Inject Font Awesome 
+        // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
 
         let qf = this.$('div[id*=ObjectQuickFindPanel');
@@ -144,7 +137,7 @@ class IqaExtensions
 
         let isImis2017 = this.$('.SubTabStrip .rtsLevel.rtsLevel1 .rtsTxt:contains("Template")').length === 0;
 
-        // Inject Font Awesome 
+        // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
 
         // Add some ICONS!
@@ -563,8 +556,8 @@ class IqaExtensions
     }
 
     /**
-     * Sources: 
-     * https://stackoverflow.com/questions/8584098/how-to-change-an-element-type-using-jquery 
+     * Sources:
+     * https://stackoverflow.com/questions/8584098/how-to-change-an-element-type-using-jquery
      */
     addJQueryExtensions(): void
     {
