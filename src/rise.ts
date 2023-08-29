@@ -1,6 +1,6 @@
 class RiseExtensions
 {
-    private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
+    private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
     private static readonly VERSION_STYLES = [
         "background-color: #e6b222; color: white;", // CSI
         "background-color: #374ea2; color: white;", // iEP
@@ -45,7 +45,7 @@ class RiseExtensions
     {
         console.log(RiseExtensions.VERSION_STRING + "Loaded: RiSE Module", ...RiseExtensions.VERSION_STYLES);
 
-        // Inject Font Awesome 
+        // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
 
         // Zone style tidying / organization
@@ -112,7 +112,8 @@ class RiseExtensions
             .html('<i class="fas fa-trash-can fa-fw fc-red"></i>');
 
         // Move the configure button to a better spot
-        this.$('.WebPartsTitleBar a.__csi__iep__verb_configure').each((_, e) => {
+        this.$('.WebPartsTitleBar a.__csi__iep__verb_configure').each((_, e) =>
+        {
             this.$(e).prependTo(this.$(e).closest('td').prev('td'));
         });
 
@@ -124,7 +125,7 @@ class RiseExtensions
             </div>
         `);
 
-        this.$('#__csi__iep__previewMode').on('change', (e) => 
+        this.$('#__csi__iep__previewMode').on('change', (e) =>
         {
             if (this.$(e.target).is(':checked'))
             {
@@ -138,8 +139,8 @@ class RiseExtensions
     }
 
     /**
-     * Sources: 
-     * https://stackoverflow.com/questions/8584098/how-to-change-an-element-type-using-jquery 
+     * Sources:
+     * https://stackoverflow.com/questions/8584098/how-to-change-an-element-type-using-jquery
      */
     addJQueryExtensions(): void
     {

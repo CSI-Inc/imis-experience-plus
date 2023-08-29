@@ -28,10 +28,6 @@ var IqaExtensions = /** @class */ (function () {
     IqaExtensions.prototype.init = function () {
         if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1) {
             this.initIqaExtensions();
-            chrome.storage.sync.set({ message: "Hello, World!" });
-            chrome.storage.sync.get(['message']).then(function (result) {
-                alert("Value is: " + result.message);
-            });
         }
         if (window.location.pathname.indexOf('/AsiCommon/Controls/IQA/Default.aspx') > -1) {
             this.initIqaBrowserExtensions();
@@ -43,8 +39,6 @@ var IqaExtensions = /** @class */ (function () {
     IqaExtensions.prototype.initIqaBrowserExtensions = function () {
         var _this = this;
         console.log.apply(console, __spreadArray([IqaExtensions.VERSION_STRING + "Loaded: IQA Module"], IqaExtensions.VERSION_STYLES, false));
-        // Inject Font Awesome
-        console.log.apply(console, __spreadArray([IqaExtensions.VERSION_STRING + "Loaded: IQA Browser Extensions"], IqaExtensions.VERSION_STYLES, false));
         // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
         var qf = this.$('div[id*=ObjectQuickFindPanel');
@@ -450,7 +444,7 @@ var IqaExtensions = /** @class */ (function () {
             return $(newElements);
         };
     };
-    IqaExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
+    IqaExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
     IqaExtensions.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
@@ -576,7 +570,7 @@ var RiseExtensions = /** @class */ (function () {
             return $(newElements);
         };
     };
-    RiseExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
+    RiseExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
     RiseExtensions.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
@@ -1249,7 +1243,7 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    SearchBar.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
+    SearchBar.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
     SearchBar.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
