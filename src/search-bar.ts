@@ -584,7 +584,7 @@ class SearchBar
             }
 
             // Open CommandBar
-            if (!isCommandBarVisible && isAnyCombo("Shift", "W"))
+            if (!isCommandBarVisible && (isAnyCombo("Shift", "W") || isAnyCombo("Shift", "w")))
             {
                 event.preventDefault();
                 await SearchBar.showOverlay();
