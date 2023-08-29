@@ -1014,7 +1014,8 @@ var SearchBar = /** @class */ (function () {
                         isAnyCombo = function (target1, target2) {
                             return (keysPressed[target1] && event.key == target2 || keysPressed[target2] && event.key == target1);
                         };
-                        if (!(!isCommandBarVisible && isAnyCombo("Shift", "CapsLock"))) return [3 /*break*/, 2];
+                        if (!(!isCommandBarVisible && isAnyCombo("Shift", "W"))) return [3 /*break*/, 2];
+                        event.preventDefault();
                         return [4 /*yield*/, SearchBar.showOverlay()];
                     case 1:
                         _a.sent();

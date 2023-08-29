@@ -584,8 +584,9 @@ class SearchBar
             }
 
             // Open CommandBar
-            if (!isCommandBarVisible && isAnyCombo("Shift", "CapsLock"))
+            if (!isCommandBarVisible && isAnyCombo("Shift", "W"))
             {
+                event.preventDefault();
                 await SearchBar.showOverlay();
             }
             //TODO: this doesnt actually do the hiding... i think its built into one of the css theme classes?
