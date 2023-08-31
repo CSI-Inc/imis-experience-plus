@@ -617,21 +617,119 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var Config = /** @class */ (function () {
-    function Config(category, displayName, altName, action, destination, isShortcut) {
+    function Config(category, displayName, altName, isTag, destination, isShortcut) {
         this.category = category;
         this.displayName = displayName;
         this.altName = altName;
-        this.action = action;
+        this.isTag = isTag;
         this.destination = destination;
         this.isShortcut = isShortcut;
     }
-    Object.defineProperty(Config.prototype, "search", {
-        get: function () {
-            return "".concat(this.displayName, " ").concat(this.altName, " ").concat(this.category);
-        },
-        enumerable: false,
-        configurable: true
-    });
+    Config.isConfigInstance = function (obj) {
+        return 'displayName' in obj;
+    };
+    Config.GetConfig = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var url, json, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        url = chrome.runtime.getURL(SearchBar.ConfigPath);
+                        return [4 /*yield*/, $.get({ url: url, dataType: 'json', type: 'GET' })];
+                    case 1:
+                        json = _a.sent();
+                        result = [];
+                        // need to build each Config model so that search can be computed
+                        json.forEach(function (i) { return result.push(new Config(i.category, i.displayName, i.altName, i.isTag, i.destination, i.isShortcut)); });
+                        result.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); });
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    Config.SetEventListeners = function (includeTags) {
+        if (includeTags === void 0) { includeTags = false; }
+        // Add hover effects
+        $('.commandBarListItem')
+            .on("mouseenter", function () {
+            $(this).addClass('commandBarHover');
+        })
+            .on("mouseleave", function () {
+            $(this).removeClass('commandBarHover');
+        });
+        if (includeTags) {
+            $('#eventCodeLookup').on("click", function () {
+                return __awaiter(this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        alert('eventCodeLookup do something...');
+                        return [2 /*return*/];
+                    });
+                });
+            });
+            $('#usernameLookup').on("click", function () {
+                return __awaiter(this, void 0, void 0, function () {
+                    var currentActionBarValue;
+                    return __generator(this, function (_a) {
+                        currentActionBarValue = $('#commandBarInput').val();
+                        SearchBar.FindUserByName(currentActionBarValue).then(function (userId) {
+                            console.log('final userId = ', userId);
+                            SearchBar.SetUserDetails(userId);
+                            SearchBar.ActivateTab(SearchBar.UserDetailsTab);
+                        });
+                        return [2 /*return*/];
+                    });
+                });
+            });
+        }
+    };
+    Config.BuildRoutesHTML = function (data) {
+        var result = '';
+        data.forEach(function (item, i) {
+            var content = "\n                <li data-index=\"".concat(i, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(i, "\">\n                    <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none;\">\n                        ").concat(item.category.length > -1 ?
+                "<span style=\"border: 1px solid lightgray; border-radius: 3px; float: left; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; min-width: 90px; text-align: center;\">\n                                ".concat(item.category, "\n                            </span>")
+                : '', "\n                        ").concat(item.displayName, "\n                        ").concat(item.isShortcut ?
+                "<span style=\"border: 1px solid lightgray; border-radius: 3px; float: right; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px;\">\n                            ~".concat(item.destination, "\n                        </span>")
+                : '', "\n                    </a>\n                </li>\n                ");
+            result = result.concat(content);
+        });
+        return result;
+    };
+    // static myTest(): void
+    // {
+    //     alert("TEST");
+    // }
+    // static myTest(userInput: string): void
+    // {
+    //     alert(userInput);
+    // }
+    Config.BuildTagsHTML = function (data, seed, userInput) {
+        var result = '';
+        data.forEach(function (item, i) {
+            var content = '';
+            var counter = seed + i;
+            switch (item.category) {
+                case "Event code lookup":
+                    // different id so that Config.SetEventListeners can setup specific functions for events and username
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a id=\"eventCodeLookup\" href=\"javascript:void(0);\" role=\"link\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
+                    break;
+                case "Username lookup":
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a id=\"usernameLookup\" href=\"javascript:void(0);\" role=\"link\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
+                    break;
+                case "Documentation lookup":
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(SearchBar.ExternalIcon, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
+                    break;
+                case "Keyword search":
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
+                    break;
+                case "iMIS Glossary":
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none; vertical-align: middle;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(SearchBar.ExternalIcon, "</span>") : '', "\n                        </a>\n                    </li>\n                    ");
+                default:
+                    break;
+            }
+            result = result.concat(content);
+        });
+        return result;
+    };
     return Config;
 }());
 var CleanUp = /** @class */ (function () {
@@ -689,23 +787,6 @@ var SearchBar = /** @class */ (function () {
         var profileUrl = "".concat(SearchBar.ClientContext.websiteRoot, "Party.aspx?ID=").concat(userId);
         var credentialsUrl = "".concat(SearchBar.ClientContext.websiteRoot, "AsiCommon/Controls/Contact/User/UserEdit.aspx?ID=").concat(userId);
         return "\n                <div id=\"userCardActions\" class=\"userDetails\">\n                    <div id=\"userCardGoToProfile\" class=\"userCardActionArea\">\n                        ".concat(SearchBar.IdCardBlue, "\n                        <a href=\"").concat(profileUrl, "\" class=\"userActionCard\">Profile</a>\n                        ").concat(SearchBar.EnterButton2, "\n                    </div>\n                    <div id=\"userCardUserCredentials\" class=\"userCardActionArea\">\n                        ").concat(SearchBar.LockIcon, "\n                        <a id=\"userCardUserCredentialsUrl\" href=\"").concat(credentialsUrl, "\" class=\"userActionCard\">User Credentials</a>\n                    </div>\n                </div>\n            ");
-        // return `
-        //         <div id="userCardActions" class="userDetails">
-        //             <div id="userCardGoToProfile" class="userCardActionArea">
-        //                 ${SearchBar.IdCardBlue}
-        //                 <a href="${profileUrl}" class="userActionCard">Profile</a>
-        //                 ${SearchBar.EnterButton2}
-        //             </div>
-        //             <div id="userCardGoToProfileNewTab" class="userCardActionArea">
-        //                 ${SearchBar.BrowsersIcon}
-        //                 <a id="userCardGoToProfileNewTabUrl" target="_blank" href="${profileUrl}" class="userActionCard">Profile (New Tab)</a>
-        //             </div>
-        //             <div id="userCardUserCredentials" class="userCardActionArea">
-        //                 ${SearchBar.LockIcon}
-        //                 <a id="userCardUserCredentialsUrl" href="${credentialsUrl}" class="userActionCard">User Credentials</a>
-        //             </div>
-        //         </div>
-        //     `;
     };
     SearchBar.GetProfile = function (data) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21;
@@ -734,32 +815,34 @@ var SearchBar = /** @class */ (function () {
         var companyName = (_19 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _19 === void 0 ? void 0 : _19.Name;
         var companyId = (_20 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _20 === void 0 ? void 0 : _20.OrganizationPartyId;
         var userTitle = (_21 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _21 === void 0 ? void 0 : _21.Title;
-        return "\n            <div id=\"userCardProfile\" class=\"userDetails\">\n                <h3 id=\"destinationUsersName\" style=\"color: #005e7d; margin: 2px\">".concat(data === null || data === void 0 ? void 0 : data.Name, "</h3>\n                <div id=\"details\" style=\"font-size: 90%;\">\n                    <div id=\"userDetailsTop\" style=\"margin: 0px 0px 5px 1px;\">\n                        <span id=\"destinationUsersId\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersIdLabel\">ID: </span>").concat(data === null || data === void 0 ? void 0 : data.Id, "\n                        </span>\n                        <span id=\"destinationUsersStatus\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersStatusLabel\">Status: </span>").concat(status, "\n                        </span>\n                        <span id=\"destinationUsersMemberType\" class=\"userDetails userSpecificDetail\">\n                            <span class=\"Label workBarLabel destinationUsersTypeLabel\">Type: </span>").concat(memberType, "\n                        </span>\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(birthDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.CakeIcon, "\n                            <span class=\"textBadge\">Date of Birth</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(birthDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber0\">\n                        ").concat(phone0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone0Type, "</span>\n                            <a href=\"tel:").concat(phone0, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone0, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber1\">\n                        ").concat(phone1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone1Type, "</span>\n                            <a href=\"tel:").concat(phone1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail1\">\n                        ").concat(email1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.EmailIcon, "\n                            ").concat(email1IsPrimary ? "".concat(SearchBar.PrimaryButton) : "<span class=\"textBadge\">".concat(email1Type, "</span>"), "\n                            <a href=\"mailto:").concat(email1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail2\">\n                        ").concat(email2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.EmailIcon, "\n                            ").concat(email2IsPrimary ? "".concat(SearchBar.PrimaryButton) : "<span class=\"textBadge\">".concat(email2Type, "</span>"), "\n                            <a href=\"mailto:").concat(email2, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email2, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail3\">\n                        ").concat(email3 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.EmailIcon, "\n                            ").concat(email3IsPrimary ? "".concat(SearchBar.PrimaryButton) : "<span class=\"textBadge\">".concat(email3Type, "</span>"), "\n                            <a href=\"mailto:").concat(email3, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email3, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress0\">\n                        ").concat(address0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address0Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address0, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress1\">\n                        ").concat(address1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address1Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address1, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress2\">\n                        ").concat(address2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address2Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address2, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersCompanyName\">\n                        ").concat(companyName ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.BuildingIcon, "\n                            ").concat(companyId ? "\n                                <a href=\"".concat(SearchBar.ClientContext.websiteRoot, "Party.aspx?ID=").concat(companyId, "\">\n                                    <span style=\"vertical-align: middle;\">").concat(companyName, "</span>\n                                    <span class=\"userDetailsBadge\">ID ").concat(companyId, "</span>\n                                </a>\n                                ") : "\n                                <span style=\"vertical-align: middle;\">".concat(companyName, "</span>\n                                <span class=\"userDetailsBadge\">CompanyId is not correctly linked!</span>"), "\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersTitle\">\n                        ").concat(userTitle ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.UserTagIcon, "\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(userTitle, "</span>\n                        </div>") : '', "\n                    </div>\n                </div>\n            </div>\n        ");
+        return "\n            <div id=\"userCardProfile\" class=\"userDetails\">\n                <h3 id=\"destinationUsersName\" style=\"color: #005e7d; margin: 2px\">".concat(data === null || data === void 0 ? void 0 : data.Name, "</h3>\n                <div id=\"details\" style=\"font-size: 90%;\">\n                    <div id=\"userDetailsTop\" style=\"margin: 0px 0px 5px 1px;\">\n                        <span id=\"destinationUsersId\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersIdLabel\">ID: </span>").concat(data === null || data === void 0 ? void 0 : data.Id, "\n                        </span>\n                        <span id=\"destinationUsersStatus\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersStatusLabel\">Status: </span>").concat(status, "\n                        </span>\n                        <span id=\"destinationUsersMemberType\" class=\"userDetails userSpecificDetail\">\n                            <span class=\"Label workBarLabel destinationUsersTypeLabel\">Type: </span>").concat(memberType, "\n                        </span>\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(birthDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.CakeIcon, "\n                            <span class=\"textBadge\">Date of Birth</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(birthDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber0\">\n                        ").concat(phone0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone0Type, "</span>\n                            <a href=\"tel:").concat(phone0, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone0, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber1\">\n                        ").concat(phone1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone1Type, "</span>\n                            <a href=\"tel:").concat(phone1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail1\">\n                        ").concat(email1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.EmailIcon, "\n                            ").concat(email1IsPrimary ? "".concat(SearchBar.PrimaryButton) : "<span class=\"textBadge\">".concat(email1Type, "</span>"), "\n                            <a href=\"mailto:").concat(email1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail2\">\n                        ").concat(email2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.EmailIcon, "\n                            ").concat(email2IsPrimary ? "".concat(SearchBar.PrimaryButton) : "<span class=\"textBadge\">".concat(email2Type, "</span>"), "\n                            <a href=\"mailto:").concat(email2, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email2, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail3\">\n                        ").concat(email3 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.EmailIcon, "\n                            ").concat(email3IsPrimary ? "".concat(SearchBar.PrimaryButton) : "<span class=\"textBadge\">".concat(email3Type, "</span>"), "\n                            <a href=\"mailto:").concat(email3, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email3, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress0\">\n                        ").concat(address0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address0Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address0, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress1\">\n                        ").concat(address1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address1Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address1, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress2\">\n                        ").concat(address2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address2Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address2, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersCompanyName\">\n                        ").concat(companyName ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.BuildingIcon, "\n                            ").concat(companyId ? "\n                                <a href=\"".concat(SearchBar.ClientContext.websiteRoot, "Party.aspx?ID=").concat(companyId, "\">\n                                    <span style=\"vertical-align: middle;\">").concat(companyName, "</span>\n                                    <span class=\"userDetailsBadge\">ID ").concat(companyId, "</span>\n                                </a>\n                                ") : "\n                                <span style=\"vertical-align: middle;\">".concat(companyName, "</span>\n                                <span class=\"userDetailsBadge\">Company ID Not Correctly Linked</span>"), "\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersTitle\">\n                        ").concat(userTitle ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.UserTagIcon, "\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(userTitle, "</span>\n                        </div>") : '', "\n                    </div>\n                </div>\n            </div>\n        ");
     };
-    SearchBar.GetDocumentationInput = function (hasInput, encoded, value) {
-        // need to strip input bc it will inject ANYTHING
-        if (hasInput) {
-            return "\n                <a id=\"documentationLinkDestination\" href=\"".concat(SearchBar.DocumentationUrl, "?q=").concat(encoded, "\" target=\"_blank\">\n                    <span id=\"searchDocumentation\" class=\"TextButton\">\n                        Search iMIS Documentation").concat(SearchBar.ExternalIconBlue, "\n                    </span><span style=\"margin-left: 4px;\">").concat(value === null || value === void 0 ? void 0 : value.trim(), "</span>\n                </a>\n            ");
-            // return `
-            //     <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}?q=${encoded}" target="_blank" style="display:block;">
-            //         <span class="TextButton"
-            //             style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d; display:inline-block">
-            //             Search iMIS Documentation
-            //             ${SearchBar.ExternalIconBlue}
-            //         </span>
-            //         <span>${value}</span>
-            //         <div id="documentationSearchHotKeyHint" style="float: right; display: flex;">
-            //             ${SearchBar.ShiftButton}&nbsp;
-            //             ${SearchBar.PlusButton}&nbsp;
-            //             ${SearchBar.EnterButton}
-            //         </div>
-            //     </a>
-            // `;
-        }
-        else {
-            return "\n                <a id=\"documentationLinkDestination\" href=\"".concat(SearchBar.DocumentationUrl, "\" target=\"_blank\">\n                    <span class=\"TextButton\"\n                        style=\"border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;\">\n                        Search iMIS Documentation\n                        ").concat(SearchBar.ExternalIconBlue, "\n                    </span>\n                </a>\n            ");
-        }
-    };
+    // public static GetDocumentationInput(hasInput: boolean, encoded: string, value: string): string
+    // {
+    //     // need to strip input bc it will inject ANYTHING
+    //     if (hasInput)
+    //     {
+    //         return `
+    //             <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}?q=${encoded}" target="_blank">
+    //                 <span id="searchDocumentation" class="TextButton">
+    //                     Search iMIS Documentation${SearchBar.ExternalIconBlue}
+    //                 </span><span style="margin-left: 4px;">${value?.trim()}</span>
+    //             </a>
+    //         `;
+    //     }
+    //     else
+    //     {
+    //         return `
+    //             <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}" target="_blank">
+    //                 <span class="TextButton"
+    //                     style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
+    //                     Search iMIS Documentation
+    //                     ${SearchBar.ExternalIconBlue}
+    //                 </span>
+    //             </a>
+    //         `;
+    //     }
+    // }
     SearchBar.GetUserChangeDetails = function (username, data) {
         var _a, _b, _c, _d;
         var createdOn = CleanUp.Date((_a = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _a === void 0 ? void 0 : _a.CreatedOn);
@@ -916,18 +999,18 @@ var SearchBar = /** @class */ (function () {
         });
     };
     // Build this Tab on the fly and scrap the whole thing when you're done
-    SearchBar.SetUserDetails = function () {
-        var input = $('#commandBarInput').val();
+    SearchBar.SetUserDetails = function (userId) {
+        if (userId === void 0) { userId = ''; }
+        var input = userId ? userId : $('#commandBarInput').val();
+        console.log('input = ', input);
         // Set up view
         var content = SearchBar.UserDetailsView;
         $("#UserDetailsTab").replaceWith(content);
         // Get api data
         var username = this.GetUserName(input); // THIS ONLY GRABS THE USERNAME
-        console.log('username = ', username);
         // TODO: this should determin whether or not to set up this view in the first place
         // TODO: extract this and pass in userData if it has it - otherwise stay on commandTab....
         var data = this.GetParty(input);
-        console.log('data = ', data);
         // Update view with api data -> right column
         var profile = SearchBar.GetProfile(data);
         $('#userCardProfile').replaceWith(profile);
@@ -978,6 +1061,47 @@ var SearchBar = /** @class */ (function () {
         });
         return result;
     };
+    SearchBar.FindUserByName = function (input) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var options, response;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        options = {
+                            method: 'POST',
+                            headers: { accept: 'application/json', 'content-type': 'application/json', RequestVerificationToken: SearchBar.RVToken },
+                            body: JSON.stringify({
+                                $type: "Asi.Soa.Core.DataContracts.GenericExecuteRequest, Asi.Contracts",
+                                OperationName: "FindByUserName",
+                                EntityTypeName: "User",
+                                Parameters: {
+                                    $type: "System.Collections.ObjectModel.Collection`1[[System.Object, mscorlib]], mscorlib",
+                                    $values: [
+                                        {
+                                            "$type": "System.String",
+                                            "$value": "".concat(input)
+                                        }
+                                    ]
+                                },
+                                ParameterTypeName: {
+                                    $type: "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                                    $values: [
+                                        "System.String"
+                                    ]
+                                },
+                                UseJson: false
+                            })
+                        };
+                        return [4 /*yield*/, fetch("".concat(SearchBar.ClientContext.baseUrl, "api/User/_execute"), options)];
+                    case 1:
+                        response = _b.sent();
+                        return [4 /*yield*/, response.json()];
+                    case 2: return [2 /*return*/, (_a = (_b.sent()).Result.UserId) !== null && _a !== void 0 ? _a : ''];
+                }
+            });
+        });
+    };
     SearchBar.RemoveUserDetailsInfo = function () {
         $("#UserDetailsTab").empty();
     };
@@ -999,22 +1123,23 @@ var SearchBar = /** @class */ (function () {
                 $("#commandBarOverlay .externalIconBlue").replaceWith(SearchBar.ExternalIconBlue);
                 $("#commandBarOverlay .externalIcon").replaceWith(SearchBar.ExternalIcon);
                 $("#commandBarOverlay #commandBarExitButton").html(SearchBar.CloseIcon);
-                // $("#commandBarOverlay #commandBarExitButton").replaceWith(`<div id="commandBarExitButton">${SearchBar.CloseIcon}</div>`);
             });
         });
         var keysPressed = {};
         document.addEventListener('keydown', function (event) { return __awaiter(_this, void 0, void 0, function () {
-            var isCommandBarVisible, isAnyCombo, input, url;
+            var key, isCommandBarVisible, isAnyCombo, input, url;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        key = event.key.toLowerCase();
                         isCommandBarVisible = $("#commandBarOverlay").is(":visible");
-                        keysPressed[event.key] = true;
-                        console.log('event.key = ', event.key);
+                        keysPressed[key] = true;
                         isAnyCombo = function (target1, target2) {
-                            return (keysPressed[target1] && event.key == target2 || keysPressed[target2] && event.key == target1);
+                            target1 = target1.toLowerCase();
+                            target2 = target2.toLowerCase();
+                            return (keysPressed[target1] && key == target2 || keysPressed[target2] && key == target1);
                         };
-                        if (!(!isCommandBarVisible && (isAnyCombo("Shift", "W") || isAnyCombo("Shift", "w")))) return [3 /*break*/, 2];
+                        if (!(!isCommandBarVisible && event.target === parent.document.body && isAnyCombo("shift", "w"))) return [3 /*break*/, 2];
                         event.preventDefault();
                         return [4 /*yield*/, SearchBar.showOverlay()];
                     case 1:
@@ -1029,12 +1154,12 @@ var SearchBar = /** @class */ (function () {
                         _a.sent();
                         return [3 /*break*/, 5];
                     case 4:
-                        if (isCommandBarVisible && event.key === "Enter" && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
+                        if (isCommandBarVisible && key === "enter" && !keysPressed["shift"] && !keysPressed["control"] && !keysPressed["cmd"] && $("#UserDetailsTab").is(":visible")) {
+                            console.log('UserDetailsTab is VISIBLE -> go to user profile');
                             if ($('#commandBarInput').get(0) === document.activeElement) {
                                 input = $('#commandBarInput').val();
                                 if (input.length > 0 && $.isNumeric(input)) {
                                     url = "".concat(SearchBar.ClientContext.websiteRoot, "Party.aspx?ID=").concat(input);
-                                    console.log('url = ', url);
                                     window.location.replace(url);
                                 }
                             }
@@ -1045,29 +1170,18 @@ var SearchBar = /** @class */ (function () {
             });
         }); });
         document.addEventListener('keyup', function (event) {
-            delete keysPressed[event.key];
-            console.log('keysPressed OFF = ', keysPressed);
+            var key = event.key.toLowerCase();
+            delete keysPressed[key];
+            // console.log('keysPressed OFF = ', keysPressed);
         });
     };
     SearchBar.BuildConfig = function () {
-        SearchBar.GetConfig().then(function (data) {
-            SearchBar.Config = data;
-            data.forEach(function (item, i) {
-                var content = "\n                <li data-index=\"".concat(i, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(i, "\" data-search=\"").concat(item.search, "\" action=").concat(item.action, ">\n                    <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none;\">\n                        ").concat(item.category.length > -1 ?
-                    "<span style=\"border: 1px solid lightgray; border-radius: 3px; float: left; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; min-width: 90px; text-align: center;\">\n                                ".concat(item.category, "\n                            </span>")
-                    : '', "\n                        ").concat(item.displayName, "\n                        ").concat(item.isShortcut ?
-                    "<span style=\"border: 1px solid lightgray; border-radius: 3px; float: right; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px;\">\n                            ~".concat(item.destination, "\n                        </span>")
-                    : '', "\n                    </a>\n                </li>\n                ");
-                $('#commandBarUl').append(content);
-                // Add hover effects
-                $('.commandBarListItem')
-                    .on("mouseenter", function () {
-                    $(this).addClass('commandBarHover').css({ 'background-color': 'rgba(231,231,231,.5', 'cursor': 'pointer' });
-                })
-                    .on("mouseleave", function () {
-                    $(this).removeClass('commandBarHover').css('background-color', 'initial');
-                });
-            });
+        Config.GetConfig().then(function (data) {
+            SearchBar.ConfigRoutes = data.filter(function (d) { return !d.isTag; });
+            SearchBar.ConfigTags = data.filter(function (d) { return d.isTag; });
+            var view = Config.BuildRoutesHTML(SearchBar.ConfigRoutes);
+            $('#commandBarUl').html(view);
+            Config.SetEventListeners();
         });
     };
     // Use this with '' for showing the spinner so that all tabs are hidden
@@ -1075,30 +1189,124 @@ var SearchBar = /** @class */ (function () {
         SearchBar.Tabs.forEach(function (tab) {
             if (tab == activateTab) {
                 $("#".concat(tab)).show();
+                if (tab == SearchBar.CommandBarSelectTab) {
+                    SearchBar.SetArrowEventListeners();
+                }
             }
             else {
+                if (tab == SearchBar.CommandBarSelectTab) {
+                    //TODO: this is currently bleeding resources...
+                    $(".commandBarListItem").off('keydown');
+                }
                 $("#".concat(tab)).hide();
             }
         });
     };
-    SearchBar.GetConfig = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var url, json, result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        url = chrome.runtime.getURL(SearchBar.ConfigPath);
-                        return [4 /*yield*/, $.get({ url: url, dataType: 'json', type: 'GET' })];
-                    case 1:
-                        json = _a.sent();
-                        result = [];
-                        // need to build each Config model so that search can be computed
-                        json.forEach(function (i) { return result.push(new Config(i.category, i.displayName, i.altName, i.action, i.destination, i.isShortcut)); });
-                        return [2 /*return*/, result];
+    SearchBar.SetArrowEventListeners = function () {
+        $(".commandBarListItem:first").addClass("commandBarSelected");
+        // Get all the <li> elements into a collection
+        var listItems = $(".commandBarListItem");
+        // Set up a counter to keep track of which <li> is selected
+        var index = 0;
+        // Initialize first li as the selected (focused) one:
+        $(listItems[index]).addClass("commandBarSelected");
+        // Set up a key event handler for the document
+        // $("#commandBarInput").on("keydown", function (event)
+        $(document).on("keydown", function (event) {
+            if ($("#CommandBarSelectTab").is(":visible")) {
+                console.log('CommandBarSelectTab is VISIBLE');
+                if (listItems.length != $(".commandBarListItem").length) {
+                    listItems = $(".commandBarListItem");
+                    index = 0;
                 }
-            });
+                switch (event.keyCode) {
+                    // Up arrow
+                    case 38:
+                        event.preventDefault();
+                        // Remove the highlighting from the previous element
+                        $(listItems[index]).removeClass("commandBarSelected");
+                        // Decrease the counter
+                        index = index > 0 ? --index : 0;
+                        // Highlight the new element
+                        $(listItems[index]).addClass("commandBarSelected");
+                        // Scroll item into view
+                        $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+                        break;
+                    // Down arrow
+                    case 40:
+                        event.preventDefault();
+                        // Remove the highlighting from the previous element
+                        $(listItems[index]).removeClass("commandBarSelected");
+                        // Increase counter
+                        index = index < listItems.length - 1 ? ++index : listItems.length - 1;
+                        // Highlight the new element
+                        $(listItems[index]).addClass("commandBarSelected");
+                        // Scroll item into view
+                        $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+                        break;
+                    // Enter
+                    case 13:
+                        event.preventDefault();
+                        console.log('currentLI = ', index);
+                        $(listItems[index]).children().trigger("click");
+                        break;
+                }
+            }
         });
+        // document.addEventListener("keydown", function (event)
+        // {
+        //     if ($("#CommandBarSelectTab").is(":visible"))
+        //     {
+        //         console.log('CommandBarSelectTab is VISIBLE');
+        //         switch (event.keyCode)
+        //         {
+        //             // Up arrow
+        //             case 38:
+        //                 event.preventDefault();
+        //                 // Remove the highlighting from the previous element
+        //                 $(listItems[index]).removeClass("commandBarSelected");
+        //                 // Decrease the counter
+        //                 index = index > 0 ? --index : 0;
+        //                 // Highlight the new element
+        //                 $(listItems[index]).addClass("commandBarSelected");
+        //                 // Scroll item into view
+        //                 $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+        //                 break;
+        //             // Down arrow
+        //             case 40:
+        //                 event.preventDefault();
+        //                 // Remove the highlighting from the previous element
+        //                 $(listItems[index]).removeClass("commandBarSelected");
+        //                 // Increase counter
+        //                 index = index < listItems.length - 1 ? ++index : listItems.length - 1;
+        //                 // Highlight the new element
+        //                 $(listItems[index]).addClass("commandBarSelected");
+        //                 // Scroll item into view
+        //                 $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+        //                 break;
+        //             // Enter
+        //             case 13:
+        //                 event.preventDefault();
+        //                 console.log('index = ', index);
+        //                 console.log('listItems = ', listItems);
+        //                 console.log('$(listItems[index]) = ', $(listItems[index]));
+        //                 console.log('$(listItems[index]) = ', $(listItems[index]));
+        //                 $(listItems[index]).trigger("click");
+        //                 $(listItems[index])[0].click();
+        //                 break;
+        //         }
+        //     }
+        // });
     };
+    // public static async GetConfig(): Promise<Config[]>
+    // {
+    //     var url = chrome.runtime.getURL(SearchBar.ConfigPath);
+    //     var json = await $.get({ url, dataType: 'json', type: 'GET' }) as Config[];
+    //     var result: Array<Config> = [];
+    //     // need to build each Config model so that search can be computed
+    //     json.forEach(i => result.push(new Config(i.category, i.displayName, i.altName, i.action, i.destination, i.isShortcut)));
+    //     return result;
+    // }
     SearchBar.SetDocumentationInput = function (content) {
         $('#commandBarDocumentationInput').html(content);
     };
@@ -1120,8 +1328,6 @@ var SearchBar = /** @class */ (function () {
             };
         };
         var userCheck = debounce(function () {
-            console.log('test');
-            console.log('debounce...');
             $('.loaderParent').hide();
             // i think i want this to return a success/fail value? or myb have a separate check to first talk to the api and pass in user data to this call instead and leave it void
             SearchBar.SetUserDetails();
@@ -1136,32 +1342,18 @@ var SearchBar = /** @class */ (function () {
         // $('#commandBarInput').on('input', Cowboy.debounce(500, (event) =>
         $('#commandBarInput').on('input', function (event) {
             var currentActionBarValue = $(event.target).val();
-            var currentActionBarValueUriEncoded = encodeURIComponent(currentActionBarValue);
+            // i think this should encode by default?
+            // var currentActionBarValueUriEncoded = encodeURIComponent(currentActionBarValue);
             var isActionBarNumeric = $.isNumeric(currentActionBarValue);
-            // Filter the results
-            $('#CommandBarSelectTab li').each(function (i, e) {
-                var search = $(e).attr('data-search');
-                $(e).toggle(search.toLowerCase().indexOf(currentActionBarValue.toLowerCase()) > -1);
-            });
-            // skipping "Organize Results"
-            // Populate Documentation Area and Links
-            var content = SearchBar.GetDocumentationInput(currentActionBarValue.length > 0, currentActionBarValueUriEncoded, currentActionBarValue);
-            SearchBar.SetDocumentationInput(content);
-            // // Populate Profile Jump Information
+            // Populate Profile Jump Information
             if (isActionBarNumeric === true) {
                 console.log('isActionBarNumeric = true');
                 SearchBar.ActivateTab('');
                 $('.loaderParent').show();
                 userCheck();
-                // setTimeout(() =>
-                // {
-                //     $('.loaderParent').hide();
-                //     SearchBar.SetUserDetails();
-                //     SearchBar.ActivateTab(SearchBar.UserDetailsTab);
-                // }, 0.5 * 1000); // 0.5 seconds
             }
             else {
-                if ($("#CommandBarSelectTab").not(":visible")) {
+                if ($("#CommandBarSelectTab").is(":hidden")) {
                     console.log('CommandBarSelectTab not visible...');
                     if ($('.loaderParent').is(":visible")) {
                         console.log('loaderParent is visible and not numeric... hide...');
@@ -1173,17 +1365,40 @@ var SearchBar = /** @class */ (function () {
                     SearchBar.RemoveUserDetailsInfo();
                 }
             }
+            if (currentActionBarValue) {
+                var filteredSearch = function (result) { return result.score < 0.6; };
+                var options = {
+                    includeScore: true,
+                    ignoreLocation: true,
+                    includeMatches: true,
+                    findAllMatches: true,
+                    threshold: 0.2,
+                    keys: ['category', 'displayName', 'altName'],
+                    shouldSort: true
+                };
+                var fuse = new Fuse(SearchBar.ConfigRoutes, options);
+                var results = fuse.search(currentActionBarValue);
+                var filteredResults = results.filter(filteredSearch).map(function (fr) { return fr.item; });
+                var routesHTML = Config.BuildRoutesHTML(filteredResults);
+                var tagsHTML = Config.BuildTagsHTML(SearchBar.ConfigTags, filteredResults.length, currentActionBarValue);
+                $('#commandBarUl').html(routesHTML.concat(tagsHTML));
+                Config.SetEventListeners(true);
+            }
+            else {
+                var routesHTML = Config.BuildRoutesHTML(SearchBar.ConfigRoutes);
+                $('#commandBarUl').html(routesHTML);
+                Config.SetEventListeners();
+            }
+            // $(".commandBarListItem:first").addClass("commandBarSelected");
+            SearchBar.SetArrowEventListeners();
         });
     };
     SearchBar.showOverlay = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                console.log('showOverlay called...');
                 //if already showing
                 if ($("#commandBarOverlay").is(":hidden")) {
-                    // this.hideOverlay();
-                    console.log('showing...');
-                    // console.log('show overlay...');
+                    console.log('show overlay...');
                     SearchBar.ActivateTab(SearchBar.CommandBarSelectTab);
                     $('#commandBarOverlay').show();
                     $('#commandBarExitButton').on("click", function () {
@@ -1200,20 +1415,22 @@ var SearchBar = /** @class */ (function () {
                             });
                         });
                     });
-                    // /*************** ABOUT WORK BAR */
-                    // $('#workBarAboutButton').on('mouseenter', function () { $('#commandBarAboutOverlay').show() });
-                    // $('#workBarAboutButton').on('mouseleave', function () { $('#commandBarAboutOverlay').hide() });
                     SearchBar.CaptureInput();
                     $('#commandBarInput').trigger("focus");
                     // TODO: fix extra handlers being made
-                    // // @ts-ignore
-                    // console.log($._data($('#commandBarExitButton')[0], 'events'));
-                    // // @ts-ignore
-                    // console.log($._data($('.commandBarListItem')[0], 'events'));
-                    // // @ts-ignore
-                    // console.log($._data($('#commandBarInput')[0], 'events'));
-                    // // @ts-ignore
+                    // @ts-ignore
+                    console.log($._data($('#commandBarExitButton')[0], 'events'));
+                    // @ts-ignore
+                    console.log($._data($('.commandBarListItem')[0], 'events'));
+                    // @ts-ignore
+                    console.log($._data($('#commandBarInput')[0], 'events'));
+                    // @ts-ignore
+                    console.log($._data($(document)[0], 'events'));
+                    // @ts-ignore
                     // console.log($._data($('#workBarAboutButton')[0], 'events'));
+                    // TODO: 'commandBarExitButton'(CLICK) = BLEEDING
+                    // TODO: '#commandBarInput'(INPUT) = BLEEDING
+                    // TODO: 'document'(KEYDOWN) = BLEEDING
                 }
                 else {
                     console.log('already showing... do nothing...');
@@ -1231,15 +1448,15 @@ var SearchBar = /** @class */ (function () {
                 // remove handlers
                 $('#commandBarExitButton').off("click");
                 $('#commandBarInput').off('input');
-                $('#workBarAboutButton').off('mouseenter');
-                $('#workBarAboutButton').off('mouseleave');
+                // $('#workBarAboutButton').off('mouseenter');
+                // $('#workBarAboutButton').off('mouseleave');
                 // reset whatever view we left off on back to the original
                 $('#commandBarInput').val('');
-                $('#CommandBarSelectTab li').each(function () {
-                    $(this).show();
-                });
+                // $('#CommandBarSelectTab li').each(function ()
+                // {
+                //     $(this).show();
+                // });
                 SearchBar.RemoveUserDetailsInfo();
-                SearchBar.SetDocumentationInput(SearchBar.GetDocumentationInput(false, '', ''));
                 return [2 /*return*/];
             });
         });
@@ -1253,6 +1470,9 @@ var SearchBar = /** @class */ (function () {
     ];
     SearchBar.UserDetailsTab = "UserDetailsTab";
     SearchBar.CommandBarSelectTab = "CommandBarSelectTab";
+    // public static ConfigPath: string = "https://www.csiinc.com/";
+    // public static ConfigPath: string = "https://privatebin.net/?957280438a1f7d22#85FkNCyRTRJV3i7eFWtbb2K7zQE7RjgViNMyo3FSqf33";
+    // public static ConfigPath: string = "https://pastebin.com/fNkent7J";
     SearchBar.ConfigPath = "assets/search-bar-config.json";
     //#region SVG Paths
     SearchBar.CsiLogoPath = "assets/images/csiLogo.svg";

@@ -19,3 +19,5 @@ interface Window
 }
 
 declare var chrome: any;
+
+declare var Fuse: any;

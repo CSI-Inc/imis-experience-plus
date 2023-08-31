@@ -1,25 +1,179 @@
+interface Fuzzy
+{
+    item: Config;
+    refIndex: number;
+    score: number;
+}
+
 class Config
 {
     category: string;
     displayName: string;
     altName: string;
-    action: string;
+    isTag: boolean;
     destination: string;
     isShortcut: boolean;
 
-    constructor(category: string, displayName: string, altName: string, action: string, destination: string, isShortcut: boolean)
+    constructor(category: string, displayName: string, altName: string, isTag: boolean, destination: string, isShortcut: boolean)
     {
         this.category = category;
         this.displayName = displayName;
         this.altName = altName;
-        this.action = action;
+        this.isTag = isTag;
         this.destination = destination;
         this.isShortcut = isShortcut;
     }
 
-    get search(): string
+    static isConfigInstance(obj: any): obj is Config
     {
-        return `${this.displayName} ${this.altName} ${this.category}`;
+        return 'displayName' in obj;
+    }
+
+    static async GetConfig(): Promise<Config[]>
+    {
+        // console.log('SearchBar.ConfigPath = ', SearchBar.ConfigPath);
+        var url = chrome.runtime.getURL(SearchBar.ConfigPath);
+        // var url = SearchBar.ConfigPath;
+        // var response = await fetch(url);
+        // var json = await response.json() as Config[];
+        var json = await $.get({ url, dataType: 'json', type: 'GET' }) as Config[];
+        var result: Array<Config> = [];
+        // need to build each Config model so that search can be computed
+        json.forEach(i => result.push(new Config(i.category, i.displayName, i.altName, i.isTag, i.destination, i.isShortcut)));
+        result.sort((a, b) => a.displayName.localeCompare(b.displayName));
+        return result;
+    }
+
+    static SetEventListeners(includeTags = false): void
+    {
+        // Add hover effects
+        $('.commandBarListItem')
+            .on("mouseenter", function ()
+            {
+                $(this).addClass('commandBarHover');
+            })
+            .on("mouseleave", function ()
+            {
+                $(this).removeClass('commandBarHover');
+            });
+        if (includeTags)
+        {
+            $('#eventCodeLookup').on("click", async function ()
+            {
+                alert('eventCodeLookup do something...');
+            });
+            $('#usernameLookup').on("click", async function ()
+            {
+                var currentActionBarValue = $('#commandBarInput').val() as string;
+                SearchBar.FindUserByName(currentActionBarValue).then(userId =>
+                {
+                    console.log('final userId = ', userId);
+                    SearchBar.SetUserDetails(userId);
+                    SearchBar.ActivateTab(SearchBar.UserDetailsTab);
+                });
+            });
+        }
+    }
+
+    static BuildRoutesHTML(data: Config[]): string
+    {
+        var result = '';
+        data.forEach((item, i) =>
+        {
+            var content = `
+                <li data-index="${i}" class="commandBarListItem" name="commandBar" id="commandBar${i}">
+                    <a href="${item.destination}" style="color: #222; text-decoration: none;">
+                        ${item.category.length > -1 ?
+                    `<span style="border: 1px solid lightgray; border-radius: 3px; float: left; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; min-width: 90px; text-align: center;">
+                                ${item.category}
+                            </span>`
+                    : ''}
+                        ${item.displayName}
+                        ${item.isShortcut ?
+                    `<span style="border: 1px solid lightgray; border-radius: 3px; float: right; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px;">
+                            ~${item.destination}
+                        </span>`
+                    : ''}
+                    </a>
+                </li>
+                `;
+            result = result.concat(content);
+        });
+        return result;
+    }
+    // static myTest(): void
+    // {
+    //     alert("TEST");
+    // }
+    // static myTest(userInput: string): void
+    // {
+    //     alert(userInput);
+    // }
+
+    static BuildTagsHTML(data: Config[], seed: number, userInput: string): string
+    {
+        var result = '';
+        data.forEach((item, i) =>
+        {
+            var content = '';
+            var counter = seed + i;
+            switch (item.category)
+            {
+                case "Event code lookup":
+                    // different id so that Config.SetEventListeners can setup specific functions for events and username
+                    content = `
+                    <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
+                        <a id="eventCodeLookup" href="javascript:void(0);" role="link" style="color: #222; text-decoration: none;">
+                            ${item.category.length > -1 ? `<span>${item.category}</span>` : ''}
+                            ${userInput}
+                        </a>
+                    </li>
+                    `;
+                    break;
+                case "Username lookup":
+                    content = `
+                    <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
+                        <a id="usernameLookup" href="javascript:void(0);" role="link" style="color: #222; text-decoration: none;">
+                            ${item.category.length > -1 ? `<span>${item.category}</span>` : ''}
+                            ${userInput}
+                        </a>
+                    </li>
+                    `;
+                    break;
+                case "Documentation lookup":
+                    content = `
+                    <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
+                        <a href="${item.destination}${userInput}" style="color: #222; text-decoration: none;">
+                            ${item.category.length > -1 ? `<span>${item.category}${SearchBar.ExternalIcon}</span>` : ''}
+                            ${userInput}
+                        </a>
+                    </li>
+                    `;
+                    break;
+                case "Keyword search":
+                    content = `
+                    <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
+                        <a href="${item.destination}${userInput}" style="color: #222; text-decoration: none;">
+                            ${item.category.length > -1 ? `<span>${item.category}</span>` : ''}
+                            ${userInput}
+                        </a>
+                    </li>
+                    `;
+                    break;
+                case "iMIS Glossary":
+                    content = `
+                    <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
+                        <a href="${item.destination}" style="color: #222; text-decoration: none; vertical-align: middle;">
+                            ${item.category.length > -1 ? `<span>${item.category}${SearchBar.ExternalIcon}</span>` : ''}
+                        </a>
+                    </li>
+                    `;
+                default:
+                    break;
+            }
+            result = result.concat(content);
+        });
+        return result;
     }
 }
 
@@ -90,7 +244,11 @@ class SearchBar
     public static CommandBarSelectTab: string = "CommandBarSelectTab";
 
     // Config
-    public static Config: Config[];
+    public static ConfigRoutes: Config[];
+    public static ConfigTags: Config[];
+    // public static ConfigPath: string = "https://www.csiinc.com/";
+    // public static ConfigPath: string = "https://privatebin.net/?957280438a1f7d22#85FkNCyRTRJV3i7eFWtbb2K7zQE7RjgViNMyo3FSqf33";
+    // public static ConfigPath: string = "https://pastebin.com/fNkent7J";
     public static ConfigPath: string = "assets/search-bar-config.json";
 
     //#region SVG Paths
@@ -168,23 +326,6 @@ class SearchBar
                     </div>
                 </div>
             `;
-        // return `
-        //         <div id="userCardActions" class="userDetails">
-        //             <div id="userCardGoToProfile" class="userCardActionArea">
-        //                 ${SearchBar.IdCardBlue}
-        //                 <a href="${profileUrl}" class="userActionCard">Profile</a>
-        //                 ${SearchBar.EnterButton2}
-        //             </div>
-        //             <div id="userCardGoToProfileNewTab" class="userCardActionArea">
-        //                 ${SearchBar.BrowsersIcon}
-        //                 <a id="userCardGoToProfileNewTabUrl" target="_blank" href="${profileUrl}" class="userActionCard">Profile (New Tab)</a>
-        //             </div>
-        //             <div id="userCardUserCredentials" class="userCardActionArea">
-        //                 ${SearchBar.LockIcon}
-        //                 <a id="userCardUserCredentialsUrl" href="${credentialsUrl}" class="userActionCard">User Credentials</a>
-        //             </div>
-        //         </div>
-        //     `;
     }
     public static GetProfile(data: any)
     {
@@ -311,7 +452,7 @@ class SearchBar
                                 </a>
                                 ` : `
                                 <span style="vertical-align: middle;">${companyName}</span>
-                                <span class="userDetailsBadge">CompanyId is not correctly linked!</span>`
+                                <span class="userDetailsBadge">Company ID Not Correctly Linked</span>`
                 }
                         </div>` : ''}
                     </div>
@@ -326,47 +467,32 @@ class SearchBar
             </div>
         `;
     }
-    public static GetDocumentationInput(hasInput: boolean, encoded: string, value: string): string
-    {
-        // need to strip input bc it will inject ANYTHING
-        if (hasInput)
-        {
-            return `
-                <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}?q=${encoded}" target="_blank">
-                    <span id="searchDocumentation" class="TextButton">
-                        Search iMIS Documentation${SearchBar.ExternalIconBlue}
-                    </span><span style="margin-left: 4px;">${value?.trim()}</span>
-                </a>
-            `;
-            // return `
-            //     <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}?q=${encoded}" target="_blank" style="display:block;">
-            //         <span class="TextButton"
-            //             style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d; display:inline-block">
-            //             Search iMIS Documentation
-            //             ${SearchBar.ExternalIconBlue}
-            //         </span>
-            //         <span>${value}</span>
-            //         <div id="documentationSearchHotKeyHint" style="float: right; display: flex;">
-            //             ${SearchBar.ShiftButton}&nbsp;
-            //             ${SearchBar.PlusButton}&nbsp;
-            //             ${SearchBar.EnterButton}
-            //         </div>
-            //     </a>
-            // `;
-        }
-        else
-        {
-            return `
-                <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}" target="_blank">
-                    <span class="TextButton"
-                        style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
-                        Search iMIS Documentation
-                        ${SearchBar.ExternalIconBlue}
-                    </span>
-                </a>
-            `;
-        }
-    }
+    // public static GetDocumentationInput(hasInput: boolean, encoded: string, value: string): string
+    // {
+    //     // need to strip input bc it will inject ANYTHING
+    //     if (hasInput)
+    //     {
+    //         return `
+    //             <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}?q=${encoded}" target="_blank">
+    //                 <span id="searchDocumentation" class="TextButton">
+    //                     Search iMIS Documentation${SearchBar.ExternalIconBlue}
+    //                 </span><span style="margin-left: 4px;">${value?.trim()}</span>
+    //             </a>
+    //         `;
+    //     }
+    //     else
+    //     {
+    //         return `
+    //             <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}" target="_blank">
+    //                 <span class="TextButton"
+    //                     style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
+    //                     Search iMIS Documentation
+    //                     ${SearchBar.ExternalIconBlue}
+    //                 </span>
+    //             </a>
+    //         `;
+    //     }
+    // }
     public static GetUserChangeDetails(username: string, data: any): string
     {
         var createdOn = CleanUp.Date(data?.UpdateInformation?.CreatedOn);
@@ -447,9 +573,10 @@ class SearchBar
     }
 
     // Build this Tab on the fly and scrap the whole thing when you're done
-    public static SetUserDetails(): void
+    public static SetUserDetails(userId = ''): void
     {
-        var input = $('#commandBarInput').val() as string;
+        var input = userId ? userId : $('#commandBarInput').val() as string;
+        console.log('input = ', input);
 
         // Set up view
         var content = SearchBar.UserDetailsView;
@@ -457,12 +584,10 @@ class SearchBar
 
         // Get api data
         var username = this.GetUserName(input); // THIS ONLY GRABS THE USERNAME
-        console.log('username = ', username);
 
         // TODO: this should determin whether or not to set up this view in the first place
         // TODO: extract this and pass in userData if it has it - otherwise stay on commandTab....
         var data = this.GetParty(input);
-        console.log('data = ', data);
 
         // Update view with api data -> right column
         var profile = SearchBar.GetProfile(data)
@@ -527,6 +652,37 @@ class SearchBar
         return result;
     }
 
+    public static async FindUserByName(input: string): Promise<string>
+    {
+        const options = {
+            method: 'POST',
+            headers: { accept: 'application/json', 'content-type': 'application/json', RequestVerificationToken: SearchBar.RVToken },
+            body: JSON.stringify({
+                $type: "Asi.Soa.Core.DataContracts.GenericExecuteRequest, Asi.Contracts",
+                OperationName: "FindByUserName",
+                EntityTypeName: "User",
+                Parameters: {
+                    $type: "System.Collections.ObjectModel.Collection`1[[System.Object, mscorlib]], mscorlib",
+                    $values: [
+                        {
+                            "$type": "System.String",
+                            "$value": `${input}`
+                        }
+                    ]
+                },
+                ParameterTypeName: {
+                    $type: "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                    $values: [
+                        "System.String"
+                    ]
+                },
+                UseJson: false
+            })
+        };
+        const response = await fetch(`${SearchBar.ClientContext.baseUrl}api/User/_execute`, options);
+        return (await response.json()).Result.UserId ?? '';
+    }
+
     public static RemoveUserDetailsInfo(): void
     {
         $("#UserDetailsTab").empty();
@@ -567,31 +723,29 @@ class SearchBar
                 $("#commandBarOverlay .externalIconBlue").replaceWith(SearchBar.ExternalIconBlue);
                 $("#commandBarOverlay .externalIcon").replaceWith(SearchBar.ExternalIcon);
                 $("#commandBarOverlay #commandBarExitButton").html(SearchBar.CloseIcon);
-                // $("#commandBarOverlay #commandBarExitButton").replaceWith(`<div id="commandBarExitButton">${SearchBar.CloseIcon}</div>`);
             });
         });
 
         let keysPressed: { [key: string]: boolean } = {};
         document.addEventListener('keydown', async (event) =>
         {
+            var key = event.key.toLowerCase();
             var isCommandBarVisible = $("#commandBarOverlay").is(":visible");
-            keysPressed[event.key] = true;
-            console.log('event.key = ', event.key);
+            keysPressed[key] = true;
+            // console.log('key = ', key);
 
             let isAnyCombo = (target1: string, target2: string): boolean =>
             {
-                return (keysPressed[target1] && event.key == target2 || keysPressed[target2] && event.key == target1);
+                target1 = target1.toLowerCase();
+                target2 = target2.toLowerCase();
+                return (keysPressed[target1] && key == target2 || keysPressed[target2] && key == target1);
             }
-
             // Open CommandBar
-            if (!isCommandBarVisible && (isAnyCombo("Shift", "W") || isAnyCombo("Shift", "w")))
+            if (!isCommandBarVisible && event.target === parent.document.body && isAnyCombo("shift", "w"))
             {
                 event.preventDefault();
                 await SearchBar.showOverlay();
             }
-            //TODO: this doesnt actually do the hiding... i think its built into one of the css theme classes?
-            // Where is this coming from? it looks like id="commandBarOverlay" is what makes this toggle-able???
-            // else if (keysPressed['Escape'] && isCommandBarVisible)
             // Close Command Bar
             else if (keysPressed['Escape'])
             {
@@ -599,95 +753,38 @@ class SearchBar
                 await SearchBar.hideOverlay();
             }
             // Go to User Profile
-            else if (isCommandBarVisible && event.key === "Enter" && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
+            else if (isCommandBarVisible && key === "enter" && !keysPressed["shift"] && !keysPressed["control"] && !keysPressed["cmd"] && $("#UserDetailsTab").is(":visible"))
             {
+                console.log('UserDetailsTab is VISIBLE -> go to user profile');
                 if ($('#commandBarInput').get(0) === document.activeElement)
                 {
                     var input = $('#commandBarInput').val() as string;
                     if (input.length > 0 && $.isNumeric(input))
                     {
                         var url = `${SearchBar.ClientContext.websiteRoot}Party.aspx?ID=${input}`;
-                        console.log('url = ', url);
                         window.location.replace(url);
                     }
                 }
             }
-            // Removing for now...
-            // // Go to Documentation
-            // // TODO: IN CRHOME: Shift + Enter actually is hotkey to open in new window, so this doesnt work in chrome
-            // else if (isCommandBarVisible && isAnyCombo("Control", "Enter"))
-            // {
-            //     if ($('#commandBarInput').get(0) === document.activeElement)
-            //     {
-            //         var input = $('#commandBarInput').val() as string;
-            //         if (input.length > 0 && !$.isNumeric(input))
-            //         {
-            //             var openDocumentation = window.open($('#documentationLinkDestination').prop('href') as string, '_blank');
-            //             if (openDocumentation)
-            //             {
-            //                 openDocumentation.focus();
-            //             }
-            //         }
-            //     }
-            // }
-            // Removing for now...
-            // // Go to User Credentials
-            // else if (isCommandBarVisible && isAnyCombo("Shift", "Control"))
-            // {
-            //     if ($('#commandBarInput').get(0) === document.activeElement)
-            //     {
-            //         var input = $('#commandBarInput').val() as string;
-            //         if (input.length > 0 && $.isNumeric(input))
-            //         {
-            //             window.location.replace($('#userCardUserCredentialsUrl').prop('href'));
-            //         }
-            //     }
-            // }
         });
 
         document.addEventListener('keyup', (event) =>
         {
-            delete keysPressed[event.key];
-            console.log('keysPressed OFF = ', keysPressed);
+            var key = event.key.toLowerCase();
+            delete keysPressed[key];
+            // console.log('keysPressed OFF = ', keysPressed);
         });
     }
 
     public static BuildConfig(): void
     {
-        SearchBar.GetConfig().then(data =>
+        Config.GetConfig().then(data =>
         {
-            SearchBar.Config = data;
-            data.forEach((item, i) =>
-            {
-                var content = `
-                <li data-index="${i}" class="commandBarListItem" name="commandBar" id="commandBar${i}" data-search="${item.search}" action=${item.action}>
-                    <a href="${item.destination}" style="color: #222; text-decoration: none;">
-                        ${item.category.length > -1 ?
-                        `<span style="border: 1px solid lightgray; border-radius: 3px; float: left; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; min-width: 90px; text-align: center;">
-                                ${item.category}
-                            </span>`
-                        : ''}
-                        ${item.displayName}
-                        ${item.isShortcut ?
-                        `<span style="border: 1px solid lightgray; border-radius: 3px; float: right; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px;">
-                            ~${item.destination}
-                        </span>`
-                        : ''}
-                    </a>
-                </li>
-                `;
-                $('#commandBarUl').append(content);
-                // Add hover effects
-                $('.commandBarListItem')
-                    .on("mouseenter", function ()
-                    {
-                        $(this).addClass('commandBarHover').css({ 'background-color': 'rgba(231,231,231,.5', 'cursor': 'pointer' });
-                    })
-                    .on("mouseleave", function ()
-                    {
-                        $(this).removeClass('commandBarHover').css('background-color', 'initial');
-                    });
-            });
+            SearchBar.ConfigRoutes = data.filter(d => !d.isTag);
+            SearchBar.ConfigTags = data.filter(d => d.isTag);
+            var view = Config.BuildRoutesHTML(SearchBar.ConfigRoutes);
+            $('#commandBarUl').html(view);
+            Config.SetEventListeners();
         });
     }
 
@@ -699,23 +796,134 @@ class SearchBar
             if (tab == activateTab)
             {
                 $(`#${tab}`).show();
+                if (tab == SearchBar.CommandBarSelectTab)
+                {
+                    SearchBar.SetArrowEventListeners();
+                }
             }
             else
             {
+                if (tab == SearchBar.CommandBarSelectTab)
+                {
+                    //TODO: this is currently bleeding resources...
+                    $(".commandBarListItem").off('keydown');
+                }
                 $(`#${tab}`).hide();
             }
         });
     }
 
-    public static async GetConfig(): Promise<Config[]>
+    public static SetArrowEventListeners(): void
     {
-        var url = chrome.runtime.getURL(SearchBar.ConfigPath);
-        var json = await $.get({ url, dataType: 'json', type: 'GET' }) as Config[];
-        var result: Array<Config> = [];
-        // need to build each Config model so that search can be computed
-        json.forEach(i => result.push(new Config(i.category, i.displayName, i.altName, i.action, i.destination, i.isShortcut)));
-        return result;
+        $(".commandBarListItem:first").addClass("commandBarSelected");
+        // Get all the <li> elements into a collection
+        var listItems = $(".commandBarListItem");
+        // Set up a counter to keep track of which <li> is selected
+        var index = 0;
+        // Initialize first li as the selected (focused) one:
+        $(listItems[index]).addClass("commandBarSelected");
+        // Set up a key event handler for the document
+        // $("#commandBarInput").on("keydown", function (event)
+        $(document).on("keydown", function (event)
+        {
+            if ($("#CommandBarSelectTab").is(":visible"))
+            {
+                console.log('CommandBarSelectTab is VISIBLE');
+                if (listItems.length != $(".commandBarListItem").length)
+                {
+                    listItems = $(".commandBarListItem");
+                    index = 0;
+                }
+                switch (event.keyCode)
+                {
+                    // Up arrow
+                    case 38:
+                        event.preventDefault();
+                        // Remove the highlighting from the previous element
+                        $(listItems[index]).removeClass("commandBarSelected");
+                        // Decrease the counter
+                        index = index > 0 ? --index : 0;
+                        // Highlight the new element
+                        $(listItems[index]).addClass("commandBarSelected");
+                        // Scroll item into view
+                        $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+                        break;
+                    // Down arrow
+                    case 40:
+                        event.preventDefault();
+                        // Remove the highlighting from the previous element
+                        $(listItems[index]).removeClass("commandBarSelected");
+                        // Increase counter
+                        index = index < listItems.length - 1 ? ++index : listItems.length - 1;
+                        // Highlight the new element
+                        $(listItems[index]).addClass("commandBarSelected");
+                        // Scroll item into view
+                        $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+                        break;
+                    // Enter
+                    case 13:
+                        event.preventDefault();
+                        console.log('currentLI = ', index);
+                        $(listItems[index]).children().trigger("click");
+                        break;
+                }
+            }
+        });
+        // document.addEventListener("keydown", function (event)
+        // {
+        //     if ($("#CommandBarSelectTab").is(":visible"))
+        //     {
+        //         console.log('CommandBarSelectTab is VISIBLE');
+        //         switch (event.keyCode)
+        //         {
+        //             // Up arrow
+        //             case 38:
+        //                 event.preventDefault();
+        //                 // Remove the highlighting from the previous element
+        //                 $(listItems[index]).removeClass("commandBarSelected");
+        //                 // Decrease the counter
+        //                 index = index > 0 ? --index : 0;
+        //                 // Highlight the new element
+        //                 $(listItems[index]).addClass("commandBarSelected");
+        //                 // Scroll item into view
+        //                 $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+        //                 break;
+        //             // Down arrow
+        //             case 40:
+        //                 event.preventDefault();
+        //                 // Remove the highlighting from the previous element
+        //                 $(listItems[index]).removeClass("commandBarSelected");
+        //                 // Increase counter
+        //                 index = index < listItems.length - 1 ? ++index : listItems.length - 1;
+        //                 // Highlight the new element
+        //                 $(listItems[index]).addClass("commandBarSelected");
+        //                 // Scroll item into view
+        //                 $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+        //                 break;
+        //             // Enter
+        //             case 13:
+        //                 event.preventDefault();
+        //                 console.log('index = ', index);
+        //                 console.log('listItems = ', listItems);
+        //                 console.log('$(listItems[index]) = ', $(listItems[index]));
+        //                 console.log('$(listItems[index]) = ', $(listItems[index]));
+        //                 $(listItems[index]).trigger("click");
+        //                 $(listItems[index])[0].click();
+        //                 break;
+        //         }
+        //     }
+        // });
     }
+
+    // public static async GetConfig(): Promise<Config[]>
+    // {
+    //     var url = chrome.runtime.getURL(SearchBar.ConfigPath);
+    //     var json = await $.get({ url, dataType: 'json', type: 'GET' }) as Config[];
+    //     var result: Array<Config> = [];
+    //     // need to build each Config model so that search can be computed
+    //     json.forEach(i => result.push(new Config(i.category, i.displayName, i.altName, i.action, i.destination, i.isShortcut)));
+    //     return result;
+    // }
 
     public static SetDocumentationInput(content: string): void
     {
@@ -742,8 +950,6 @@ class SearchBar
 
         const userCheck = debounce(() =>
         {
-            console.log('test');
-            console.log('debounce...');
             $('.loaderParent').hide();
             // i think i want this to return a success/fail value? or myb have a separate check to first talk to the api and pass in user data to this call instead and leave it void
             SearchBar.SetUserDetails();
@@ -762,39 +968,20 @@ class SearchBar
         $('#commandBarInput').on('input', (event) =>
         {
             var currentActionBarValue = $(event.target).val() as string;
-            var currentActionBarValueUriEncoded = encodeURIComponent(currentActionBarValue);
+            // i think this should encode by default?
+            // var currentActionBarValueUriEncoded = encodeURIComponent(currentActionBarValue);
             var isActionBarNumeric = $.isNumeric(currentActionBarValue);
-
-            // Filter the results
-            $('#CommandBarSelectTab li').each((i, e) =>
-            {
-                var search = $(e).attr('data-search') as string;
-                $(e).toggle(search.toLowerCase().indexOf(currentActionBarValue.toLowerCase()) > -1);
-            });
-
-            // skipping "Organize Results"
-
-            // Populate Documentation Area and Links
-            var content = SearchBar.GetDocumentationInput(currentActionBarValue.length > 0, currentActionBarValueUriEncoded, currentActionBarValue);
-            SearchBar.SetDocumentationInput(content);
-
-            // // Populate Profile Jump Information
+            // Populate Profile Jump Information
             if (isActionBarNumeric === true)
             {
                 console.log('isActionBarNumeric = true');
                 SearchBar.ActivateTab('');
                 $('.loaderParent').show();
                 userCheck();
-                // setTimeout(() =>
-                // {
-                //     $('.loaderParent').hide();
-                //     SearchBar.SetUserDetails();
-                //     SearchBar.ActivateTab(SearchBar.UserDetailsTab);
-                // }, 0.5 * 1000); // 0.5 seconds
             }
             else
             {
-                if ($("#CommandBarSelectTab").not(":visible"))
+                if ($("#CommandBarSelectTab").is(":hidden"))
                 {
                     console.log('CommandBarSelectTab not visible...');
                     if ($('.loaderParent').is(":visible"))
@@ -808,47 +995,69 @@ class SearchBar
                     SearchBar.RemoveUserDetailsInfo();
                 }
             }
+
+            if (currentActionBarValue)
+            {
+                var filteredSearch = (result: any) => result.score < 0.6;
+                const options = {
+                    includeScore: true,
+                    ignoreLocation: true,
+                    includeMatches: true,
+                    findAllMatches: true,
+                    threshold: 0.2,
+                    keys: ['category', 'displayName', 'altName'],
+                    shouldSort: true
+                }
+                const fuse = new Fuse(SearchBar.ConfigRoutes, options)
+                var results: Fuzzy[] = fuse.search(currentActionBarValue);
+                var filteredResults = results.filter(filteredSearch).map(fr => fr.item);
+                var routesHTML = Config.BuildRoutesHTML(filteredResults);
+                var tagsHTML = Config.BuildTagsHTML(SearchBar.ConfigTags, filteredResults.length, currentActionBarValue);
+                $('#commandBarUl').html(routesHTML.concat(tagsHTML));
+                Config.SetEventListeners(true);
+            }
+            else
+            {
+                var routesHTML = Config.BuildRoutesHTML(SearchBar.ConfigRoutes);
+                $('#commandBarUl').html(routesHTML);
+                Config.SetEventListeners();
+            }
+            // $(".commandBarListItem:first").addClass("commandBarSelected");
+            SearchBar.SetArrowEventListeners();
         });
     }
 
     public static async showOverlay(): Promise<void>
     {
-        console.log('showOverlay called...');
         //if already showing
         if ($("#commandBarOverlay").is(":hidden"))
         {
-            // this.hideOverlay();
-
-            console.log('showing...');
-            // console.log('show overlay...');
+            console.log('show overlay...');
             SearchBar.ActivateTab(SearchBar.CommandBarSelectTab);
             $('#commandBarOverlay').show();
-
             $('#commandBarExitButton').on("click", async function ()
             {
                 console.log('exit clicked...');
                 await SearchBar.hideOverlay();
             });
-
-            // /*************** ABOUT WORK BAR */
-            // $('#workBarAboutButton').on('mouseenter', function () { $('#commandBarAboutOverlay').show() });
-            // $('#workBarAboutButton').on('mouseleave', function () { $('#commandBarAboutOverlay').hide() });
-
             SearchBar.CaptureInput();
-
             $('#commandBarInput').trigger("focus");
 
-
-
             // TODO: fix extra handlers being made
-            // // @ts-ignore
-            // console.log($._data($('#commandBarExitButton')[0], 'events'));
-            // // @ts-ignore
-            // console.log($._data($('.commandBarListItem')[0], 'events'));
-            // // @ts-ignore
-            // console.log($._data($('#commandBarInput')[0], 'events'));
-            // // @ts-ignore
+            // @ts-ignore
+            console.log($._data($('#commandBarExitButton')[0], 'events'));
+            // @ts-ignore
+            console.log($._data($('.commandBarListItem')[0], 'events'));
+            // @ts-ignore
+            console.log($._data($('#commandBarInput')[0], 'events'));
+            // @ts-ignore
+            console.log($._data($(document)[0], 'events'));
+            // @ts-ignore
             // console.log($._data($('#workBarAboutButton')[0], 'events'));
+
+            // TODO: 'commandBarExitButton'(CLICK) = BLEEDING
+            // TODO: '#commandBarInput'(INPUT) = BLEEDING
+            // TODO: 'document'(KEYDOWN) = BLEEDING
         }
         else
         {
@@ -865,17 +1074,20 @@ class SearchBar
         // remove handlers
         $('#commandBarExitButton').off("click");
         $('#commandBarInput').off('input');
-        $('#workBarAboutButton').off('mouseenter');
-        $('#workBarAboutButton').off('mouseleave');
+        // $('#workBarAboutButton').off('mouseenter');
+        // $('#workBarAboutButton').off('mouseleave');
 
         // reset whatever view we left off on back to the original
         $('#commandBarInput').val('');
-        $('#CommandBarSelectTab li').each(function ()
-        {
-            $(this).show();
-        });
+        // $('#CommandBarSelectTab li').each(function ()
+        // {
+        //     $(this).show();
+        // });
+
+        
+
+
         SearchBar.RemoveUserDetailsInfo();
-        SearchBar.SetDocumentationInput(SearchBar.GetDocumentationInput(false, '', ''));
     }
 }
 

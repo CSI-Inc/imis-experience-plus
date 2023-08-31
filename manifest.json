@@ -6,7 +6,7 @@
     "description": "A browser extension to improve the user experience within the iMIS Staff Site. Made with ❤️ by the iMIS community and CSI.",
     "host_permissions": [
         "https://*/*",
-        "https://fonts.googleapis.com/"
+        "https://privatebin.net/*"
     ],
     "permissions": [
         "storage"
@@ -18,7 +18,7 @@
                 "https://*/*"
             ],
             "js": [
-                "lib/debounce/debounce-1.1.js",
+                "lib/fuse/fuse-6.6.2.js",
                 "lib/jquery/jquery-3.6.0.js",
                 "imis-plus.js"
             ],
@@ -46,5 +46,9 @@
                 "<all_urls>"
             ]
         }
-    ]
+    ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'; https://privatebin.net/*",
+        "sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';"
+    }
 }
