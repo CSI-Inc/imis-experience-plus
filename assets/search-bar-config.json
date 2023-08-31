@@ -896,7 +896,7 @@
     "isShortcut": true
   },
   {
-    "category": "Keyword search",
+    "category": "Keyword Search",
     "displayName": "",
     "altName": "",
     "isTag": true,
@@ -904,7 +904,7 @@
     "isShortcut": false
   },
   {
-    "category": "Event code lookup",
+    "category": "Event Code Lookup",
     "displayName": "",
     "altName": "",
     "isTag": true,
@@ -912,7 +912,7 @@
     "isShortcut": false
   },
   {
-    "category": "Username lookup",
+    "category": "Username Lookup",
     "displayName": "",
     "altName": "",
     "isTag": true,
@@ -920,7 +920,7 @@
     "isShortcut": false
   },
   {
-    "category": "Documentation lookup",
+    "category": "Documentation Lookup",
     "displayName": "",
     "altName": "",
     "isTag": true,

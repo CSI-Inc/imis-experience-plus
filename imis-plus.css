@@ -422,6 +422,7 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
 
 .commandBarButton {
     margin-left: 1rem;
+    vertical-align: middle;
     display: inline-block;
 }
 

@@ -117,9 +117,9 @@ class Config
         {
             var content = '';
             var counter = seed + i;
-            switch (item.category)
+            switch (item.category.toLowerCase())
             {
-                case "Event code lookup":
+                case "event code lookup":
                     // different id so that Config.SetEventListeners can setup specific functions for events and username
                     content = `
                     <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
@@ -130,7 +130,7 @@ class Config
                     </li>
                     `;
                     break;
-                case "Username lookup":
+                case "username lookup":
                     content = `
                     <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
                         <a id="usernameLookup" href="javascript:void(0);" role="link" style="color: #222; text-decoration: none;">
@@ -140,7 +140,7 @@ class Config
                     </li>
                     `;
                     break;
-                case "Documentation lookup":
+                case "documentation lookup":
                     content = `
                     <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
                         <a href="${item.destination}${userInput}" style="color: #222; text-decoration: none;">
@@ -150,7 +150,7 @@ class Config
                     </li>
                     `;
                     break;
-                case "Keyword search":
+                case "keyword search":
                     content = `
                     <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
                         <a href="${item.destination}${userInput}" style="color: #222; text-decoration: none;">
@@ -160,7 +160,7 @@ class Config
                     </li>
                     `;
                     break;
-                case "iMIS Glossary":
+                case "imis glossary":
                     content = `
                     <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
                         <a href="${item.destination}" style="color: #222; text-decoration: none; vertical-align: middle;">
@@ -261,6 +261,7 @@ class SearchBar
     public static UserTagIconPath: string = "assets/images/userTagIcon.svg"
     public static ExternalIconPath: string = "assets/images/externalIcon.svg";
     public static ExternalIconBluePath: string = "assets/images/externalIconBlue.svg";
+    public static ExternalIconWhitePath: string = "assets/images/externalIconWhite.svg";
     public static IdCardBluePath: string = "assets/images/idCardBlue.svg";
     public static BrowsersIconPath: string = "assets/images/browserIcon.svg";
     public static LockIconPath: string = "assets/images/lockIcon.svg";
@@ -297,6 +298,7 @@ class SearchBar
     public static UserTagIcon: string;
     public static ExternalIcon: string;
     public static ExternalIconBlue: string;
+    public static ExternalIconWhite: string;
     public static IdCardBlue: string;
     public static BrowsersIcon: string;
     public static LockIcon: string;
@@ -531,6 +533,7 @@ class SearchBar
         SearchBar.CsiLogo = await SearchBar.GetResource(SearchBar.CsiLogoPath);
         SearchBar.ExternalIcon = await SearchBar.GetResource(SearchBar.ExternalIconPath);
         SearchBar.ExternalIconBlue = await SearchBar.GetResource(SearchBar.ExternalIconBluePath);
+        SearchBar.ExternalIconWhite = await SearchBar.GetResource(SearchBar.ExternalIconWhitePath);
         SearchBar.IdCardBlue = await SearchBar.GetResource(SearchBar.IdCardBluePath);
         SearchBar.BrowsersIcon = await SearchBar.GetResource(SearchBar.BrowsersIconPath);
         SearchBar.LockIcon = await SearchBar.GetResource(SearchBar.LockIconPath);
@@ -712,6 +715,11 @@ class SearchBar
             console.log(SearchBar.VERSION_STRING + "Loaded: IQA Browser Extensions", ...SearchBar.VERSION_STYLES);
             SearchBar.RVToken = $("#__RequestVerificationToken").val() as string;
             SearchBar.ClientContext = JSON.parse($('#__ClientContext').val() as string) as ClientContext;
+
+            // we want to prevent non-users from using the searchbar
+            console.log('SearchBar.ClientContext.isAnonymous = ', SearchBar.ClientContext.isAnonymous);
+            if (SearchBar.ClientContext.isAnonymous) return;
+
             SearchBar.GetResource(SearchBar.CommandBarPath).then(data =>
             {
                 $('body').prepend(data);
@@ -720,59 +728,60 @@ class SearchBar
             SearchBar.GetAllAssets().then(() =>
             {
                 $("#commandBarOverlay .csiLogo").replaceWith(SearchBar.CsiLogo);
-                $("#commandBarOverlay .externalIconBlue").replaceWith(SearchBar.ExternalIconBlue);
+                $("#commandBarOverlay .externalIconWhite").replaceWith(SearchBar.ExternalIconWhite);
+                // $("#commandBarOverlay .externalIconBlue").replaceWith(SearchBar.ExternalIconBlue);
                 $("#commandBarOverlay .externalIcon").replaceWith(SearchBar.ExternalIcon);
                 $("#commandBarOverlay #commandBarExitButton").html(SearchBar.CloseIcon);
             });
-        });
 
-        let keysPressed: { [key: string]: boolean } = {};
-        document.addEventListener('keydown', async (event) =>
-        {
-            var key = event.key.toLowerCase();
-            var isCommandBarVisible = $("#commandBarOverlay").is(":visible");
-            keysPressed[key] = true;
-            // console.log('key = ', key);
+            let keysPressed: { [key: string]: boolean } = {};
+            document.addEventListener('keydown', async (event) =>
+            {
+                var key = event.key.toLowerCase();
+                var isCommandBarVisible = $("#commandBarOverlay").is(":visible");
+                keysPressed[key] = true;
+                // console.log('key = ', key);
 
-            let isAnyCombo = (target1: string, target2: string): boolean =>
-            {
-                target1 = target1.toLowerCase();
-                target2 = target2.toLowerCase();
-                return (keysPressed[target1] && key == target2 || keysPressed[target2] && key == target1);
-            }
-            // Open CommandBar
-            if (!isCommandBarVisible && event.target === parent.document.body && isAnyCombo("shift", "w"))
-            {
-                event.preventDefault();
-                await SearchBar.showOverlay();
-            }
-            // Close Command Bar
-            else if (keysPressed['Escape'])
-            {
-                // technically chrome has already hidden this, but we need to execute this still for clean up purposes
-                await SearchBar.hideOverlay();
-            }
-            // Go to User Profile
-            else if (isCommandBarVisible && key === "enter" && !keysPressed["shift"] && !keysPressed["control"] && !keysPressed["cmd"] && $("#UserDetailsTab").is(":visible"))
-            {
-                console.log('UserDetailsTab is VISIBLE -> go to user profile');
-                if ($('#commandBarInput').get(0) === document.activeElement)
+                let isAnyCombo = (target1: string, target2: string): boolean =>
                 {
-                    var input = $('#commandBarInput').val() as string;
-                    if (input.length > 0 && $.isNumeric(input))
+                    target1 = target1.toLowerCase();
+                    target2 = target2.toLowerCase();
+                    return (keysPressed[target1] && key == target2 || keysPressed[target2] && key == target1);
+                }
+                // Open CommandBar
+                if (!isCommandBarVisible && event.target === parent.document.body && isAnyCombo("shift", "w"))
+                {
+                    event.preventDefault();
+                    await SearchBar.showOverlay();
+                }
+                // Close Command Bar
+                else if (keysPressed['Escape'])
+                {
+                    // technically chrome has already hidden this, but we need to execute this still for clean up purposes
+                    await SearchBar.hideOverlay();
+                }
+                // Go to User Profile
+                else if (isCommandBarVisible && key === "enter" && !keysPressed["shift"] && !keysPressed["control"] && !keysPressed["cmd"] && $("#UserDetailsTab").is(":visible"))
+                {
+                    console.log('UserDetailsTab is VISIBLE -> go to user profile');
+                    if ($('#commandBarInput').get(0) === document.activeElement)
                     {
-                        var url = `${SearchBar.ClientContext.websiteRoot}Party.aspx?ID=${input}`;
-                        window.location.replace(url);
+                        var input = $('#commandBarInput').val() as string;
+                        if (input.length > 0 && $.isNumeric(input))
+                        {
+                            var url = `${SearchBar.ClientContext.websiteRoot}Party.aspx?ID=${input}`;
+                            window.location.replace(url);
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        document.addEventListener('keyup', (event) =>
-        {
-            var key = event.key.toLowerCase();
-            delete keysPressed[key];
-            // console.log('keysPressed OFF = ', keysPressed);
+            document.addEventListener('keyup', (event) =>
+            {
+                var key = event.key.toLowerCase();
+                delete keysPressed[key];
+                // console.log('keysPressed OFF = ', keysPressed);
+            });
         });
     }
 

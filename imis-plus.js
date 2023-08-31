@@ -707,21 +707,21 @@ var Config = /** @class */ (function () {
         data.forEach(function (item, i) {
             var content = '';
             var counter = seed + i;
-            switch (item.category) {
-                case "Event code lookup":
+            switch (item.category.toLowerCase()) {
+                case "event code lookup":
                     // different id so that Config.SetEventListeners can setup specific functions for events and username
                     content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a id=\"eventCodeLookup\" href=\"javascript:void(0);\" role=\"link\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
                     break;
-                case "Username lookup":
+                case "username lookup":
                     content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a id=\"usernameLookup\" href=\"javascript:void(0);\" role=\"link\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
                     break;
-                case "Documentation lookup":
+                case "documentation lookup":
                     content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(SearchBar.ExternalIcon, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
                     break;
-                case "Keyword search":
+                case "keyword search":
                     content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
                     break;
-                case "iMIS Glossary":
+                case "imis glossary":
                     content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none; vertical-align: middle;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(SearchBar.ExternalIcon, "</span>") : '', "\n                        </a>\n                    </li>\n                    ");
                 default:
                     break;
@@ -867,114 +867,98 @@ var SearchBar = /** @class */ (function () {
     };
     SearchBar.GetAllAssets = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
-            return __generator(this, function (_y) {
-                switch (_y.label) {
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y;
+            return __generator(this, function (_z) {
+                switch (_z.label) {
                     case 0:
                         _a = SearchBar;
                         return [4 /*yield*/, SearchBar.GetResource(SearchBar.CommandBarPath)];
                     case 1:
-                        _a.CommandBar = _y.sent();
+                        _a.CommandBar = _z.sent();
                         _b = SearchBar;
                         return [4 /*yield*/, SearchBar.GetResource(SearchBar.CsiLogoPath)];
                     case 2:
-                        _b.CsiLogo = _y.sent();
+                        _b.CsiLogo = _z.sent();
                         _c = SearchBar;
                         return [4 /*yield*/, SearchBar.GetResource(SearchBar.ExternalIconPath)];
                     case 3:
-                        _c.ExternalIcon = _y.sent();
+                        _c.ExternalIcon = _z.sent();
                         _d = SearchBar;
                         return [4 /*yield*/, SearchBar.GetResource(SearchBar.ExternalIconBluePath)];
                     case 4:
-                        _d.ExternalIconBlue = _y.sent();
+                        _d.ExternalIconBlue = _z.sent();
                         _e = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.IdCardBluePath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ExternalIconWhitePath)];
                     case 5:
-                        _e.IdCardBlue = _y.sent();
+                        _e.ExternalIconWhite = _z.sent();
                         _f = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.BrowsersIconPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.IdCardBluePath)];
                     case 6:
-                        _f.BrowsersIcon = _y.sent();
+                        _f.IdCardBlue = _z.sent();
                         _g = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.LockIconPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.BrowsersIconPath)];
                     case 7:
-                        _g.LockIcon = _y.sent();
+                        _g.BrowsersIcon = _z.sent();
                         _h = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.CloseIconPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.LockIconPath)];
                     case 8:
-                        _h.CloseIcon = _y.sent();
+                        _h.LockIcon = _z.sent();
                         _j = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.CakeIconPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.CloseIconPath)];
                     case 9:
-                        _j.CakeIcon = _y.sent();
+                        _j.CloseIcon = _z.sent();
                         _k = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.BuildingIconPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.CakeIconPath)];
                     case 10:
-                        _k.BuildingIcon = _y.sent();
+                        _k.CakeIcon = _z.sent();
                         _l = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.EmailIconPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.BuildingIconPath)];
                     case 11:
-                        _l.EmailIcon = _y.sent();
+                        _l.BuildingIcon = _z.sent();
                         _m = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.MailboxIconPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.EmailIconPath)];
                     case 12:
-                        _m.MailboxIcon = _y.sent();
+                        _m.EmailIcon = _z.sent();
                         _o = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.PhoneIconPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.MailboxIconPath)];
                     case 13:
-                        _o.PhoneIcon = _y.sent();
+                        _o.MailboxIcon = _z.sent();
                         _p = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.UserTagIconPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.PhoneIconPath)];
                     case 14:
-                        _p.UserTagIcon = _y.sent();
+                        _p.PhoneIcon = _z.sent();
                         _q = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ShiftButtonPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.UserTagIconPath)];
                     case 15:
-                        _q.ShiftButton = _y.sent();
+                        _q.UserTagIcon = _z.sent();
                         _r = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.PlusButtonPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ShiftButtonPath)];
                     case 16:
-                        _r.PlusButton = _y.sent();
+                        _r.ShiftButton = _z.sent();
                         _s = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.EnterButtonPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.PlusButtonPath)];
                     case 17:
-                        _s.EnterButton = _y.sent();
+                        _s.PlusButton = _z.sent();
                         _t = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.EnterButton2Path)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.EnterButtonPath)];
                     case 18:
-                        _t.EnterButton2 = _y.sent();
+                        _t.EnterButton = _z.sent();
                         _u = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ControlButtonPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.EnterButton2Path)];
                     case 19:
-                        _u.ControlButton = _y.sent();
+                        _u.EnterButton2 = _z.sent();
                         _v = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ControlButton2Path)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ControlButtonPath)];
                     case 20:
-                        _v.ControlButton2 = _y.sent();
+                        _v.ControlButton = _z.sent();
                         _w = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.PrimaryButtonPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ControlButton2Path)];
                     case 21:
-                        _w.PrimaryButton = _y.sent();
-                        // TODO: i think this html loading and replacing is driving my nuts bc i want it all to work like this:
-                        //1 Build Some Component
-                        // inside BUILD:
-                        // GET HTML (should already be loaded from GetAllAssets?)
-                        // REPLACE TEMPLATE STUFF (should make a static func to rip throw all the replace calls)
-                        // SAVE TO VAR FOR REUSE (need more SearchBar.ABC variables)
-                        // TODO: i think this is how i want it below...
-                        // SearchBar.CommandBarDocumentationInputWithoutValue = await SearchBar.GetResource(SearchBar.CommandBarDocumentationInputWithoutValuePath);
-                        // `
-                        //         <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}" target="_blank">
-                        //             <span class="TextButton"
-                        //                 style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
-                        //                 Search iMIS Documentation
-                        //                 <i class="externalIconBlue"></i>
-                        //             </span>
-                        //         </a>
-                        //     `;
+                        _w.ControlButton2 = _z.sent();
                         _x = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.UserDetailsViewPath)];
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.PrimaryButtonPath)];
                     case 22:
+                        _x.PrimaryButton = _z.sent();
                         // TODO: i think this html loading and replacing is driving my nuts bc i want it all to work like this:
                         //1 Build Some Component
                         // inside BUILD:
@@ -992,7 +976,27 @@ var SearchBar = /** @class */ (function () {
                         //             </span>
                         //         </a>
                         //     `;
-                        _x.UserDetailsView = _y.sent();
+                        _y = SearchBar;
+                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.UserDetailsViewPath)];
+                    case 23:
+                        // TODO: i think this html loading and replacing is driving my nuts bc i want it all to work like this:
+                        //1 Build Some Component
+                        // inside BUILD:
+                        // GET HTML (should already be loaded from GetAllAssets?)
+                        // REPLACE TEMPLATE STUFF (should make a static func to rip throw all the replace calls)
+                        // SAVE TO VAR FOR REUSE (need more SearchBar.ABC variables)
+                        // TODO: i think this is how i want it below...
+                        // SearchBar.CommandBarDocumentationInputWithoutValue = await SearchBar.GetResource(SearchBar.CommandBarDocumentationInputWithoutValuePath);
+                        // `
+                        //         <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}" target="_blank">
+                        //             <span class="TextButton"
+                        //                 style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
+                        //                 Search iMIS Documentation
+                        //                 <i class="externalIconBlue"></i>
+                        //             </span>
+                        //         </a>
+                        //     `;
+                        _y.UserDetailsView = _z.sent();
                         return [2 /*return*/];
                 }
             });
@@ -1114,65 +1118,70 @@ var SearchBar = /** @class */ (function () {
             console.log.apply(console, __spreadArray([SearchBar.VERSION_STRING + "Loaded: IQA Browser Extensions"], SearchBar.VERSION_STYLES, false));
             SearchBar.RVToken = $("#__RequestVerificationToken").val();
             SearchBar.ClientContext = JSON.parse($('#__ClientContext').val());
+            // we want to prevent non-users from using the searchbar
+            console.log('SearchBar.ClientContext.isAnonymous = ', SearchBar.ClientContext.isAnonymous);
+            if (SearchBar.ClientContext.isAnonymous)
+                return;
             SearchBar.GetResource(SearchBar.CommandBarPath).then(function (data) {
                 $('body').prepend(data);
             });
             SearchBar.BuildConfig();
             SearchBar.GetAllAssets().then(function () {
                 $("#commandBarOverlay .csiLogo").replaceWith(SearchBar.CsiLogo);
-                $("#commandBarOverlay .externalIconBlue").replaceWith(SearchBar.ExternalIconBlue);
+                $("#commandBarOverlay .externalIconWhite").replaceWith(SearchBar.ExternalIconWhite);
+                // $("#commandBarOverlay .externalIconBlue").replaceWith(SearchBar.ExternalIconBlue);
                 $("#commandBarOverlay .externalIcon").replaceWith(SearchBar.ExternalIcon);
                 $("#commandBarOverlay #commandBarExitButton").html(SearchBar.CloseIcon);
             });
-        });
-        var keysPressed = {};
-        document.addEventListener('keydown', function (event) { return __awaiter(_this, void 0, void 0, function () {
-            var key, isCommandBarVisible, isAnyCombo, input, url;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        key = event.key.toLowerCase();
-                        isCommandBarVisible = $("#commandBarOverlay").is(":visible");
-                        keysPressed[key] = true;
-                        isAnyCombo = function (target1, target2) {
-                            target1 = target1.toLowerCase();
-                            target2 = target2.toLowerCase();
-                            return (keysPressed[target1] && key == target2 || keysPressed[target2] && key == target1);
-                        };
-                        if (!(!isCommandBarVisible && event.target === parent.document.body && isAnyCombo("shift", "w"))) return [3 /*break*/, 2];
-                        event.preventDefault();
-                        return [4 /*yield*/, SearchBar.showOverlay()];
-                    case 1:
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 2:
-                        if (!keysPressed['Escape']) return [3 /*break*/, 4];
-                        // technically chrome has already hidden this, but we need to execute this still for clean up purposes
-                        return [4 /*yield*/, SearchBar.hideOverlay()];
-                    case 3:
-                        // technically chrome has already hidden this, but we need to execute this still for clean up purposes
-                        _a.sent();
-                        return [3 /*break*/, 5];
-                    case 4:
-                        if (isCommandBarVisible && key === "enter" && !keysPressed["shift"] && !keysPressed["control"] && !keysPressed["cmd"] && $("#UserDetailsTab").is(":visible")) {
-                            console.log('UserDetailsTab is VISIBLE -> go to user profile');
-                            if ($('#commandBarInput').get(0) === document.activeElement) {
-                                input = $('#commandBarInput').val();
-                                if (input.length > 0 && $.isNumeric(input)) {
-                                    url = "".concat(SearchBar.ClientContext.websiteRoot, "Party.aspx?ID=").concat(input);
-                                    window.location.replace(url);
+            var keysPressed = {};
+            document.addEventListener('keydown', function (event) { return __awaiter(_this, void 0, void 0, function () {
+                var key, isCommandBarVisible, isAnyCombo, input, url;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            key = event.key.toLowerCase();
+                            isCommandBarVisible = $("#commandBarOverlay").is(":visible");
+                            keysPressed[key] = true;
+                            isAnyCombo = function (target1, target2) {
+                                target1 = target1.toLowerCase();
+                                target2 = target2.toLowerCase();
+                                return (keysPressed[target1] && key == target2 || keysPressed[target2] && key == target1);
+                            };
+                            if (!(!isCommandBarVisible && event.target === parent.document.body && isAnyCombo("shift", "w"))) return [3 /*break*/, 2];
+                            event.preventDefault();
+                            return [4 /*yield*/, SearchBar.showOverlay()];
+                        case 1:
+                            _a.sent();
+                            return [3 /*break*/, 5];
+                        case 2:
+                            if (!keysPressed['Escape']) return [3 /*break*/, 4];
+                            // technically chrome has already hidden this, but we need to execute this still for clean up purposes
+                            return [4 /*yield*/, SearchBar.hideOverlay()];
+                        case 3:
+                            // technically chrome has already hidden this, but we need to execute this still for clean up purposes
+                            _a.sent();
+                            return [3 /*break*/, 5];
+                        case 4:
+                            if (isCommandBarVisible && key === "enter" && !keysPressed["shift"] && !keysPressed["control"] && !keysPressed["cmd"] && $("#UserDetailsTab").is(":visible")) {
+                                console.log('UserDetailsTab is VISIBLE -> go to user profile');
+                                if ($('#commandBarInput').get(0) === document.activeElement) {
+                                    input = $('#commandBarInput').val();
+                                    if (input.length > 0 && $.isNumeric(input)) {
+                                        url = "".concat(SearchBar.ClientContext.websiteRoot, "Party.aspx?ID=").concat(input);
+                                        window.location.replace(url);
+                                    }
                                 }
                             }
-                        }
-                        _a.label = 5;
-                    case 5: return [2 /*return*/];
-                }
+                            _a.label = 5;
+                        case 5: return [2 /*return*/];
+                    }
+                });
+            }); });
+            document.addEventListener('keyup', function (event) {
+                var key = event.key.toLowerCase();
+                delete keysPressed[key];
+                // console.log('keysPressed OFF = ', keysPressed);
             });
-        }); });
-        document.addEventListener('keyup', function (event) {
-            var key = event.key.toLowerCase();
-            delete keysPressed[key];
-            // console.log('keysPressed OFF = ', keysPressed);
         });
     };
     SearchBar.BuildConfig = function () {
@@ -1417,6 +1426,7 @@ var SearchBar = /** @class */ (function () {
     SearchBar.UserTagIconPath = "assets/images/userTagIcon.svg";
     SearchBar.ExternalIconPath = "assets/images/externalIcon.svg";
     SearchBar.ExternalIconBluePath = "assets/images/externalIconBlue.svg";
+    SearchBar.ExternalIconWhitePath = "assets/images/externalIconWhite.svg";
     SearchBar.IdCardBluePath = "assets/images/idCardBlue.svg";
     SearchBar.BrowsersIconPath = "assets/images/browserIcon.svg";
     SearchBar.LockIconPath = "assets/images/lockIcon.svg";
