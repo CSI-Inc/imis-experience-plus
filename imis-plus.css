@@ -1,6 +1,7 @@
 /* RiSE Content Editor Styles */
 
-.__csi__iep__addButton {
+.__csi__iep__addButton
+{
     display: inline-flex;
     flex-direction: 'row';
     flex-wrap: nowrap;
@@ -13,31 +14,37 @@
     border: 1px solid #E5E5E5;
 }
 
-.__csi__iep__addButton>a[id=AddContentLink] {
+.__csi__iep__addButton > a[id=AddContentLink]
+{
     color: #36ad4b !important;
 }
 
-.__csi__iep__addButton>br+div {
+.__csi__iep__addButton > br + div
+{
     width: 100%;
     text-align: center;
 }
 
-.__csi__iep__addButton>a[id=AddContentLink],
-.__csi__iep__addButton>a[id=AddContentLink]+span+a {
+.__csi__iep__addButton > a[id=AddContentLink],
+.__csi__iep__addButton > a[id=AddContentLink] + span + a
+{
     text-decoration: none !important;
 }
 
-.__csi__iep__addButton>a[id=AddContentLink]:hover,
-.__csi__iep__addButton>a[id=AddContentLink]+span+a:hover {
+.__csi__iep__addButton > a[id=AddContentLink]:hover,
+.__csi__iep__addButton > a[id=AddContentLink] + span + a:hover
+{
     text-decoration: underline !important;
 }
 
-.__csi__iep__addButton>a[id=AddContentLink]+span {
+.__csi__iep__addButton > a[id=AddContentLink] + span
+{
     display: inline-block;
     margin: 0 1rem;
 }
 
-.__csi__iep__zoneName {
+.__csi__iep__zoneName
+{
     position: absolute;
     border-top: 2px dashed rgba(0, 0, 0, 0.2);
     border-bottom: none;
@@ -52,64 +59,76 @@
     background-color: white;
 }
 
-table div.WebPartZoneDesignTimeEmptyZoneText {
+table div.WebPartZoneDesignTimeEmptyZoneText
+{
     margin-bottom: 1rem;
 }
 
-.panel-body .WebPartZoneDesignTime {
+.panel-body .WebPartZoneDesignTime
+{
     border: 2px dashed;
     margin: 2rem 0;
 }
 
 .panel-body .WebPartZoneDesignTime,
-.panel-body .__csi__iep__zoneName {
+.panel-body .__csi__iep__zoneName
+{
     border-color: rgba(0, 0, 0, 0.1);
     transition: border-color 0.2s ease-in-out;
 }
 
-.panel-body .WebPartZoneDesignTime:hover {
+.panel-body .WebPartZoneDesignTime:hover
+{
     border-color: rgba(35, 116, 157, 0.7);
     transition: border-color 0.2s ease-in-out;
 }
 
-.panel-body .WebPartZoneDesignTime .__csi__iep__addButton {
+.panel-body .WebPartZoneDesignTime .__csi__iep__addButton
+{
     opacity: 0.2;
     transition: opacity 0.2s ease-in-out;
 }
 
-.panel-body .WebPartZoneDesignTime:hover .__csi__iep__addButton {
+.panel-body .WebPartZoneDesignTime:hover .__csi__iep__addButton
+{
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
 }
 
-.WebPartsTitleBar>table>tbody>tr>td>span {
+.WebPartsTitleBar > table > tbody > tr > td > span
+{
     font-size: 1.5rem;
     font-style: italic;
     vertical-align: text-bottom !important;
     line-height: 1;
 }
 
-.WebPartsTitleBar a.WebPartsTitleBarVerb {
+.WebPartsTitleBar a.WebPartsTitleBarVerb
+{
     font-size: 18px !important;
     display: inline-block;
     margin: 0 0.5.rem;
 }
 
-.WebPartsTitleBar.__csi__iep__preview {
+.WebPartsTitleBar.__csi__iep__preview
+{
     display: none;
 }
 
 .WebPartZoneDesignTime.__csi__iep__preview,
-.WebPartZoneDesignTime.__csi__iep__preview table[class*=WebPartControl_Zone] {
+.WebPartZoneDesignTime.__csi__iep__preview table[class*=WebPartControl_Zone]
+{
     border: none !important;
 }
 
-.WebPartZoneDesignTime.__csi__iep__preview .WebPartZoneDesignTimeAction {
+.WebPartZoneDesignTime.__csi__iep__preview .WebPartZoneDesignTimeAction
+{
     display: none !important;
 }
 
 /* Drag and drop improvements */
-.droppable.ui-droppable-active {
+.droppable.ui-droppable-active
+{
     border: 2px dotted #CCC;
     display: block;
     margin: 1rem 1px;
@@ -117,7 +136,8 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     background: none;
 }
 
-.droppable.ui-droppable-active:after {
+.droppable.ui-droppable-active:after
+{
     content: 'Drop Here';
     display: flex;
     position: relative;
@@ -132,7 +152,8 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     align-items: center;
 }
 
-.droppable.ui-droppable.ui-droppable-hover {
+.droppable.ui-droppable.ui-droppable-hover
+{
     border: 2px dotted #AAA;
     display: block;
     margin: 1rem 1px;
@@ -140,11 +161,13 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     background-color: #EAEAEA;
 }
 
-.droppable.ui-droppable.ui-droppable-hover:after {
+.droppable.ui-droppable.ui-droppable-hover:after
+{
     color: #222;
 }
 
-.__csi__iep__verb_configure {
+.__csi__iep__verb_configure
+{
     margin: 2px 0.5rem 6px 0;
     padding: 4px 0 2px 0;
     vertical-align: middle;
@@ -153,77 +176,92 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
 
 /* Font Awesome Colors */
 .fas.fc-yellow,
-.far.fc-yellow {
+.far.fc-yellow
+{
     color: #ffa600;
 }
 
 .fas.fc-green,
-.far.fc-green {
+.far.fc-green
+{
     color: #5cb85c;
 }
 
 .fas.fc-red,
-.far.fc-red {
+.far.fc-red
+{
     color: #da5f51;
 }
 
 .fas.fc-blue,
-.far.fc-blue {
+.far.fc-blue
+{
     color: #5bc0de;
 }
 
 .fas.fc-imis-blue,
-.far.fc-imis-blue {
+.far.fc-imis-blue
+{
     color: #005e7d;
 }
 
 .fas.fc-dark-teal,
-.far.fc-dark-teal {
+.far.fc-dark-teal
+{
     color: #336472;
 }
 
 .fas.fc-teal,
-.far.fc-teal {
+.far.fc-teal
+{
     color: #15838b;
 }
 
 .fas.fc-purple,
-.far.fc-purple {
+.far.fc-purple
+{
     color: #424077;
 }
 
 .fas.fc-pink,
-.far.fc-pink {
+.far.fc-pink
+{
     color: #954a87;
 }
 
 .fas.fc-orange,
-.far.fc-orange {
+.far.fc-orange
+{
     color: #f38f1a;
 }
 
 .fas.fc-black,
-.far.fc-black {
+.far.fc-black
+{
     color: #000;
 }
 
 .fas.fc-white,
-.far.fc-white {
+.far.fc-white
+{
     color: #fff;
 }
 
 .fas.fc-gray,
-.far.fc-gray {
+.far.fc-gray
+{
     color: #ccc;
 }
 
 .fas.fc-light-gray,
-.far.fc-light-gray {
+.far.fc-light-gray
+{
     color: #eee;
 }
 
 .fas.fc-dark-gray,
-.far.fc-dark-gray {
+.far.fc-dark-gray
+{
     color: #444;
 }
 
@@ -237,7 +275,8 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 } */
 
-#commandBarOverlay {
+#commandBarOverlay
+{
     font-family: inherit;
     background-color: rgba(200, 200, 200, 0.5);
     z-index: 999999;
@@ -248,7 +287,8 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     height: 100%;
 }
 
-.buttonBadge {
+.buttonBadge
+{
     font-weight: 500;
     border: 1px solid lightgray;
     border-radius: 3px;
@@ -258,15 +298,18 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     color: black;
 }
 
-.shift {
+.shift
+{
     margin-left: 5px;
 }
 
-.plus {
+.plus
+{
     margin: 0px 1px;
 }
 
-#commandBarPalette {
+#commandBarPalette
+{
     width: 60%;
     background-color: rgba(242, 242, 243, 1);
     height: 490px;
@@ -277,50 +320,58 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     border: solid 15px rgb(242, 242, 243);
 }
 
-#commandBarInput {
+#commandBarInput
+{
     width: 100%;
     height: 50px;
     font-size: 140%;
     font-weight: 500;
 }
 
-#commandBarPartyUrl {
+#commandBarPartyUrl
+{
     position: absolute;
     right: 57px;
     top: 13px;
     display: none;
 }
 
-#commandBarOptionsArea {
+#commandBarOptionsArea
+{
     width: 100%;
     margin-top: 6px;
     height: auto;
 }
 
-#commandBarOptions {
+#commandBarOptions
+{
     width: 100%;
     background-color: white;
     padding: 5px;
 }
 
-#commandBarUl {
+#commandBarUl
+{
     -webkit-padding-start: 0;
     height: 376px;
     overflow-y: auto;
     margin: 0 4px 4px 4px;
 }
 
-#userCardChange {
+#userCardChange
+{
     width: 100%;
     display: block;
     height: 36px;
 }
 
-#userCardChangeCard {
+#userCardChangeCard
+{
     display: block;
 }
 
-#userCardChangeArea {
+#userCardChangeArea
+{
     width: 100%;
     height: 100%;
     background-color: white;
@@ -331,14 +382,16 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     border-top: 6px solid rgb(242, 242, 243);
 }
 
-.stack {
+.stack
+{
     height: 340px;
     overflow-y: auto;
     margin: 0 4px 4px 4px;
     border-top: solid 4px white;
 }
 
-#userCardProfile {
+#userCardProfile
+{
     width: 64%;
     border: solid 1px rgba(231, 231, 231, .9);
     border-radius: 2px;
@@ -347,13 +400,15 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     height: 100%;
 }
 
-.userActionCard {
+.userActionCard
+{
     vertical-align: middle;
     font-weight: 500;
     font-size: 13px;
 }
 
-.userCardActionArea {
+.userCardActionArea
+{
     width: 92%;
     height: 40px;
     margin: 0 auto;
@@ -365,15 +420,18 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     vertical-align: middle;
 }
 
-#destinationUsersName {
+#destinationUsersName
+{
     color: #005e7d;
 }
 
-#UserDetailsTab {
+#UserDetailsTab
+{
     height: 380px;
 }
 
-.userDetailsBadge {
+.userDetailsBadge
+{
     text-decoration: none;
     display: inline-block;
     font-weight: 500;
@@ -387,12 +445,14 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     vertical-align: middle;
 }
 
-#destinationUsersCompanyName {
+#destinationUsersCompanyName
+{
     margin-top: 1.5rem;
     font-weight: 700;
 }
 
-#userCardActions {
+#userCardActions
+{
     width: 35%;
     border: solid 1px rgba(231, 231, 231, .9);
     border-radius: 2px;
@@ -402,17 +462,20 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     background-color: rgb(242, 242, 243);
 }
 
-#userCardChangeDetails {
+#userCardChangeDetails
+{
     width: 100%;
     text-align: right;
     color: #686868;
 }
 
-#userCardChangeDetails>span {
+#userCardChangeDetails > span
+{
     vertical-align: middle;
 }
 
-#commandBarSupportButtons {
+#commandBarSupportButtons
+{
     width: 100%;
     background-color: rgb(242, 242, 243);
     height: 32px;
@@ -420,33 +483,39 @@ table div.WebPartZoneDesignTimeEmptyZoneText {
     text-align: center;
 }
 
-.commandBarButton {
+.commandBarButton
+{
     margin-left: 1rem;
     vertical-align: middle;
     display: inline-block;
 }
 
-.commandBarButton>.badge {
+.commandBarButton > .badge
+{
     background-color: #23B4E8
 }
 
-.commandBarHover {
+.commandBarHover
+{
     opacity: 1;
     background-color: #F3F3F3;
     cursor: pointer;
 }
 
-.commandBarSelected {
+.commandBarSelected
+{
     opacity: 1;
     background-color: #9be5ff;
     cursor: pointer;
 }
 
-span.badge {
+span.badge
+{
     background-color: #23B4E8
 }
 
-#commandBarAboutOverlay {
+#commandBarAboutOverlay
+{
     width: 100%;
     height: 346px;
     background-color: white;
@@ -457,24 +526,28 @@ span.badge {
     display: none;
 }
 
-span.userDetails.displayBlock {
+span.userDetails.displayBlock
+{
     display: block;
 }
 
-.commandBarListItem {
+.commandBarListItem
+{
     font-weight: 500;
     list-style: none;
     margin: 0;
     padding: 4px;
 }
 
-.commandBarListItem>a {
+.commandBarListItem > a
+{
     display: inline-block;
     width: 100%;
     height: 100%;
 }
 
-.commandBarListItem>a>span {
+.commandBarListItem > a > span
+{
     border: 1px solid lightgray;
     border-radius: 3px;
     float: left;
@@ -486,7 +559,8 @@ span.userDetails.displayBlock {
     text-align: center;
 }
 
-#commandBarExitButton {
+#commandBarExitButton
+{
     position: absolute;
     cursor: pointer;
     padding: 0;
@@ -495,7 +569,8 @@ span.userDetails.displayBlock {
     z-index: 9999999;
 }
 
-#searchDocumentation {
+#searchDocumentation
+{
     border: 1px solid lightgray;
     border-radius: 3px;
     background-color: #F4F5F7;
@@ -514,11 +589,13 @@ span.userDetails.displayBlock {
   z-index: 9999999;
 } */
 
-#documentationLinkDestination>span {
+#documentationLinkDestination > span
+{
     vertical-align: middle;
 }
 
-.textBadge {
+.textBadge
+{
     font-weight: 500;
     border: 1px solid lightgray;
     border-radius: 3px;
@@ -530,7 +607,8 @@ span.userDetails.displayBlock {
     color: black
 }
 
-.textBadgeNoMargin {
+.textBadgeNoMargin
+{
     font-weight: 500;
     border: 1px solid lightgray;
     border-radius: 3px;
@@ -541,7 +619,8 @@ span.userDetails.displayBlock {
     color: black
 }
 
-.loader {
+.loader
+{
     width: 48px;
     height: 48px;
     border: 5px solid #FFF;
@@ -557,12 +636,15 @@ span.userDetails.displayBlock {
     position: absolute;
 }
 
-@keyframes rotation {
-    0% {
+@keyframes rotation
+{
+    0%
+    {
         transform: rotate(0deg);
     }
 
-    100% {
+    100%
+    {
         transform: rotate(360deg);
     }
 }

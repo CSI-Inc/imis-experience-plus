@@ -10,10 +10,10 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 var IqaExtensions = /** @class */ (function () {
     function IqaExtensions($) {
-        var _a, _b;
+        var _a, _b, _c;
         this.$ = $;
         // Run some checks to determine if we are inside of the iMIS staff site
-        if (((_a = this.$('head').get(0)) === null || _a === void 0 ? void 0 : _a.id) !== 'ctl00_Head1' && ((_b = this.$('form').get(0)) === null || _b === void 0 ? void 0 : _b.id) !== 'aspnetForm') {
+        if (((_a = this.$('html').get(0)) === null || _a === void 0 ? void 0 : _a.id) !== 'MainHtml' && ((_b = this.$('body').get(0)) === null || _b === void 0 ? void 0 : _b.id) !== 'MainBody' && ((_c = this.$('form').get(0)) === null || _c === void 0 ? void 0 : _c.id) !== 'aspnetForm') {
             // Not iMIS - do nothing
             return;
         }
@@ -580,158 +580,6 @@ var RiseExtensions = /** @class */ (function () {
     return RiseExtensions;
 }());
 new RiseExtensions(jQuery);
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var Config = /** @class */ (function () {
-    function Config(category, displayName, altName, isTag, destination, isShortcut) {
-        this.category = category;
-        this.displayName = displayName;
-        this.altName = altName;
-        this.isTag = isTag;
-        this.destination = destination;
-        this.isShortcut = isShortcut;
-    }
-    Config.isConfigInstance = function (obj) {
-        return 'displayName' in obj;
-    };
-    Config.GetConfig = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var url, json, result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        url = chrome.runtime.getURL(SearchBar.ConfigPath);
-                        return [4 /*yield*/, $.get({ url: url, dataType: 'json', type: 'GET' })];
-                    case 1:
-                        json = _a.sent();
-                        result = [];
-                        // need to build each Config model so that search can be computed
-                        json.forEach(function (i) { return result.push(new Config(i.category, i.displayName, i.altName, i.isTag, i.destination, i.isShortcut)); });
-                        result.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); });
-                        return [2 /*return*/, result];
-                }
-            });
-        });
-    };
-    Config.SetEventListeners = function (includeTags) {
-        if (includeTags === void 0) { includeTags = false; }
-        // Add hover effects
-        $('.commandBarListItem')
-            .on("mouseenter", function () {
-            $(this).addClass('commandBarHover');
-        })
-            .on("mouseleave", function () {
-            $(this).removeClass('commandBarHover');
-        });
-        if (includeTags) {
-            $('#eventCodeLookup').on("click", function () {
-                return __awaiter(this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        alert('eventCodeLookup do something...');
-                        return [2 /*return*/];
-                    });
-                });
-            });
-            $('#usernameLookup').on("click", function () {
-                return __awaiter(this, void 0, void 0, function () {
-                    var currentActionBarValue;
-                    return __generator(this, function (_a) {
-                        currentActionBarValue = $('#commandBarInput').val();
-                        SearchBar.FindUserByName(currentActionBarValue).then(function (userId) {
-                            console.log('final userId = ', userId);
-                            SearchBar.SetUserDetails(userId);
-                            SearchBar.ActivateTab(SearchBar.UserDetailsTab);
-                        });
-                        return [2 /*return*/];
-                    });
-                });
-            });
-        }
-    };
-    Config.BuildRoutesHTML = function (data) {
-        var result = '';
-        data.forEach(function (item, i) {
-            var content = "\n                <li data-index=\"".concat(i, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(i, "\">\n                    <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none;\">\n                        ").concat(item.category.length > -1 ?
-                "<span style=\"border: 1px solid lightgray; border-radius: 3px; float: left; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; min-width: 90px; text-align: center;\">\n                                ".concat(item.category, "\n                            </span>")
-                : '', "\n                        ").concat(item.displayName, "\n                        ").concat(item.isShortcut ?
-                "<span style=\"border: 1px solid lightgray; border-radius: 3px; float: right; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px;\">\n                            ~".concat(item.destination, "\n                        </span>")
-                : '', "\n                    </a>\n                </li>\n                ");
-            result = result.concat(content);
-        });
-        return result;
-    };
-    // static myTest(): void
-    // {
-    //     alert("TEST");
-    // }
-    // static myTest(userInput: string): void
-    // {
-    //     alert(userInput);
-    // }
-    Config.BuildTagsHTML = function (data, seed, userInput) {
-        var result = '';
-        data.forEach(function (item, i) {
-            var content = '';
-            var counter = seed + i;
-            switch (item.category.toLowerCase()) {
-                case "event code lookup":
-                    // different id so that Config.SetEventListeners can setup specific functions for events and username
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a id=\"eventCodeLookup\" href=\"javascript:void(0);\" role=\"link\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
-                    break;
-                case "username lookup":
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a id=\"usernameLookup\" href=\"javascript:void(0);\" role=\"link\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
-                    break;
-                case "documentation lookup":
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(SearchBar.ExternalIcon, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
-                    break;
-                case "keyword search":
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
-                    break;
-                case "imis glossary":
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none; vertical-align: middle;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(SearchBar.ExternalIcon, "</span>") : '', "\n                        </a>\n                    </li>\n                    ");
-                default:
-                    break;
-            }
-            result = result.concat(content);
-        });
-        return result;
-    };
-    return Config;
-}());
 var CleanUp = /** @class */ (function () {
     function CleanUp() {
     }
@@ -770,11 +618,218 @@ var CleanUp = /** @class */ (function () {
     };
     return CleanUp;
 }());
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var ConfigManager = /** @class */ (function () {
+    function ConfigManager(searchBar) {
+        this.searchBar = searchBar;
+    }
+    ConfigManager.GetConfigInstance = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var url, configItems;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        url = chrome.runtime.getURL(this.ConfigPath);
+                        return [4 /*yield*/, fetch(url).then(function (data) { return data.json(); })];
+                    case 1:
+                        configItems = (_a.sent())
+                            .sort(function (a, b) { return a.displayName.localeCompare(b.displayName); });
+                        return [2 /*return*/, configItems];
+                }
+            });
+        });
+    };
+    ConfigManager.prototype.SetEventListeners = function (includeTags) {
+        var _this = this;
+        if (includeTags === void 0) { includeTags = false; }
+        // Add hover effects
+        $('.commandBarListItem')
+            .on("mouseenter", function (e) { return $(e.currentTarget).addClass('commandBarHover'); })
+            .on("mouseleave", function (e) { return $(e.currentTarget).removeClass('commandBarHover'); });
+        if (includeTags) {
+            $('#eventCodeLookup').on("click", function () {
+                return __awaiter(this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        alert('eventCodeLookup do something...');
+                        return [2 /*return*/];
+                    });
+                });
+            });
+            $('#usernameLookup').on("click", function () { return __awaiter(_this, void 0, void 0, function () {
+                var currentActionBarValue, imisId;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            currentActionBarValue = $('#commandBarInput').val();
+                            return [4 /*yield*/, this.searchBar.FindUserIdByName(currentActionBarValue)];
+                        case 1:
+                            imisId = _a.sent();
+                            if (imisId === null)
+                                return [2 /*return*/];
+                            console.log('final userId = ', imisId);
+                            this.searchBar.SetUserDetails(imisId);
+                            this.searchBar.ActivateTab(this.searchBar.UserDetailsTab);
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+        }
+    };
+    ConfigManager.prototype.BuildRoutesHTML = function (data) {
+        var result = '';
+        data.forEach(function (item, i) {
+            var content = "\n                <li data-index=\"".concat(i, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(i, "\">\n                    <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none;\">\n                        ").concat(item.category.length > -1 ?
+                "<span style=\"border: 1px solid lightgray; border-radius: 3px; float: left; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; min-width: 90px; text-align: center;\">\n                                ".concat(item.category, "\n                            </span>")
+                : '', "\n                        ").concat(item.displayName, "\n                        ").concat(item.isShortcut ?
+                "<span style=\"border: 1px solid lightgray; border-radius: 3px; float: right; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px;\">\n                            ~".concat(item.destination, "\n                        </span>")
+                : '', "\n                    </a>\n                </li>\n                ");
+            result = result.concat(content);
+        });
+        return result;
+    };
+    // static myTest(): void
+    // {
+    //     alert("TEST");
+    // }
+    // static myTest(userInput: string): void
+    // {
+    //     alert(userInput);
+    // }
+    ConfigManager.prototype.BuildTagsHTML = function (data, seed, userInput) {
+        var _this = this;
+        var result = '';
+        data.forEach(function (item, i) {
+            var content = '';
+            var counter = seed + i;
+            switch (item.category.toLowerCase()) {
+                case "event code lookup":
+                    // different id so that Config.SetEventListeners can setup specific functions for events and username
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a id=\"eventCodeLookup\" href=\"javascript:void(0);\" role=\"link\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
+                    break;
+                case "username lookup":
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a id=\"usernameLookup\" href=\"javascript:void(0);\" role=\"link\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
+                    break;
+                case "documentation lookup":
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(_this.searchBar.ExternalIcon, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
+                    break;
+                case "keyword search":
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
+                    break;
+                case "imis glossary":
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none; vertical-align: middle;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(_this.searchBar.ExternalIcon, "</span>") : '', "\n                        </a>\n                    </li>\n                    ");
+                default:
+                    break;
+            }
+            result = result.concat(content);
+        });
+        return result;
+    };
+    ConfigManager.ConfigPath = "assets/search-bar-config.json";
+    return ConfigManager;
+}());
 var SearchBar = /** @class */ (function () {
     function SearchBar($) {
         var _a, _b;
         this.$ = $;
-        SearchBar.Tabs = [SearchBar.CommandBarSelectTab, SearchBar.UserDetailsTab];
+        this.UserDetailsTab = "UserDetailsTab";
+        this.CommandBarSelectTab = "CommandBarSelectTab";
+        this.ConfigRoutes = [];
+        this.ConfigTags = [];
+        //#region SVG Paths
+        this.CsiLogoPath = "assets/images/csiLogo.svg";
+        this.BuildingIconPath = "assets/images/buildingIcon.svg";
+        this.CakeIconPath = "assets/images/cakeIcon.svg";
+        this.EmailIconPath = "assets/images/emailIcon.svg";
+        this.MailboxIconPath = "assets/images/mailboxIcon.svg";
+        this.PhoneIconPath = "assets/images/phoneIcon.svg";
+        this.UserTagIconPath = "assets/images/userTagIcon.svg";
+        this.ExternalIconPath = "assets/images/externalIcon.svg";
+        this.ExternalIconBluePath = "assets/images/externalIconBlue.svg";
+        this.ExternalIconWhitePath = "assets/images/externalIconWhite.svg";
+        this.IdCardBluePath = "assets/images/idCardBlue.svg";
+        this.BrowsersIconPath = "assets/images/browserIcon.svg";
+        this.LockIconPath = "assets/images/lockIcon.svg";
+        this.CloseIconPath = "assets/images/closeIcon.svg";
+        //#endregion
+        //#region Component Paths
+        this.CommandBarPath = "assets/components/commandBar.html";
+        this.ShiftButtonPath = "assets/components/buttons/shift.html";
+        this.PlusButtonPath = "assets/components/buttons/plus.html";
+        this.EnterButtonPath = "assets/components/buttons/enter.html";
+        this.EnterButton2Path = "assets/components/buttons/enter2.html";
+        this.ControlButtonPath = "assets/components/buttons/control.html";
+        this.ControlButton2Path = "assets/components/buttons/control2.html";
+        this.PrimaryButtonPath = "assets/components/buttons/primary.html";
+        //#endregion
+        //#region Assets
+        this.CsiLogo = null;
+        this.CommandBar = null;
+        this.ShiftButton = null;
+        this.PlusButton = null;
+        this.EnterButton = null;
+        this.EnterButton2 = null;
+        this.ControlButton = null;
+        this.ControlButton2 = null;
+        this.PrimaryButton = null;
+        // Icons
+        this.CakeIcon = null;
+        this.BuildingIcon = null;
+        this.EmailIcon = null;
+        this.MailboxIcon = null;
+        this.PhoneIcon = null;
+        this.UserTagIcon = null;
+        this.ExternalIcon = null;
+        this.ExternalIconBlue = null;
+        this.ExternalIconWhite = null;
+        this.IdCardBlue = null;
+        this.BrowsersIcon = null;
+        this.LockIcon = null;
+        this.CloseIcon = null;
+        //#endregion
+        // TESTING
+        this.RVToken = null;
+        this.DocumentationUrl = "https://help.imis.com/enterprise/search.htm";
+        this.ClientContext = null;
+        this.WebsiteUrl = null;
+        this.UserDetailsView = null;
+        this.UserDetailsViewPath = "assets/views/userDetailsTab.html";
+        this.config = new ConfigManager(this);
+        this.Tabs = [this.CommandBarSelectTab, this.UserDetailsTab];
         // Run some checks to determine if we are inside of the iMIS staff site
         if (((_a = this.$('head').get(0)) === null || _a === void 0 ? void 0 : _a.id) !== 'ctl00_Head1' && ((_b = this.$('form').get(0)) === null || _b === void 0 ? void 0 : _b.id) !== 'aspnetForm') {
             // Not iMIS - do nothing
@@ -783,13 +838,82 @@ var SearchBar = /** @class */ (function () {
         // Initialize the module
         this.init();
     }
-    SearchBar.GetUserCardActions = function (userId) {
-        var profileUrl = "".concat(SearchBar.ClientContext.websiteRoot, "Party.aspx?ID=").concat(userId);
-        var credentialsUrl = "".concat(SearchBar.ClientContext.websiteRoot, "AsiCommon/Controls/Contact/User/UserEdit.aspx?ID=").concat(userId);
-        return "\n                <div id=\"userCardActions\" class=\"userDetails\">\n                    <div id=\"userCardGoToProfile\" class=\"userCardActionArea\">\n                        ".concat(SearchBar.IdCardBlue, "\n                        <a href=\"").concat(profileUrl, "\" class=\"userActionCard\">Profile</a>\n                        ").concat(SearchBar.EnterButton2, "\n                    </div>\n                    <div id=\"userCardUserCredentials\" class=\"userCardActionArea\">\n                        ").concat(SearchBar.LockIcon, "\n                        <a id=\"userCardUserCredentialsUrl\" href=\"").concat(credentialsUrl, "\" class=\"userActionCard\">User Credentials</a>\n                    </div>\n                </div>\n            ");
+    /**
+     * Initializes the various elements of this module..
+     */
+    SearchBar.prototype.init = function () {
+        var _this = this;
+        this.$(function () {
+            console.log.apply(console, __spreadArray([SearchBar.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
+            _this.RVToken = _this.$("#__RequestVerificationToken").val();
+            _this.ClientContext = JSON.parse(_this.$('#__ClientContext').val());
+            // we want to prevent non-users from using the searchbar
+            console.log('this.ClientContext.isAnonymous = ', _this.ClientContext.isAnonymous);
+            if (_this.ClientContext.isAnonymous)
+                return;
+            _this.GetResource(_this.CommandBarPath).then(function (data) {
+                _this.$('body').prepend(data);
+            });
+            _this.BuildConfig();
+            _this.GetAllAssets().then(function () {
+                var _a, _b, _c, _d;
+                _this.$("#commandBarOverlay .csiLogo").replaceWith((_a = _this.CsiLogo) !== null && _a !== void 0 ? _a : "");
+                _this.$("#commandBarOverlay .externalIconWhite").replaceWith((_b = _this.ExternalIconWhite) !== null && _b !== void 0 ? _b : "");
+                // this.$("#commandBarOverlay .externalIconBlue").replaceWith(this.ExternalIconBlue);
+                _this.$("#commandBarOverlay .externalIcon").replaceWith((_c = _this.ExternalIcon) !== null && _c !== void 0 ? _c : "");
+                _this.$("#commandBarOverlay #commandBarExitButton").html((_d = _this.CloseIcon) !== null && _d !== void 0 ? _d : "");
+            });
+            var keysPressed = {};
+            // on key down
+            _this.$(document).on("keydown", function (e) { return __awaiter(_this, void 0, void 0, function () {
+                var isCommandBarVisible, input, url;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
+                            if (!(!isCommandBarVisible && e.key.toLowerCase() === "w" && e.shiftKey)) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this.showOverlay()];
+                        case 1:
+                            _a.sent();
+                            e.preventDefault();
+                            return [3 /*break*/, 5];
+                        case 2:
+                            if (!(isCommandBarVisible && e.key === "Escape")) return [3 /*break*/, 4];
+                            return [4 /*yield*/, this.hideOverlay()];
+                        case 3:
+                            _a.sent();
+                            return [3 /*break*/, 5];
+                        case 4:
+                            if (isCommandBarVisible && e.key === "Enter" && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"] && this.$("#UserDetailsTab").is(":visible")) {
+                                console.log('UserDetailsTab is VISIBLE -> go to user profile');
+                                if (this.$('#commandBarInput').get(0) === document.activeElement) {
+                                    input = this.$('#commandBarInput').val();
+                                    if (input.length > 0 && $.isNumeric(input) && this.ClientContext !== null) {
+                                        url = "".concat(this.ClientContext.websiteRoot, "Party.aspx?ID=").concat(input);
+                                        window.location.replace(url);
+                                    }
+                                }
+                            }
+                            _a.label = 5;
+                        case 5: return [2 /*return*/];
+                    }
+                });
+            }); });
+            document.addEventListener('keyup', function (event) {
+                var key = event.key.toLowerCase();
+                delete keysPressed[key];
+                // console.log('keysPressed OFF = ', keysPressed);
+            });
+        });
     };
-    SearchBar.GetProfile = function (data) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21;
+    SearchBar.prototype.GetUserCardActions = function (userId) {
+        var _a, _b;
+        var profileUrl = "".concat((_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.websiteRoot, "Party.aspx?ID=").concat(userId);
+        var credentialsUrl = "".concat((_b = this.ClientContext) === null || _b === void 0 ? void 0 : _b.websiteRoot, "AsiCommon/Controls/Contact/User/UserEdit.aspx?ID=").concat(userId);
+        return "\n                <div id=\"userCardActions\" class=\"userDetails\">\n                    <div id=\"userCardGoToProfile\" class=\"userCardActionArea\">\n                        ".concat(this.IdCardBlue, "\n                        <a href=\"").concat(profileUrl, "\" class=\"userActionCard\">Profile</a>\n                        ").concat(this.EnterButton2, "\n                    </div>\n                    <div id=\"userCardUserCredentials\" class=\"userCardActionArea\">\n                        ").concat(this.LockIcon, "\n                        <a id=\"userCardUserCredentialsUrl\" href=\"").concat(credentialsUrl, "\" class=\"userActionCard\">User Credentials</a>\n                    </div>\n                </div>\n            ");
+    };
+    SearchBar.prototype.GetProfile = function (data) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22;
         var status = (_a = data === null || data === void 0 ? void 0 : data.Status) === null || _a === void 0 ? void 0 : _a.Description;
         var memberType = (_b = data === null || data === void 0 ? void 0 : data.AdditionalAttributes) === null || _b === void 0 ? void 0 : _b.$values[0].Value;
         var birthDate = CleanUp.Date(data === null || data === void 0 ? void 0 : data.BirthDate);
@@ -815,17 +939,17 @@ var SearchBar = /** @class */ (function () {
         var companyName = (_19 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _19 === void 0 ? void 0 : _19.Name;
         var companyId = (_20 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _20 === void 0 ? void 0 : _20.OrganizationPartyId;
         var userTitle = (_21 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _21 === void 0 ? void 0 : _21.Title;
-        return "\n            <div id=\"userCardProfile\" class=\"userDetails\">\n                <h3 id=\"destinationUsersName\" style=\"color: #005e7d; margin: 2px\">".concat(data === null || data === void 0 ? void 0 : data.Name, "</h3>\n                <div id=\"details\" style=\"font-size: 90%;\">\n                    <div id=\"userDetailsTop\" style=\"margin: 0px 0px 5px 1px;\">\n                        <span id=\"destinationUsersId\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersIdLabel\">ID: </span>").concat(data === null || data === void 0 ? void 0 : data.Id, "\n                        </span>\n                        <span id=\"destinationUsersStatus\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersStatusLabel\">Status: </span>").concat(status, "\n                        </span>\n                        <span id=\"destinationUsersMemberType\" class=\"userDetails userSpecificDetail\">\n                            <span class=\"Label workBarLabel destinationUsersTypeLabel\">Type: </span>").concat(memberType, "\n                        </span>\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(birthDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.CakeIcon, "\n                            <span class=\"textBadge\">Date of Birth</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(birthDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber0\">\n                        ").concat(phone0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone0Type, "</span>\n                            <a href=\"tel:").concat(phone0, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone0, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber1\">\n                        ").concat(phone1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone1Type, "</span>\n                            <a href=\"tel:").concat(phone1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail1\">\n                        ").concat(email1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.EmailIcon, "\n                            ").concat(email1IsPrimary ? "".concat(SearchBar.PrimaryButton) : "<span class=\"textBadge\">".concat(email1Type, "</span>"), "\n                            <a href=\"mailto:").concat(email1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail2\">\n                        ").concat(email2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.EmailIcon, "\n                            ").concat(email2IsPrimary ? "".concat(SearchBar.PrimaryButton) : "<span class=\"textBadge\">".concat(email2Type, "</span>"), "\n                            <a href=\"mailto:").concat(email2, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email2, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail3\">\n                        ").concat(email3 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.EmailIcon, "\n                            ").concat(email3IsPrimary ? "".concat(SearchBar.PrimaryButton) : "<span class=\"textBadge\">".concat(email3Type, "</span>"), "\n                            <a href=\"mailto:").concat(email3, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email3, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress0\">\n                        ").concat(address0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address0Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address0, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress1\">\n                        ").concat(address1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address1Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address1, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress2\">\n                        ").concat(address2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address2Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address2, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersCompanyName\">\n                        ").concat(companyName ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.BuildingIcon, "\n                            ").concat(companyId ? "\n                                <a href=\"".concat(SearchBar.ClientContext.websiteRoot, "Party.aspx?ID=").concat(companyId, "\">\n                                    <span style=\"vertical-align: middle;\">").concat(companyName, "</span>\n                                    <span class=\"userDetailsBadge\">ID ").concat(companyId, "</span>\n                                </a>\n                                ") : "\n                                <span style=\"vertical-align: middle;\">".concat(companyName, "</span>\n                                <span class=\"userDetailsBadge\">Company ID Not Correctly Linked</span>"), "\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersTitle\">\n                        ").concat(userTitle ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(SearchBar.UserTagIcon, "\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(userTitle, "</span>\n                        </div>") : '', "\n                    </div>\n                </div>\n            </div>\n        ");
+        return "\n            <div id=\"userCardProfile\" class=\"userDetails\">\n                <h3 id=\"destinationUsersName\" style=\"color: #005e7d; margin: 2px\">".concat(data === null || data === void 0 ? void 0 : data.Name, "</h3>\n                <div id=\"details\" style=\"font-size: 90%;\">\n                    <div id=\"userDetailsTop\" style=\"margin: 0px 0px 5px 1px;\">\n                        <span id=\"destinationUsersId\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersIdLabel\">ID: </span>").concat(data === null || data === void 0 ? void 0 : data.Id, "\n                        </span>\n                        <span id=\"destinationUsersStatus\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersStatusLabel\">Status: </span>").concat(status, "\n                        </span>\n                        <span id=\"destinationUsersMemberType\" class=\"userDetails userSpecificDetail\">\n                            <span class=\"Label workBarLabel destinationUsersTypeLabel\">Type: </span>").concat(memberType, "\n                        </span>\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(birthDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.CakeIcon, "\n                            <span class=\"textBadge\">Date of Birth</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(birthDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber0\">\n                        ").concat(phone0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone0Type, "</span>\n                            <a href=\"tel:").concat(phone0, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone0, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber1\">\n                        ").concat(phone1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone1Type, "</span>\n                            <a href=\"tel:").concat(phone1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail1\">\n                        ").concat(email1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.EmailIcon, "\n                            ").concat(email1IsPrimary ? "".concat(this.PrimaryButton) : "<span class=\"textBadge\">".concat(email1Type, "</span>"), "\n                            <a href=\"mailto:").concat(email1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail2\">\n                        ").concat(email2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.EmailIcon, "\n                            ").concat(email2IsPrimary ? "".concat(this.PrimaryButton) : "<span class=\"textBadge\">".concat(email2Type, "</span>"), "\n                            <a href=\"mailto:").concat(email2, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email2, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail3\">\n                        ").concat(email3 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.EmailIcon, "\n                            ").concat(email3IsPrimary ? "".concat(this.PrimaryButton) : "<span class=\"textBadge\">".concat(email3Type, "</span>"), "\n                            <a href=\"mailto:").concat(email3, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email3, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress0\">\n                        ").concat(address0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address0Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address0, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress1\">\n                        ").concat(address1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address1Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address1, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress2\">\n                        ").concat(address2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address2Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address2, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersCompanyName\">\n                        ").concat(companyName ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.BuildingIcon, "\n                            ").concat(companyId ? "\n                                <a href=\"".concat((_22 = this.ClientContext) === null || _22 === void 0 ? void 0 : _22.websiteRoot, "Party.aspx?ID=").concat(companyId, "\">\n                                    <span style=\"vertical-align: middle;\">").concat(companyName, "</span>\n                                    <span class=\"userDetailsBadge\">ID ").concat(companyId, "</span>\n                                </a>\n                                ") : "\n                                <span style=\"vertical-align: middle;\">".concat(companyName, "</span>\n                                <span class=\"userDetailsBadge\">Company ID Not Correctly Linked</span>"), "\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersTitle\">\n                        ").concat(userTitle ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.UserTagIcon, "\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(userTitle, "</span>\n                        </div>") : '', "\n                    </div>\n                </div>\n            </div>\n        ");
     };
-    // public static GetDocumentationInput(hasInput: boolean, encoded: string, value: string): string
+    // private GetDocumentationInput(hasInput: boolean, encoded: string, value: string): string
     // {
     //     // need to strip input bc it will inject ANYTHING
     //     if (hasInput)
     //     {
     //         return `
-    //             <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}?q=${encoded}" target="_blank">
+    //             <a id="documentationLinkDestination" href="${this.DocumentationUrl}?q=${encoded}" target="_blank">
     //                 <span id="searchDocumentation" class="TextButton">
-    //                     Search iMIS Documentation${SearchBar.ExternalIconBlue}
+    //                     Search iMIS Documentation${this.ExternalIconBlue}
     //                 </span><span style="margin-left: 4px;">${value?.trim()}</span>
     //             </a>
     //         `;
@@ -833,26 +957,25 @@ var SearchBar = /** @class */ (function () {
     //     else
     //     {
     //         return `
-    //             <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}" target="_blank">
+    //             <a id="documentationLinkDestination" href="${this.DocumentationUrl}" target="_blank">
     //                 <span class="TextButton"
     //                     style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
     //                     Search iMIS Documentation
-    //                     ${SearchBar.ExternalIconBlue}
+    //                     ${this.ExternalIconBlue}
     //                 </span>
     //             </a>
     //         `;
     //     }
     // }
-    SearchBar.GetUserChangeDetails = function (username, data) {
+    SearchBar.prototype.GetUserChangeDetails = function (username, data) {
         var _a, _b, _c, _d;
         var createdOn = CleanUp.Date((_a = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _a === void 0 ? void 0 : _a.CreatedOn);
         var createdBy = (_b = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _b === void 0 ? void 0 : _b.CreatedBy;
         var updatedOn = CleanUp.Date((_c = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _c === void 0 ? void 0 : _c.UpdatedOn);
         var updatedBy = (_d = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _d === void 0 ? void 0 : _d.UpdatedBy;
-        return "\n            <div class=\"userDetails\" id=\"userCardChangeDetails\">\n                <span id=\"destinationUsersCreatedOn\">\n                    <span class=\"Label workBarLabel\">Created: </span>".concat(createdOn, "\n                </span>\n                <span id=\"destinationUsersCreatedBy\">by ").concat(createdBy, "</span>\n                <span id=\"destinationUsersUpdatedOn\">\n                    <span class=\"Label workBarLabel\">Last Updated: </span>").concat(updatedOn, "\n                </span>\n                <span id=\"destinationUsersUpdatedBy\">by ").concat(updatedBy, "</span>\n                <span id=\"destinationUsersUsername\">\n                    ").concat(username ? "\n                        <span class=\"Label workBarLabel workBarUsernameLabel\">Username: </span>".concat(username, "\n                    ") : '', "\n                </span>\n            </div>\n        ");
+        return "\n            <div class=\"userDetails\" id=\"userCardChangeDetails\">\n                <span id=\"destinationUsersCreatedOn\">\n                    <span class=\"Label workBarLabel\">Created: </span>".concat(createdOn, "\n                </span>\n                <span id=\"destinationUsersCreatedBy\">by ").concat(createdBy, "</span>\n                <span id=\"destinationUsersUpdatedOn\">\n                    <span class=\"Label workBarLabel\">Last Updated: </span>").concat(updatedOn, "\n                </span>\n                <span id=\"destinationUsersUpdatedBy\">by ").concat(updatedBy, "</span>\n                <span id=\"destinationUsersUsername\">\n                    ").concat(username ? "\n                        <span class=\"Label workBarLabel workBarUsernameLabel\">Username: </span>".concat(username, "\n                    ") : '', "\n                </span> \n            </div>\n        ");
     };
-    //#endregion
-    SearchBar.GetResource = function (path) {
+    SearchBar.prototype.GetResource = function (path) {
         return __awaiter(this, void 0, void 0, function () {
             var url;
             return __generator(this, function (_a) {
@@ -865,110 +988,110 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    SearchBar.GetAllAssets = function () {
+    SearchBar.prototype.GetAllAssets = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y;
             return __generator(this, function (_z) {
                 switch (_z.label) {
                     case 0:
-                        _a = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.CommandBarPath)];
+                        _a = this;
+                        return [4 /*yield*/, this.GetResource(this.CommandBarPath)];
                     case 1:
                         _a.CommandBar = _z.sent();
-                        _b = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.CsiLogoPath)];
+                        _b = this;
+                        return [4 /*yield*/, this.GetResource(this.CsiLogoPath)];
                     case 2:
                         _b.CsiLogo = _z.sent();
-                        _c = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ExternalIconPath)];
+                        _c = this;
+                        return [4 /*yield*/, this.GetResource(this.ExternalIconPath)];
                     case 3:
                         _c.ExternalIcon = _z.sent();
-                        _d = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ExternalIconBluePath)];
+                        _d = this;
+                        return [4 /*yield*/, this.GetResource(this.ExternalIconBluePath)];
                     case 4:
                         _d.ExternalIconBlue = _z.sent();
-                        _e = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ExternalIconWhitePath)];
+                        _e = this;
+                        return [4 /*yield*/, this.GetResource(this.ExternalIconWhitePath)];
                     case 5:
                         _e.ExternalIconWhite = _z.sent();
-                        _f = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.IdCardBluePath)];
+                        _f = this;
+                        return [4 /*yield*/, this.GetResource(this.IdCardBluePath)];
                     case 6:
                         _f.IdCardBlue = _z.sent();
-                        _g = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.BrowsersIconPath)];
+                        _g = this;
+                        return [4 /*yield*/, this.GetResource(this.BrowsersIconPath)];
                     case 7:
                         _g.BrowsersIcon = _z.sent();
-                        _h = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.LockIconPath)];
+                        _h = this;
+                        return [4 /*yield*/, this.GetResource(this.LockIconPath)];
                     case 8:
                         _h.LockIcon = _z.sent();
-                        _j = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.CloseIconPath)];
+                        _j = this;
+                        return [4 /*yield*/, this.GetResource(this.CloseIconPath)];
                     case 9:
                         _j.CloseIcon = _z.sent();
-                        _k = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.CakeIconPath)];
+                        _k = this;
+                        return [4 /*yield*/, this.GetResource(this.CakeIconPath)];
                     case 10:
                         _k.CakeIcon = _z.sent();
-                        _l = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.BuildingIconPath)];
+                        _l = this;
+                        return [4 /*yield*/, this.GetResource(this.BuildingIconPath)];
                     case 11:
                         _l.BuildingIcon = _z.sent();
-                        _m = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.EmailIconPath)];
+                        _m = this;
+                        return [4 /*yield*/, this.GetResource(this.EmailIconPath)];
                     case 12:
                         _m.EmailIcon = _z.sent();
-                        _o = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.MailboxIconPath)];
+                        _o = this;
+                        return [4 /*yield*/, this.GetResource(this.MailboxIconPath)];
                     case 13:
                         _o.MailboxIcon = _z.sent();
-                        _p = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.PhoneIconPath)];
+                        _p = this;
+                        return [4 /*yield*/, this.GetResource(this.PhoneIconPath)];
                     case 14:
                         _p.PhoneIcon = _z.sent();
-                        _q = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.UserTagIconPath)];
+                        _q = this;
+                        return [4 /*yield*/, this.GetResource(this.UserTagIconPath)];
                     case 15:
                         _q.UserTagIcon = _z.sent();
-                        _r = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ShiftButtonPath)];
+                        _r = this;
+                        return [4 /*yield*/, this.GetResource(this.ShiftButtonPath)];
                     case 16:
                         _r.ShiftButton = _z.sent();
-                        _s = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.PlusButtonPath)];
+                        _s = this;
+                        return [4 /*yield*/, this.GetResource(this.PlusButtonPath)];
                     case 17:
                         _s.PlusButton = _z.sent();
-                        _t = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.EnterButtonPath)];
+                        _t = this;
+                        return [4 /*yield*/, this.GetResource(this.EnterButtonPath)];
                     case 18:
                         _t.EnterButton = _z.sent();
-                        _u = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.EnterButton2Path)];
+                        _u = this;
+                        return [4 /*yield*/, this.GetResource(this.EnterButton2Path)];
                     case 19:
                         _u.EnterButton2 = _z.sent();
-                        _v = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ControlButtonPath)];
+                        _v = this;
+                        return [4 /*yield*/, this.GetResource(this.ControlButtonPath)];
                     case 20:
                         _v.ControlButton = _z.sent();
-                        _w = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.ControlButton2Path)];
+                        _w = this;
+                        return [4 /*yield*/, this.GetResource(this.ControlButton2Path)];
                     case 21:
                         _w.ControlButton2 = _z.sent();
-                        _x = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.PrimaryButtonPath)];
+                        _x = this;
+                        return [4 /*yield*/, this.GetResource(this.PrimaryButtonPath)];
                     case 22:
                         _x.PrimaryButton = _z.sent();
                         // TODO: i think this html loading and replacing is driving my nuts bc i want it all to work like this:
                         //1 Build Some Component
                         // inside BUILD:
                         // GET HTML (should already be loaded from GetAllAssets?)
-                        // REPLACE TEMPLATE STUFF (should make a static func to rip throw all the replace calls)
-                        // SAVE TO VAR FOR REUSE (need more SearchBar.ABC variables)
+                        // REPLACE TEMPLATE STUFF (should make a func to rip throw all the replace calls)
+                        // SAVE TO VAR FOR REUSE (need more this.ABC variables)
                         // TODO: i think this is how i want it below...
-                        // SearchBar.CommandBarDocumentationInputWithoutValue = await SearchBar.GetResource(SearchBar.CommandBarDocumentationInputWithoutValuePath);
+                        // this.CommandBarDocumentationInputWithoutValue = await this.GetResource(this.CommandBarDocumentationInputWithoutValuePath);
                         // `
-                        //         <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}" target="_blank">
+                        //         <a id="documentationLinkDestination" href="${this.DocumentationUrl}" target="_blank">
                         //             <span class="TextButton"
                         //                 style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
                         //                 Search iMIS Documentation
@@ -976,19 +1099,19 @@ var SearchBar = /** @class */ (function () {
                         //             </span>
                         //         </a>
                         //     `;
-                        _y = SearchBar;
-                        return [4 /*yield*/, SearchBar.GetResource(SearchBar.UserDetailsViewPath)];
+                        _y = this;
+                        return [4 /*yield*/, this.GetResource(this.UserDetailsViewPath)];
                     case 23:
                         // TODO: i think this html loading and replacing is driving my nuts bc i want it all to work like this:
                         //1 Build Some Component
                         // inside BUILD:
                         // GET HTML (should already be loaded from GetAllAssets?)
-                        // REPLACE TEMPLATE STUFF (should make a static func to rip throw all the replace calls)
-                        // SAVE TO VAR FOR REUSE (need more SearchBar.ABC variables)
+                        // REPLACE TEMPLATE STUFF (should make a func to rip throw all the replace calls)
+                        // SAVE TO VAR FOR REUSE (need more this.ABC variables)
                         // TODO: i think this is how i want it below...
-                        // SearchBar.CommandBarDocumentationInputWithoutValue = await SearchBar.GetResource(SearchBar.CommandBarDocumentationInputWithoutValuePath);
+                        // this.CommandBarDocumentationInputWithoutValue = await this.GetResource(this.CommandBarDocumentationInputWithoutValuePath);
                         // `
-                        //         <a id="documentationLinkDestination" href="${SearchBar.DocumentationUrl}" target="_blank">
+                        //         <a id="documentationLinkDestination" href="${this.DocumentationUrl}" target="_blank">
                         //             <span class="TextButton"
                         //                 style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
                         //                 Search iMIS Documentation
@@ -1003,36 +1126,37 @@ var SearchBar = /** @class */ (function () {
         });
     };
     // Build this Tab on the fly and scrap the whole thing when you're done
-    SearchBar.SetUserDetails = function (userId) {
+    SearchBar.prototype.SetUserDetails = function (userId) {
         if (userId === void 0) { userId = ''; }
-        var input = userId ? userId : $('#commandBarInput').val();
+        var input = userId ? userId : this.$('#commandBarInput').val();
         console.log('input = ', input);
         // Set up view
-        var content = SearchBar.UserDetailsView;
-        $("#UserDetailsTab").replaceWith(content);
+        var content = this.UserDetailsView;
+        this.$("#UserDetailsTab").replaceWith(content !== null && content !== void 0 ? content : "");
         // Get api data
         var username = this.GetUserName(input); // THIS ONLY GRABS THE USERNAME
         // TODO: this should determin whether or not to set up this view in the first place
         // TODO: extract this and pass in userData if it has it - otherwise stay on commandTab....
         var data = this.GetParty(input);
         // Update view with api data -> right column
-        var profile = SearchBar.GetProfile(data);
-        $('#userCardProfile').replaceWith(profile);
+        var profile = this.GetProfile(data);
+        this.$('#userCardProfile').replaceWith(profile);
         // Update view with api data -> left column
-        var userActions = SearchBar.GetUserCardActions(input);
-        $('#userCardActions').replaceWith(userActions);
+        var userActions = this.GetUserCardActions(input);
+        this.$('#userCardActions').replaceWith(userActions);
         // Update Documentation Search Area with Created/Updated stuff
-        var changeDetails = SearchBar.GetUserChangeDetails(username, data);
-        $("#userCardChangeDetails").replaceWith(changeDetails);
+        var changeDetails = this.GetUserChangeDetails(username, data);
+        this.$("#userCardChangeDetails").replaceWith(changeDetails);
     };
-    SearchBar.GetParty = function (input) {
+    SearchBar.prototype.GetParty = function (input) {
+        var _a;
         var result = {};
-        $.ajax("".concat(SearchBar.ClientContext.baseUrl, "api/Party/").concat(input), {
+        $.ajax("".concat((_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl, "api/Party/").concat(input), {
             type: "GET",
             contentType: "application/json",
             async: false,
             headers: {
-                RequestVerificationToken: SearchBar.RVToken
+                RequestVerificationToken: this.RVToken
             },
             success: function (personData) {
                 console.log('personData = ', personData);
@@ -1045,14 +1169,15 @@ var SearchBar = /** @class */ (function () {
         });
         return result;
     };
-    SearchBar.GetUserName = function (input) {
+    SearchBar.prototype.GetUserName = function (input) {
+        var _a;
         var result = '';
-        $.ajax("".concat(SearchBar.ClientContext.baseUrl, "api/User/").concat(input), {
+        $.ajax("".concat((_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl, "api/User/").concat(input), {
             type: "GET",
             contentType: "application/json",
             async: false,
             headers: {
-                RequestVerificationToken: SearchBar.RVToken
+                RequestVerificationToken: this.RVToken
             },
             success: function (userData) {
                 console.log('userData = ', userData);
@@ -1065,207 +1190,120 @@ var SearchBar = /** @class */ (function () {
         });
         return result;
     };
-    SearchBar.FindUserByName = function (input) {
-        var _a;
+    SearchBar.prototype.FindUserIdByName = function (input) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var options, response;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var options, response, results;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         options = {
-                            method: 'POST',
-                            headers: { accept: 'application/json', 'content-type': 'application/json', RequestVerificationToken: SearchBar.RVToken },
-                            body: JSON.stringify({
-                                $type: "Asi.Soa.Core.DataContracts.GenericExecuteRequest, Asi.Contracts",
-                                OperationName: "FindByUserName",
-                                EntityTypeName: "User",
-                                Parameters: {
-                                    $type: "System.Collections.ObjectModel.Collection`1[[System.Object, mscorlib]], mscorlib",
-                                    $values: [
-                                        {
-                                            "$type": "System.String",
-                                            "$value": "".concat(input)
-                                        }
-                                    ]
-                                },
-                                ParameterTypeName: {
-                                    $type: "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
-                                    $values: [
-                                        "System.String"
-                                    ]
-                                },
-                                UseJson: false
-                            })
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': (_a = this.RVToken) !== null && _a !== void 0 ? _a : ""
+                            }
                         };
-                        return [4 /*yield*/, fetch("".concat(SearchBar.ClientContext.baseUrl, "api/User/_execute"), options)];
+                        return [4 /*yield*/, fetch("".concat((_b = this.ClientContext) === null || _b === void 0 ? void 0 : _b.baseUrl, "api/User?username=").concat(input), options)];
                     case 1:
-                        response = _b.sent();
+                        response = _c.sent();
                         return [4 /*yield*/, response.json()];
-                    case 2: return [2 /*return*/, (_a = (_b.sent()).Result.UserId) !== null && _a !== void 0 ? _a : ''];
+                    case 2:
+                        results = _c.sent();
+                        if (results.Count !== 1) {
+                            return [2 /*return*/, null];
+                        }
+                        else {
+                            return [2 /*return*/, results.Items.$values[0].Party.Id];
+                        }
+                        return [2 /*return*/];
                 }
             });
         });
     };
-    SearchBar.RemoveUserDetailsInfo = function () {
-        $("#UserDetailsTab").empty();
+    SearchBar.prototype.RemoveUserDetailsInfo = function () {
+        this.$("#UserDetailsTab").empty();
     };
-    /**
-     * Initializes the various elements of this module..
-     */
-    SearchBar.prototype.init = function () {
+    SearchBar.prototype.BuildConfig = function () {
         var _this = this;
-        this.$(function () {
-            console.log.apply(console, __spreadArray([SearchBar.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
-            SearchBar.RVToken = $("#__RequestVerificationToken").val();
-            SearchBar.ClientContext = JSON.parse($('#__ClientContext').val());
-            // we want to prevent non-users from using the searchbar
-            console.log('SearchBar.ClientContext.isAnonymous = ', SearchBar.ClientContext.isAnonymous);
-            if (SearchBar.ClientContext.isAnonymous)
-                return;
-            SearchBar.GetResource(SearchBar.CommandBarPath).then(function (data) {
-                $('body').prepend(data);
-            });
-            SearchBar.BuildConfig();
-            SearchBar.GetAllAssets().then(function () {
-                $("#commandBarOverlay .csiLogo").replaceWith(SearchBar.CsiLogo);
-                $("#commandBarOverlay .externalIconWhite").replaceWith(SearchBar.ExternalIconWhite);
-                // $("#commandBarOverlay .externalIconBlue").replaceWith(SearchBar.ExternalIconBlue);
-                $("#commandBarOverlay .externalIcon").replaceWith(SearchBar.ExternalIcon);
-                $("#commandBarOverlay #commandBarExitButton").html(SearchBar.CloseIcon);
-            });
-            var keysPressed = {};
-            document.addEventListener('keydown', function (event) { return __awaiter(_this, void 0, void 0, function () {
-                var key, isCommandBarVisible, isAnyCombo, input, url;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            key = event.key.toLowerCase();
-                            isCommandBarVisible = $("#commandBarOverlay").is(":visible");
-                            keysPressed[key] = true;
-                            isAnyCombo = function (target1, target2) {
-                                target1 = target1.toLowerCase();
-                                target2 = target2.toLowerCase();
-                                return (keysPressed[target1] && key == target2 || keysPressed[target2] && key == target1);
-                            };
-                            if (!(!isCommandBarVisible && event.target === parent.document.body && isAnyCombo("shift", "w"))) return [3 /*break*/, 2];
-                            event.preventDefault();
-                            return [4 /*yield*/, SearchBar.showOverlay()];
-                        case 1:
-                            _a.sent();
-                            return [3 /*break*/, 5];
-                        case 2:
-                            if (!keysPressed['Escape']) return [3 /*break*/, 4];
-                            // technically chrome has already hidden this, but we need to execute this still for clean up purposes
-                            return [4 /*yield*/, SearchBar.hideOverlay()];
-                        case 3:
-                            // technically chrome has already hidden this, but we need to execute this still for clean up purposes
-                            _a.sent();
-                            return [3 /*break*/, 5];
-                        case 4:
-                            if (isCommandBarVisible && key === "enter" && !keysPressed["shift"] && !keysPressed["control"] && !keysPressed["cmd"] && $("#UserDetailsTab").is(":visible")) {
-                                console.log('UserDetailsTab is VISIBLE -> go to user profile');
-                                if ($('#commandBarInput').get(0) === document.activeElement) {
-                                    input = $('#commandBarInput').val();
-                                    if (input.length > 0 && $.isNumeric(input)) {
-                                        url = "".concat(SearchBar.ClientContext.websiteRoot, "Party.aspx?ID=").concat(input);
-                                        window.location.replace(url);
-                                    }
-                                }
-                            }
-                            _a.label = 5;
-                        case 5: return [2 /*return*/];
-                    }
-                });
-            }); });
-            document.addEventListener('keyup', function (event) {
-                var key = event.key.toLowerCase();
-                delete keysPressed[key];
-                // console.log('keysPressed OFF = ', keysPressed);
-            });
-        });
-    };
-    SearchBar.BuildConfig = function () {
-        Config.GetConfig().then(function (data) {
-            SearchBar.ConfigRoutes = data.filter(function (d) { return !d.isTag; });
-            SearchBar.ConfigTags = data.filter(function (d) { return d.isTag; });
-            var view = Config.BuildRoutesHTML(SearchBar.ConfigRoutes);
-            $('#commandBarUl').html(view);
-            Config.SetEventListeners();
+        ConfigManager.GetConfigInstance().then(function (data) {
+            _this.ConfigRoutes = data.filter(function (d) { return !d.isTag; });
+            _this.ConfigTags = data.filter(function (d) { return d.isTag; });
+            var view = _this.config.BuildRoutesHTML(_this.ConfigRoutes);
+            _this.$('#commandBarUl').html(view);
+            _this.config.SetEventListeners();
         });
     };
     // Use this with '' for showing the spinner so that all tabs are hidden
-    SearchBar.ActivateTab = function (activateTab) {
-        SearchBar.Tabs.forEach(function (tab) {
+    SearchBar.prototype.ActivateTab = function (activateTab) {
+        var _this = this;
+        this.Tabs.forEach(function (tab) {
             if (tab == activateTab) {
-                $("#".concat(tab)).show();
-                if (tab == SearchBar.CommandBarSelectTab) {
-                    SearchBar.SetArrowEventListeners();
+                _this.$("#".concat(tab)).show();
+                if (tab == _this.CommandBarSelectTab) {
+                    _this.SetArrowEventListeners();
                 }
             }
             else {
-                if (tab == SearchBar.CommandBarSelectTab) {
+                if (tab == _this.CommandBarSelectTab) {
                     //TODO: this is currently bleeding resources...
-                    $(".commandBarListItem").off('keydown');
+                    _this.$(".commandBarListItem").off('keydown');
                 }
-                $("#".concat(tab)).hide();
+                _this.$("#".concat(tab)).hide();
             }
         });
     };
-    SearchBar.SetArrowEventListeners = function () {
-        $(".commandBarListItem:first").addClass("commandBarSelected");
+    SearchBar.prototype.SetArrowEventListeners = function () {
+        var _this = this;
+        this.$(".commandBarListItem:first").addClass("commandBarSelected");
         // Get all the <li> elements into a collection
-        var listItems = $(".commandBarListItem");
+        var listItems = this.$(".commandBarListItem");
         // Set up a counter to keep track of which <li> is selected
         var index = 0;
         // Initialize first li as the selected (focused) one:
-        $(listItems[index]).addClass("commandBarSelected");
+        this.$(listItems[index]).addClass("commandBarSelected");
         // Set up a key event handler for the document
-        // $("#commandBarInput").on("keydown", function (event)
-        $(document).on("keydown", function (event) {
-            if ($("#CommandBarSelectTab").is(":visible")) {
+        // this.$("#commandBarInput").on("keydown", function (event)
+        this.$(document).on("keydown", function (event) {
+            if (_this.$("#CommandBarSelectTab").is(":visible")) {
                 console.log('CommandBarSelectTab is VISIBLE');
-                if (listItems.length != $(".commandBarListItem").length) {
-                    listItems = $(".commandBarListItem");
+                if (listItems.length != _this.$(".commandBarListItem").length) {
+                    listItems = _this.$(".commandBarListItem");
                     index = 0;
                 }
-                switch (event.keyCode) {
-                    // Up arrow
-                    case 38:
+                switch (event.key) {
+                    case "ArrowUp":
                         event.preventDefault();
                         // Remove the highlighting from the previous element
-                        $(listItems[index]).removeClass("commandBarSelected");
+                        _this.$(listItems[index]).removeClass("commandBarSelected");
                         // Decrease the counter
                         index = index > 0 ? --index : 0;
                         // Highlight the new element
-                        $(listItems[index]).addClass("commandBarSelected");
+                        _this.$(listItems[index]).addClass("commandBarSelected");
                         // Scroll item into view
-                        $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+                        _this.$(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
                         break;
-                    // Down arrow
-                    case 40:
+                    case "ArrowDown":
                         event.preventDefault();
                         // Remove the highlighting from the previous element
-                        $(listItems[index]).removeClass("commandBarSelected");
+                        _this.$(listItems[index]).removeClass("commandBarSelected");
                         // Increase counter
                         index = index < listItems.length - 1 ? ++index : listItems.length - 1;
                         // Highlight the new element
-                        $(listItems[index]).addClass("commandBarSelected");
+                        _this.$(listItems[index]).addClass("commandBarSelected");
                         // Scroll item into view
-                        $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+                        _this.$(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
                         break;
-                    // Enter
-                    case 13:
+                    case "Enter":
                         event.preventDefault();
-                        $(listItems[index]).children()[0].click();
+                        _this.$(listItems[index]).children()[0].click();
                         break;
                 }
             }
         });
     };
-    SearchBar.SetDocumentationInput = function (content) {
-        $('#commandBarDocumentationInput').html(content);
-    };
-    SearchBar.CaptureInput = function () {
+    SearchBar.prototype.CaptureInput = function () {
         var _this = this;
         console.log('capture input...');
         var debounce = function (fn, t) {
@@ -1283,36 +1321,36 @@ var SearchBar = /** @class */ (function () {
             };
         };
         var userCheck = debounce(function () {
-            $('.loaderParent').hide();
+            _this.$('.loaderParent').hide();
             // i think i want this to return a success/fail value? or myb have a separate check to first talk to the api and pass in user data to this call instead and leave it void
-            SearchBar.SetUserDetails();
+            _this.SetUserDetails();
             // based on above, set this to userdetails if success or a not found tab if unsuccessful (this tab will have to have a "not found" type message somewhere)
             // i really dont want this to inside list itmes bc it will dirty everything up and then ill have to actually manage the list
-            SearchBar.ActivateTab(SearchBar.UserDetailsTab);
+            _this.ActivateTab(_this.UserDetailsTab);
         }, 500);
-        $('#commandBarInput').on('input', function (event) {
-            var currentActionBarValue = $(event.target).val();
+        this.$('#commandBarInput').on('input', function (event) {
+            var currentActionBarValue = _this.$(event.target).val();
             // i think this should encode by default?
             // var currentActionBarValueUriEncoded = encodeURIComponent(currentActionBarValue);
             var isActionBarNumeric = $.isNumeric(currentActionBarValue);
             // Populate Profile Jump Information
             if (isActionBarNumeric === true) {
                 console.log('isActionBarNumeric = true');
-                SearchBar.ActivateTab('');
-                $('.loaderParent').show();
+                _this.ActivateTab('');
+                _this.$('.loaderParent').show();
                 userCheck();
             }
             else {
-                if ($("#CommandBarSelectTab").is(":hidden")) {
+                if (_this.$("#CommandBarSelectTab").is(":hidden")) {
                     console.log('CommandBarSelectTab not visible...');
-                    if ($('.loaderParent').is(":visible")) {
+                    if (_this.$('.loaderParent').is(":visible")) {
                         console.log('loaderParent is visible and not numeric... hide...');
-                        $('.loaderParent').hide();
+                        _this.$('.loaderParent').hide();
                     }
                     console.log('activate commandbar select tab...');
-                    SearchBar.ActivateTab(SearchBar.CommandBarSelectTab);
+                    _this.ActivateTab(_this.CommandBarSelectTab);
                     console.log('remove user details view...');
-                    SearchBar.RemoveUserDetailsInfo();
+                    _this.RemoveUserDetailsInfo();
                 }
             }
             if (currentActionBarValue) {
@@ -1326,56 +1364,55 @@ var SearchBar = /** @class */ (function () {
                     keys: ['category', 'displayName', 'altName'],
                     shouldSort: true
                 };
-                var fuse = new Fuse(SearchBar.ConfigRoutes, options);
+                var fuse = new Fuse(_this.ConfigRoutes, options);
                 var results = fuse.search(currentActionBarValue);
                 var filteredResults = results.filter(filteredSearch).map(function (fr) { return fr.item; });
-                var routesHTML = Config.BuildRoutesHTML(filteredResults);
-                var tagsHTML = Config.BuildTagsHTML(SearchBar.ConfigTags, filteredResults.length, currentActionBarValue);
-                $('#commandBarUl').html(routesHTML.concat(tagsHTML));
-                Config.SetEventListeners(true);
+                var routesHTML = _this.config.BuildRoutesHTML(filteredResults);
+                var tagsHTML = _this.config.BuildTagsHTML(_this.ConfigTags, filteredResults.length, currentActionBarValue);
+                _this.$('#commandBarUl').html(routesHTML.concat(tagsHTML));
+                _this.config.SetEventListeners(true);
             }
             else {
-                var routesHTML = Config.BuildRoutesHTML(SearchBar.ConfigRoutes);
-                $('#commandBarUl').html(routesHTML);
-                Config.SetEventListeners();
+                var routesHTML = _this.config.BuildRoutesHTML(_this.ConfigRoutes);
+                _this.$('#commandBarUl').html(routesHTML);
+                _this.config.SetEventListeners();
             }
-            // $(".commandBarListItem:first").addClass("commandBarSelected");
-            SearchBar.SetArrowEventListeners();
+            // this.$(".commandBarListItem:first").addClass("commandBarSelected");
+            _this.SetArrowEventListeners();
         });
     };
-    SearchBar.showOverlay = function () {
+    SearchBar.prototype.showOverlay = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
                 //if already showing
-                if ($("#commandBarOverlay").is(":hidden")) {
+                if (this.$("#commandBarOverlay").is(":hidden")) {
                     console.log('show overlay...');
-                    SearchBar.ActivateTab(SearchBar.CommandBarSelectTab);
-                    $('#commandBarOverlay').show();
-                    $('#commandBarExitButton').on("click", function () {
-                        return __awaiter(this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        console.log('exit clicked...');
-                                        return [4 /*yield*/, SearchBar.hideOverlay()];
-                                    case 1:
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
+                    this.ActivateTab(this.CommandBarSelectTab);
+                    this.$('#commandBarOverlay').show();
+                    this.$('#commandBarExitButton').on("click", function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    console.log('exit clicked...');
+                                    return [4 /*yield*/, this.hideOverlay()];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
                         });
-                    });
-                    SearchBar.CaptureInput();
-                    $('#commandBarInput').trigger("focus");
+                    }); });
+                    this.CaptureInput();
+                    this.$('#commandBarInput').trigger("focus");
                     // TODO: fix extra handlers being made
                     // @ts-ignore
-                    // console.log($._data($('#commandBarExitButton')[0], 'events'));
+                    // console.log($._data(this.$('#commandBarExitButton')[0], 'events'));
                     // // @ts-ignore
-                    // console.log($._data($('.commandBarListItem')[0], 'events'));
+                    // console.log($._data(this.$('.commandBarListItem')[0], 'events'));
                     // // @ts-ignore
-                    // console.log($._data($('#commandBarInput')[0], 'events'));
+                    // console.log($._data(this.$('#commandBarInput')[0], 'events'));
                     // // @ts-ignore
-                    // console.log($._data($(document)[0], 'events'));
+                    // console.log($._data(this.$(document)[0], 'events'));
                     // TODO: 'commandBarExitButton'(CLICK) = BLEEDING
                     // TODO: '#commandBarInput'(INPUT) = BLEEDING
                     // TODO: 'document'(KEYDOWN) = BLEEDING
@@ -1387,18 +1424,18 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    // TODO: ESCAPE DOESNT CALL THIS....
-    SearchBar.hideOverlay = function () {
+    SearchBar.prototype.hideOverlay = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 console.log('hideOverlay called...');
-                $('#commandBarOverlay').hide();
+                this.$('#commandBarOverlay').hide();
                 // remove handlers
-                $('#commandBarExitButton').off("click");
-                $('#commandBarInput').off('input');
+                this.$('#commandBarExitButton').off("click");
+                this.$('#commandBarInput').off('input');
                 // reset whatever view we left off on back to the original
-                $('#commandBarInput').val('');
-                SearchBar.RemoveUserDetailsInfo();
+                this.$('#commandBarInput').val('');
+                // todo: add search results / config clearing
+                this.RemoveUserDetailsInfo();
                 return [2 /*return*/];
             });
         });
@@ -1410,39 +1447,6 @@ var SearchBar = /** @class */ (function () {
         "background-color: #00a4e0; color: white;",
         "background-color: inherit; color: inherit;", // Message
     ];
-    SearchBar.UserDetailsTab = "UserDetailsTab";
-    SearchBar.CommandBarSelectTab = "CommandBarSelectTab";
-    // public static ConfigPath: string = "https://www.csiinc.com/";
-    // public static ConfigPath: string = "https://privatebin.net/?957280438a1f7d22#85FkNCyRTRJV3i7eFWtbb2K7zQE7RjgViNMyo3FSqf33";
-    // public static ConfigPath: string = "https://pastebin.com/fNkent7J";
-    SearchBar.ConfigPath = "assets/search-bar-config.json";
-    //#region SVG Paths
-    SearchBar.CsiLogoPath = "assets/images/csiLogo.svg";
-    SearchBar.BuildingIconPath = "assets/images/buildingIcon.svg";
-    SearchBar.CakeIconPath = "assets/images/cakeIcon.svg";
-    SearchBar.EmailIconPath = "assets/images/emailIcon.svg";
-    SearchBar.MailboxIconPath = "assets/images/mailboxIcon.svg";
-    SearchBar.PhoneIconPath = "assets/images/phoneIcon.svg";
-    SearchBar.UserTagIconPath = "assets/images/userTagIcon.svg";
-    SearchBar.ExternalIconPath = "assets/images/externalIcon.svg";
-    SearchBar.ExternalIconBluePath = "assets/images/externalIconBlue.svg";
-    SearchBar.ExternalIconWhitePath = "assets/images/externalIconWhite.svg";
-    SearchBar.IdCardBluePath = "assets/images/idCardBlue.svg";
-    SearchBar.BrowsersIconPath = "assets/images/browserIcon.svg";
-    SearchBar.LockIconPath = "assets/images/lockIcon.svg";
-    SearchBar.CloseIconPath = "assets/images/closeIcon.svg";
-    //#endregion
-    //#region Component Paths
-    SearchBar.CommandBarPath = "assets/components/commandBar.html";
-    SearchBar.ShiftButtonPath = "assets/components/buttons/shift.html";
-    SearchBar.PlusButtonPath = "assets/components/buttons/plus.html";
-    SearchBar.EnterButtonPath = "assets/components/buttons/enter.html";
-    SearchBar.EnterButton2Path = "assets/components/buttons/enter2.html";
-    SearchBar.ControlButtonPath = "assets/components/buttons/control.html";
-    SearchBar.ControlButton2Path = "assets/components/buttons/control2.html";
-    SearchBar.PrimaryButtonPath = "assets/components/buttons/primary.html";
-    SearchBar.DocumentationUrl = "https://help.imis.com/enterprise/search.htm";
-    SearchBar.UserDetailsViewPath = "assets/views/userDetailsTab.html";
     return SearchBar;
 }());
-new SearchBar($);
+new SearchBar(jQuery);

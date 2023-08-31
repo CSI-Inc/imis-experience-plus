@@ -11,7 +11,7 @@ class IqaExtensions
     constructor(private $: JQueryStatic)
     {
         // Run some checks to determine if we are inside of the iMIS staff site
-        if (this.$('head').get(0)?.id !== 'ctl00_Head1' && this.$('form').get(0)?.id !== 'aspnetForm')
+        if (this.$('html').get(0)?.id !== 'MainHtml' && this.$('body').get(0)?.id !== 'MainBody' && this.$('form').get(0)?.id !== 'aspnetForm')
         {
             // Not iMIS - do nothing
             return;
