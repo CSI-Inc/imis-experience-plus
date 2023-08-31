@@ -712,7 +712,7 @@ class SearchBar
     {
         this.$(() =>
         {
-            console.log(SearchBar.VERSION_STRING + "Loaded: IQA Browser Extensions", ...SearchBar.VERSION_STYLES);
+            console.log(SearchBar.VERSION_STRING + "Loaded: Search Bar", ...SearchBar.VERSION_STYLES);
             SearchBar.RVToken = $("#__RequestVerificationToken").val() as string;
             SearchBar.ClientContext = JSON.parse($('#__ClientContext').val() as string) as ClientContext;
 

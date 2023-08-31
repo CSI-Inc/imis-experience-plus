@@ -1115,7 +1115,7 @@ var SearchBar = /** @class */ (function () {
     SearchBar.prototype.init = function () {
         var _this = this;
         this.$(function () {
-            console.log.apply(console, __spreadArray([SearchBar.VERSION_STRING + "Loaded: IQA Browser Extensions"], SearchBar.VERSION_STYLES, false));
+            console.log.apply(console, __spreadArray([SearchBar.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
             SearchBar.RVToken = $("#__RequestVerificationToken").val();
             SearchBar.ClientContext = JSON.parse($('#__ClientContext').val());
             // we want to prevent non-users from using the searchbar
