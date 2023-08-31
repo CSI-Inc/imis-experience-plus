@@ -863,67 +863,12 @@ class SearchBar
                     // Enter
                     case 13:
                         event.preventDefault();
-                        console.log('currentLI = ', index);
-                        $(listItems[index]).children().trigger("click");
+                        $(listItems[index]).children()[0].click();
                         break;
                 }
             }
         });
-        // document.addEventListener("keydown", function (event)
-        // {
-        //     if ($("#CommandBarSelectTab").is(":visible"))
-        //     {
-        //         console.log('CommandBarSelectTab is VISIBLE');
-        //         switch (event.keyCode)
-        //         {
-        //             // Up arrow
-        //             case 38:
-        //                 event.preventDefault();
-        //                 // Remove the highlighting from the previous element
-        //                 $(listItems[index]).removeClass("commandBarSelected");
-        //                 // Decrease the counter
-        //                 index = index > 0 ? --index : 0;
-        //                 // Highlight the new element
-        //                 $(listItems[index]).addClass("commandBarSelected");
-        //                 // Scroll item into view
-        //                 $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
-        //                 break;
-        //             // Down arrow
-        //             case 40:
-        //                 event.preventDefault();
-        //                 // Remove the highlighting from the previous element
-        //                 $(listItems[index]).removeClass("commandBarSelected");
-        //                 // Increase counter
-        //                 index = index < listItems.length - 1 ? ++index : listItems.length - 1;
-        //                 // Highlight the new element
-        //                 $(listItems[index]).addClass("commandBarSelected");
-        //                 // Scroll item into view
-        //                 $(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
-        //                 break;
-        //             // Enter
-        //             case 13:
-        //                 event.preventDefault();
-        //                 console.log('index = ', index);
-        //                 console.log('listItems = ', listItems);
-        //                 console.log('$(listItems[index]) = ', $(listItems[index]));
-        //                 console.log('$(listItems[index]) = ', $(listItems[index]));
-        //                 $(listItems[index]).trigger("click");
-        //                 $(listItems[index])[0].click();
-        //                 break;
-        //         }
-        //     }
-        // });
     }
-
-    // public static async GetConfig(): Promise<Config[]>
-    // {
-    //     var url = chrome.runtime.getURL(SearchBar.ConfigPath);
-    //     var json = await $.get({ url, dataType: 'json', type: 'GET' }) as Config[];
-    //     var result: Array<Config> = [];
-    //     // need to build each Config model so that search can be computed
-    //     json.forEach(i => result.push(new Config(i.category, i.displayName, i.altName, i.action, i.destination, i.isShortcut)));
-    //     return result;
-    // }
 
     public static SetDocumentationInput(content: string): void
     {
@@ -958,13 +903,6 @@ class SearchBar
             SearchBar.ActivateTab(SearchBar.UserDetailsTab);
         }, 500);
 
-
-
-        // TODO: not sure why this isnt working...
-        // $('#commandBarInput').on('keyup', $.debounce(500, SearchBar.Stuff));
-        // @ts-ignore
-        // $('#commandBarInput').on('input', Cowboy.debounce(500, debouceFn));
-        // $('#commandBarInput').on('input', Cowboy.debounce(500, (event) =>
         $('#commandBarInput').on('input', (event) =>
         {
             var currentActionBarValue = $(event.target).val() as string;
@@ -1045,15 +983,13 @@ class SearchBar
 
             // TODO: fix extra handlers being made
             // @ts-ignore
-            console.log($._data($('#commandBarExitButton')[0], 'events'));
-            // @ts-ignore
-            console.log($._data($('.commandBarListItem')[0], 'events'));
-            // @ts-ignore
-            console.log($._data($('#commandBarInput')[0], 'events'));
-            // @ts-ignore
-            console.log($._data($(document)[0], 'events'));
-            // @ts-ignore
-            // console.log($._data($('#workBarAboutButton')[0], 'events'));
+            // console.log($._data($('#commandBarExitButton')[0], 'events'));
+            // // @ts-ignore
+            // console.log($._data($('.commandBarListItem')[0], 'events'));
+            // // @ts-ignore
+            // console.log($._data($('#commandBarInput')[0], 'events'));
+            // // @ts-ignore
+            // console.log($._data($(document)[0], 'events'));
 
             // TODO: 'commandBarExitButton'(CLICK) = BLEEDING
             // TODO: '#commandBarInput'(INPUT) = BLEEDING
@@ -1065,7 +1001,7 @@ class SearchBar
         }
     }
 
-    // todo: ESCAPE DOESNT CALL THIS....
+    // TODO: ESCAPE DOESNT CALL THIS....
     public static async hideOverlay(): Promise<void>
     {
         console.log('hideOverlay called...');
@@ -1074,18 +1010,9 @@ class SearchBar
         // remove handlers
         $('#commandBarExitButton').off("click");
         $('#commandBarInput').off('input');
-        // $('#workBarAboutButton').off('mouseenter');
-        // $('#workBarAboutButton').off('mouseleave');
 
         // reset whatever view we left off on back to the original
         $('#commandBarInput').val('');
-        // $('#CommandBarSelectTab li').each(function ()
-        // {
-        //     $(this).show();
-        // });
-
-        
-
 
         SearchBar.RemoveUserDetailsInfo();
     }
