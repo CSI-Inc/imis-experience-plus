@@ -11,6 +11,9 @@
     "permissions": [
         "storage"
     ],
+    "action": {
+        "default_popup": "menu.html"
+    },
     "incognito": "split",
     "content_scripts": [
         {

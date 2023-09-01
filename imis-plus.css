@@ -1,6 +1,6 @@
 /* RiSE Content Editor Styles */
 
-.__csi__iep__addButton
+#MainPanel.__csi__iep__rise .__csi__iep__addButton
 {
     display: inline-flex;
     flex-direction: 'row';
@@ -14,36 +14,36 @@
     border: 1px solid #E5E5E5;
 }
 
-.__csi__iep__addButton > a[id=AddContentLink]
+#MainPanel.__csi__iep__rise .__csi__iep__addButton > a[id=AddContentLink]
 {
     color: #36ad4b !important;
 }
 
-.__csi__iep__addButton > br + div
+#MainPanel.__csi__iep__rise .__csi__iep__addButton > br + div
 {
     width: 100%;
     text-align: center;
 }
 
-.__csi__iep__addButton > a[id=AddContentLink],
-.__csi__iep__addButton > a[id=AddContentLink] + span + a
+#MainPanel.__csi__iep__rise .__csi__iep__addButton > a[id=AddContentLink],
+#MainPanel.__csi__iep__rise .__csi__iep__addButton > a[id=AddContentLink] + span + a
 {
     text-decoration: none !important;
 }
 
-.__csi__iep__addButton > a[id=AddContentLink]:hover,
-.__csi__iep__addButton > a[id=AddContentLink] + span + a:hover
+#MainPanel.__csi__iep__rise .__csi__iep__addButton > a[id=AddContentLink]:hover,
+#MainPanel.__csi__iep__rise .__csi__iep__addButton > a[id=AddContentLink] + span + a:hover
 {
     text-decoration: underline !important;
 }
 
-.__csi__iep__addButton > a[id=AddContentLink] + span
+#MainPanel.__csi__iep__rise .__csi__iep__addButton > a[id=AddContentLink] + span
 {
     display: inline-block;
     margin: 0 1rem;
 }
 
-.__csi__iep__zoneName
+#MainPanel.__csi__iep__rise .__csi__iep__zoneName
 {
     position: absolute;
     border-top: 2px dashed rgba(0, 0, 0, 0.2);
@@ -59,75 +59,77 @@
     background-color: white;
 }
 
-table div.WebPartZoneDesignTimeEmptyZoneText
+#MainPanel.__csi__iep__rise table div.WebPartZoneDesignTimeEmptyZoneText
 {
     margin-bottom: 1rem;
 }
 
-.panel-body .WebPartZoneDesignTime
+#MainPanel.__csi__iep__rise .panel-body .WebPartZoneDesignTime
 {
     border: 2px dashed;
     margin: 2rem 0;
 }
 
-.panel-body .WebPartZoneDesignTime,
-.panel-body .__csi__iep__zoneName
+#MainPanel.__csi__iep__rise .panel-body .WebPartZoneDesignTime,
+#MainPanel.__csi__iep__rise .panel-body .__csi__iep__zoneName
 {
     border-color: rgba(0, 0, 0, 0.1);
     transition: border-color 0.2s ease-in-out;
 }
 
-.panel-body .WebPartZoneDesignTime:hover
+#MainPanel.__csi__iep__rise .panel-body .WebPartZoneDesignTime:hover
 {
     border-color: rgba(35, 116, 157, 0.7);
     transition: border-color 0.2s ease-in-out;
 }
 
-.panel-body .WebPartZoneDesignTime .__csi__iep__addButton
+#MainPanel.__csi__iep__rise .panel-body .WebPartZoneDesignTime .__csi__iep__addButton
 {
     opacity: 0.2;
     transition: opacity 0.2s ease-in-out;
 }
 
-.panel-body .WebPartZoneDesignTime:hover .__csi__iep__addButton
+#MainPanel.__csi__iep__rise .panel-body .WebPartZoneDesignTime:hover .__csi__iep__addButton
 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
 }
 
-.WebPartsTitleBar > table > tbody > tr > td > span
+#MainPanel.__csi__iep__rise .WebPartsTitleBar > table > tbody > tr > td > span
 {
     font-size: 1.5rem;
     font-style: italic;
-    vertical-align: text-bottom !important;
+    vertical-align: middle !important;
     line-height: 1;
 }
 
-.WebPartsTitleBar a.WebPartsTitleBarVerb
+#MainPanel.__csi__iep__rise .WebPartsTitleBar a.WebPartsTitleBarVerb
 {
     font-size: 18px !important;
     display: inline-block;
     margin: 0 0.5.rem;
+    line-height: 1.7;
 }
 
-.WebPartsTitleBar.__csi__iep__preview
+#MainPanel.__csi__iep__rise .WebPartsTitleBar.__csi__iep__preview,
+#MainPanel.__csi__iep__rise .__csi__iep__zoneName.__csi__iep__preview
 {
-    display: none;
+    display: none !important;
 }
 
-.WebPartZoneDesignTime.__csi__iep__preview,
-.WebPartZoneDesignTime.__csi__iep__preview table[class*=WebPartControl_Zone]
+#MainPanel.__csi__iep__rise .WebPartZoneDesignTime.__csi__iep__preview,
+#MainPanel.__csi__iep__rise .WebPartZoneDesignTime.__csi__iep__preview table[class*=WebPartControl_Zone]
 {
     border: none !important;
 }
 
-.WebPartZoneDesignTime.__csi__iep__preview .WebPartZoneDesignTimeAction
+#MainPanel.__csi__iep__rise .WebPartZoneDesignTime.__csi__iep__preview .WebPartZoneDesignTimeAction
 {
     display: none !important;
 }
 
 /* Drag and drop improvements */
-.droppable.ui-droppable-active
+#MainPanel.__csi__iep__rise .droppable.ui-droppable-active
 {
     border: 2px dotted #CCC;
     display: block;
@@ -136,7 +138,7 @@ table div.WebPartZoneDesignTimeEmptyZoneText
     background: none;
 }
 
-.droppable.ui-droppable-active:after
+#MainPanel.__csi__iep__rise .droppable.ui-droppable-active:after
 {
     content: 'Drop Here';
     display: flex;
@@ -152,7 +154,7 @@ table div.WebPartZoneDesignTimeEmptyZoneText
     align-items: center;
 }
 
-.droppable.ui-droppable.ui-droppable-hover
+#MainPanel.__csi__iep__rise .droppable.ui-droppable.ui-droppable-hover
 {
     border: 2px dotted #AAA;
     display: block;
@@ -161,17 +163,9 @@ table div.WebPartZoneDesignTimeEmptyZoneText
     background-color: #EAEAEA;
 }
 
-.droppable.ui-droppable.ui-droppable-hover:after
+#MainPanel.__csi__iep__rise .droppable.ui-droppable.ui-droppable-hover:after
 {
     color: #222;
-}
-
-.__csi__iep__verb_configure
-{
-    margin: 2px 0.5rem 6px 0;
-    padding: 4px 0 2px 0;
-    vertical-align: middle;
-    line-height: 1
 }
 
 /* Font Awesome Colors */
@@ -264,16 +258,6 @@ table div.WebPartZoneDesignTimeEmptyZoneText
 {
     color: #444;
 }
-
-/* SEARCH BAR STYLES */
-/* @font-face {
-  font-family: 'CSI Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  font-stretch: 100%;
-  src: url(https://fonts.gstatic.com/s/opensans/v35/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVI.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-} */
 
 #commandBarOverlay
 {

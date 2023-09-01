@@ -1,4 +1,131 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var Settings = /** @class */ (function () {
+    function Settings($) {
+        var _this = this;
+        this.$ = $;
+        this.SPACEBAR = 'Spacebar';
+        // Contains interactive logic for the popout menu speceifically. Will early exit for other pages.
+        this.$(function () { return __awaiter(_this, void 0, void 0, function () {
+            var config;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!$('#iep-menu').length) {
+                            return [2 /*return*/];
+                        }
+                        return [4 /*yield*/, this.load()];
+                    case 1:
+                        config = _a.sent();
+                        // Restore settings to the page
+                        $('#enable-iqa').prop('checked', config.enableIqa);
+                        $('#enable-rise').prop('checked', config.enableRise);
+                        $('#enable-workbar').prop('checked', config.enableWorkbar);
+                        $('#workbar-kbd').val(config.workbarShortcut);
+                        $('#kbd-ctrl').prop('checked', config.workbarKbdCtrl);
+                        $('#kbd-alt').prop('checked', config.workbarKbdAlt);
+                        $('#kbd-shift').prop('checked', config.workbarKbdShift);
+                        $('#workbar-kbd').on('keydown', function (e) {
+                            e.preventDefault();
+                            if (e.metaKey || e.key === 'Control' || e.key === 'Alt' || e.key === 'Shift') {
+                                return;
+                            }
+                            $('#kbd-ctrl').prop('checked', e.ctrlKey);
+                            $('#kbd-alt').prop('checked', e.altKey);
+                            $('#kbd-shift').prop('checked', e.shiftKey);
+                            // Capitalize the first letter of e.key
+                            e.key = e.key.charAt(0).toUpperCase() + e.key.slice(1);
+                            // Rename ' ' to Space
+                            if (e.key === ' ')
+                                e.key = _this.SPACEBAR;
+                            $('#workbar-kbd').val(e.key);
+                        });
+                        // If any input on the page changes, trigger the save function
+                        $('input').on('change', function () { return _this.save(); });
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    }
+    Settings.prototype.save = function () {
+        chrome.storage.sync.set({
+            enableIqa: $('#enable-iqa').prop('checked'),
+            enableRise: $('#enable-rise').prop('checked'),
+            enableWorkbar: $('#enable-workbar').prop('checked'),
+            workbarShortcut: $('#workbar-kbd').val(),
+            workbarKbdCtrl: $('#kbd-ctrl').prop('checked'),
+            workbarKbdAlt: $('#kbd-alt').prop('checked'),
+            workbarKbdShift: $('#kbd-shift').prop('checked')
+        });
+    };
+    Settings.prototype.load = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve) {
+                        chrome.storage.sync.get({
+                            enableIqa: true,
+                            enableRise: false,
+                            enableWorkbar: true,
+                            workbarShortcut: _this.SPACEBAR,
+                            workbarKbdCtrl: true,
+                            workbarKbdAlt: false,
+                            workbarKbdShift: false
+                        }, function (settings) {
+                            resolve({
+                                enableIqa: settings.enableIqa,
+                                enableRise: settings.enableRise,
+                                enableWorkbar: settings.enableWorkbar,
+                                workbarShortcut: settings.workbarShortcut,
+                                workbarKbdCtrl: settings.workbarKbdCtrl,
+                                workbarKbdAlt: settings.workbarKbdAlt,
+                                workbarKbdShift: settings.workbarKbdShift
+                            });
+                        });
+                    })];
+            });
+        });
+    };
+    return Settings;
+}());
+new Settings(jQuery);
+/// <reference path="settings/settings.ts" />
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -12,6 +139,7 @@ var IqaExtensions = /** @class */ (function () {
     function IqaExtensions($) {
         var _a, _b, _c;
         this.$ = $;
+        this.settings = new Settings($);
         // Run some checks to determine if we are inside of the iMIS staff site
         if (((_a = this.$('html').get(0)) === null || _a === void 0 ? void 0 : _a.id) !== 'MainHtml' && ((_b = this.$('body').get(0)) === null || _b === void 0 ? void 0 : _b.id) !== 'MainBody' && ((_c = this.$('form').get(0)) === null || _c === void 0 ? void 0 : _c.id) !== 'aspnetForm') {
             // Not iMIS - do nothing
@@ -26,12 +154,25 @@ var IqaExtensions = /** @class */ (function () {
      * Initializes the various elements of this module.
      */
     IqaExtensions.prototype.init = function () {
-        if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1) {
-            this.initIqaExtensions();
-        }
-        if (window.location.pathname.indexOf('/AsiCommon/Controls/IQA/Default.aspx') > -1) {
-            this.initIqaBrowserExtensions();
-        }
+        return __awaiter(this, void 0, void 0, function () {
+            var config;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.settings.load()];
+                    case 1:
+                        config = _a.sent();
+                        if (!config.enableIqa)
+                            return [2 /*return*/];
+                        if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1) {
+                            this.initIqaExtensions();
+                        }
+                        if (window.location.pathname.indexOf('/AsiCommon/Controls/IQA/Default.aspx') > -1) {
+                            this.initIqaBrowserExtensions();
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
     /**
      * Initializes the IQA Browser extensions.
@@ -458,6 +599,7 @@ var RiseExtensions = /** @class */ (function () {
     function RiseExtensions($) {
         var _a, _b;
         this.$ = $;
+        this.settings = new Settings($);
         // Run some checks to determine if we are inside of the iMIS staff site
         if (((_a = this.$('head').get(0)) === null || _a === void 0 ? void 0 : _a.id) !== 'ctl00_Head1' && ((_b = this.$('form').get(0)) === null || _b === void 0 ? void 0 : _b.id) !== 'aspnetForm') {
             // Not iMIS - do nothing
@@ -472,12 +614,25 @@ var RiseExtensions = /** @class */ (function () {
      * Initializes the various elements of this module.
      */
     RiseExtensions.prototype.init = function () {
-        var _this = this;
-        if (window.location.pathname.indexOf('/ContentManagement/ContentDesigner/ContentRecordEdit.aspx') > -1) {
-            this.$(function () {
-                _this.initRiseEditorExtensions();
+        return __awaiter(this, void 0, void 0, function () {
+            var config;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.settings.load()];
+                    case 1:
+                        config = _a.sent();
+                        if (!config.enableRise)
+                            return [2 /*return*/];
+                        if (window.location.pathname.indexOf('/ContentManagement/ContentDesigner/ContentRecordEdit.aspx') > -1) {
+                            this.$(function () {
+                                _this.initRiseEditorExtensions();
+                            });
+                        }
+                        return [2 /*return*/];
+                }
             });
-        }
+        });
     };
     /**
      * Initializes the IQA Browser extensions.
@@ -487,6 +642,45 @@ var RiseExtensions = /** @class */ (function () {
         console.log.apply(console, __spreadArray([RiseExtensions.VERSION_STRING + "Loaded: RiSE Module"], RiseExtensions.VERSION_STYLES, false));
         // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
+        // Add a class to the body for scoping CSS rules
+        this.$('form #MainPanel').addClass('__csi__iep__rise');
+        // ICONS!
+        this.$('.rtsLevel.rtsLevel1 .rtsTxt:contains("Definition")').parent().prepend('<i class="fas fa-fw fa-pen-to-square fc-yellow"></i>');
+        this.$('.rtsLevel.rtsLevel1 .rtsTxt:contains("Properties")').parent().prepend('<i class="fas fa-fw fa-cog fc-purple"></i>');
+        this.$('.rtsLevel.rtsLevel1 .rtsTxt:contains("Current tags")').parent().prepend('<i class="fas fa-fw fa-tag fc-teal"></i>');
+        this.$('.rtsLevel.rtsLevel1 .rtsTxt:contains("Redirect rules")').parent().prepend('<i class="fas fa-fw fa-external-link fc-blue"></i>');
+        this.$('.rtsLevel.rtsLevel1 .rtsTxt:contains("Access settings")').parent().prepend('<i class="fas fa-fw fa-users fc-green"></i>');
+        // Fix the confusing publish location controls
+        while (this.$('.PanelFieldValue > #LinkButtons br + *').length) {
+            // remove anything after the first <br>
+            this.$('.PanelFieldValue > #LinkButtons br + *').remove();
+        }
+        this.$('.PanelFieldValue > #LinkButtons').parent().addClass('InputXLargeWrapper');
+        var fullUrl = this.$('.PanelFieldValue > #LinkButtons').find('a').attr('href');
+        var freeLink = this.$("#ctl01_TemplateBody_WebPartControl_PublishFileName_TextField").val();
+        this.$('.PanelFieldValue > #LinkButtons').prepend("\n            <div style=\"margin-bottom: 0.5rem;\">\n                <input type=\"text\" id=\"__csi__iep__fullUrl\" readonly value=\"".concat(fullUrl, "\" />\n                <button id=\"__csi__iep__copyFullUrl\" style=\"margin: 0 0.5rem;\" class=\"btn btn-primary\">\n                    <i class=\"fas fa-copy fa-fw\"></i>\n                    Copy\n                </button>\n            </div>\n        "));
+        // if freelink is not empty, then we have a custom URL
+        if (freeLink) {
+            this.$('.PanelFieldValue > #LinkButtons').closest('.PanelField').after("\n                <div class=\"PanelField Left InputLargeWrapper\">\n                    <div style=\"display: inline;\">\n                        <label class=\"PanelFieldLabel\">Freelink</labeb>\n                    </div>\n                    <div class=\"PanelFieldValue\">\n                        <input type=\"text\" id=\"__csi__iep__freeLink\" readonly value=\"[[".concat(freeLink, "]]\" />\n                        <button id=\"__csi__iep__copyFreeLink\" style=\"margin: 0 0.5rem;\" class=\"btn btn-primary\">\n                            <i class=\"fas fa-copy fa-fw\"></i>\n                            Copy\n                        </button>\n                    </div>\n                </div>\n            "));
+        }
+        else {
+            this.$('.PanelFieldValue > #LinkButtons').closest('.PanelField').append("\n                <div class=\"PanelField Left\">\n                    <div style=\"display: inline;\">\n                        <label class=\"PanelFieldLabel\">Freelink</labeb>\n                    </div>\n                    <div class=\"PanelFieldValue\">\n                        <em>This page does not have a freelink.</em>\n                    </div>\n                </div>\n            ");
+        }
+        // If the user clicks on ID __csi__iep__copyFullUrl or __csi__iep__copyFreeLink, copy the value to the clipboard
+        this.$('#__csi__iep__copyFullUrl, #__csi__iep__copyFreeLink').on('click', function (e) {
+            var _a, _b;
+            e.preventDefault();
+            var target = _this.$(e.currentTarget);
+            target.addClass('disabled').css('pointerEvents', 'none');
+            var qt = (_b = (_a = target.siblings('input').val()) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : '';
+            navigator.clipboard.writeText(qt.trim()).then(function () {
+                target.after('<span class="csi__iep__tempmsg"> Copied!</span>');
+                window.setTimeout(function () { return _this.$('.csi__iep__tempmsg').fadeOut(function () {
+                    _this.$('.csi__iep__tempmsg').remove();
+                    $('#__csi__iep__copyFullUrl, #__csi__iep__copyFreeLink').removeClass('disabled').css('pointerEvents', '');
+                }); }, 2000);
+            });
+        });
         // Zone style tidying / organization
         this.$('.WebPartZoneDesignTimeAction').each(function (_, e) {
             _this.$(e).closest('tr').appendTo(_this.$(e).closest('table'));
@@ -529,18 +723,14 @@ var RiseExtensions = /** @class */ (function () {
         this.$('.WebPartsTitleBar a.WebPartsTitleBarVerb:contains("Remove")')
             .addClass('__csi__iep__verb_remove')
             .html('<i class="fas fa-trash-can fa-fw fc-red"></i>');
-        // Move the configure button to a better spot
-        this.$('.WebPartsTitleBar a.__csi__iep__verb_configure').each(function (_, e) {
-            _this.$(e).prependTo(_this.$(e).closest('td').prev('td'));
-        });
         // Preview Mode
         this.$('div[id$=FieldsPanel]').append("\n            <div class=\"PanelColumn\">\n                <input type=\"checkbox\" id=\"__csi__iep__previewMode\" />\n                <label for=\"__csi__iep__previewMode\">Preview Mode</label>\n            </div>\n        ");
         this.$('#__csi__iep__previewMode').on('change', function (e) {
             if (_this.$(e.target).is(':checked')) {
-                _this.$('.WebPartsTitleBar, .WebPartZoneDesignTime').addClass('__csi__iep__preview');
+                _this.$('.WebPartsTitleBar, .WebPartZoneDesignTime, .__csi__iep__zoneName').addClass('__csi__iep__preview');
             }
             else {
-                _this.$('.WebPartsTitleBar, .WebPartZoneDesignTime').removeClass('__csi__iep__preview');
+                _this.$('.WebPartsTitleBar, .WebPartZoneDesignTime, .__csi__iep__zoneName').removeClass('__csi__iep__preview');
             }
         });
     };
@@ -618,42 +808,6 @@ var CleanUp = /** @class */ (function () {
     };
     return CleanUp;
 }());
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 var ConfigManager = /** @class */ (function () {
     function ConfigManager(searchBar) {
         this.searchBar = searchBar;
