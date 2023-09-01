@@ -1,3 +1,5 @@
+/// <reference path="settings/settings.ts" />
+
 class IqaExtensions
 {
     private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
@@ -8,8 +10,12 @@ class IqaExtensions
         "background-color: inherit; color: inherit;", // Message
     ]
 
+    private settings: Settings;
+
     constructor(private $: JQueryStatic)
     {
+        this.settings = new Settings($);
+
         // Run some checks to determine if we are inside of the iMIS staff site
         if (this.$('html').get(0)?.id !== 'MainHtml' && this.$('body').get(0)?.id !== 'MainBody' && this.$('form').get(0)?.id !== 'aspnetForm')
         {
@@ -27,8 +33,12 @@ class IqaExtensions
     /**
      * Initializes the various elements of this module.
      */
-    init(): void
+    async init(): Promise<void>
     {
+        var config = await this.settings.load();
+
+        if (!config.enableIqa) return;
+
         if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1)
         {
             this.initIqaExtensions();
