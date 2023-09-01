@@ -1,3 +1,6 @@
+/// <reference path="../settings/settings.ts" />
+/// <reference path="../utils.ts" />
+
 class SearchBar
 {
     private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
@@ -19,7 +22,7 @@ class SearchBar
     private ConfigTags: ConfigItem[] = [];
 
     //#region SVG Paths
-    private CsiLogoPath: string = "assets/images/csiLogo.svg"
+    private CsiLogoPath: string = "assets/images/csiicon.svg"
     private BuildingIconPath: string = "assets/images/buildingIcon.svg"
     private CakeIconPath: string = "assets/images/cakeIcon.svg"
     private EmailIconPath: string = "assets/images/emailIcon.svg"
@@ -80,14 +83,16 @@ class SearchBar
     private UserDetailsView: string | null = null;
     private UserDetailsViewPath: string = "assets/views/userDetailsTab.html";
 
+    private settings: Settings;
+
     constructor(private $: JQueryStatic)
     {
+        this.settings = new Settings($);
         this.config = new ConfigManager(this);
         
         this.Tabs = [this.CommandBarSelectTab, this.UserDetailsTab];
 
-        // Run some checks to determine if we are inside of the iMIS staff site
-        if (this.$('head').get(0)?.id !== 'ctl00_Head1' && this.$('form').get(0)?.id !== 'aspnetForm')
+        if (!Utils.isImisPage($))
         {
             // Not iMIS - do nothing
             return;
@@ -100,8 +105,12 @@ class SearchBar
     /**
      * Initializes the various elements of this module..
      */
-    init(): void
+    async init(): Promise<void>
     {
+        var config = await this.settings.load();
+
+        if (!config.enableWorkbar) return;   
+
         this.$(() =>
         {
             console.log(SearchBar.VERSION_STRING + "Loaded: Search Bar", ...SearchBar.VERSION_STYLES);
@@ -119,7 +128,7 @@ class SearchBar
             this.BuildConfig();
             this.GetAllAssets().then(() =>
             {
-                this.$("#commandBarOverlay .csiLogo").replaceWith(this.CsiLogo ?? "");
+                this.$("#commandBarOverlay #logo-placeholder").replaceWith(this.CsiLogo ?? "");
                 this.$("#commandBarOverlay .externalIconWhite").replaceWith(this.ExternalIconWhite ?? "");
                 // this.$("#commandBarOverlay .externalIconBlue").replaceWith(this.ExternalIconBlue);
                 this.$("#commandBarOverlay .externalIcon").replaceWith(this.ExternalIcon ?? "");
@@ -133,14 +142,18 @@ class SearchBar
             {
                 var isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
 
-                // let isAnyCombo = (target1: string, target2: string): boolean =>
-                // {
-                //     target1 = target1.toLowerCase();
-                //     target2 = target2.toLowerCase();
-                //     return (keysPressed[target1] && key == target2 || keysPressed[target2] && key == target1);
-                // }
+                // Replace space in e.key with "Spacebar"
+                if (e.key === " ")
+                {
+                    e.key = Settings.SPACEBAR;
+                }
+
                 // Open CommandBar
-                if (!isCommandBarVisible && e.key.toLowerCase() === "w" && e.shiftKey)
+                if (!isCommandBarVisible
+                    && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
+                    && e.ctrlKey === config.workbarKbdCtrl
+                    && e.altKey === config.workbarKbdAlt
+                    && e.shiftKey === config.workbarKbdShift)
                 {
                     await this.showOverlay();
                     e.preventDefault();

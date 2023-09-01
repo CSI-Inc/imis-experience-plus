@@ -1,4 +1,5 @@
 /// <reference path="settings/settings.ts" />
+/// <reference path="utils.ts" />
 
 class IqaExtensions
 {
@@ -17,7 +18,7 @@ class IqaExtensions
         this.settings = new Settings($);
 
         // Run some checks to determine if we are inside of the iMIS staff site
-        if (this.$('html').get(0)?.id !== 'MainHtml' && this.$('body').get(0)?.id !== 'MainBody' && this.$('form').get(0)?.id !== 'aspnetForm')
+        if (!Utils.isImisPage($))
         {
             // Not iMIS - do nothing
             return;

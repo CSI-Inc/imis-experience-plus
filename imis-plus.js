@@ -1,4 +1,5 @@
 "use strict";
+/// <reference path="settingsModel.ts" />
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -39,7 +40,6 @@ var Settings = /** @class */ (function () {
     function Settings($) {
         var _this = this;
         this.$ = $;
-        this.SPACEBAR = 'Spacebar';
         // Contains interactive logic for the popout menu speceifically. Will early exit for other pages.
         this.$(function () { return __awaiter(_this, void 0, void 0, function () {
             var config;
@@ -73,10 +73,17 @@ var Settings = /** @class */ (function () {
                             e.key = e.key.charAt(0).toUpperCase() + e.key.slice(1);
                             // Rename ' ' to Space
                             if (e.key === ' ')
-                                e.key = _this.SPACEBAR;
-                            $('#workbar-kbd').val(e.key);
+                                e.key = Settings.SPACEBAR;
+                            // If the user enters backspace, clear the input
+                            if (e.key === 'Backspace') {
+                                $('#workbar-kbd').val('');
+                            }
+                            else {
+                                $('#workbar-kbd').val(e.key);
+                            }
+                            _this.save();
                         });
-                        // If any input on the page changes, trigger the save function
+                        // If any input on the page changes or any key is pressed, save the settings
                         $('input').on('change', function () { return _this.save(); });
                         return [2 /*return*/];
                 }
@@ -94,16 +101,15 @@ var Settings = /** @class */ (function () {
             workbarKbdShift: $('#kbd-shift').prop('checked')
         });
     };
-    Settings.prototype.load = function () {
+    Settings.prototype.load = function (something) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve) {
                         chrome.storage.sync.get({
                             enableIqa: true,
                             enableRise: false,
                             enableWorkbar: true,
-                            workbarShortcut: _this.SPACEBAR,
+                            workbarShortcut: Settings.SPACEBAR,
                             workbarKbdCtrl: true,
                             workbarKbdAlt: false,
                             workbarKbdShift: false
@@ -122,10 +128,25 @@ var Settings = /** @class */ (function () {
             });
         });
     };
+    Settings.SPACEBAR = 'Spacebar';
     return Settings;
 }());
 new Settings(jQuery);
+var Utils = /** @class */ (function () {
+    function Utils() {
+    }
+    /** Determines if the current page is an IMIS page or not. This is used to determine if the extension should be enabled or not. */
+    Utils.isImisPage = function ($) {
+        var _a, _b;
+        // Most iMIS pages have a "gWebRoot" variable, a body called "MainBody", and a form called "aspnetForm".
+        return $('script').toArray().some(function (script) { return script.innerHTML.includes('gWebRoot'); })
+            && ((_a = $('body').get(0)) === null || _a === void 0 ? void 0 : _a.id) === 'MainBody'
+            && ((_b = $('form').get(0)) === null || _b === void 0 ? void 0 : _b.id) === 'aspnetForm';
+    };
+    return Utils;
+}());
 /// <reference path="settings/settings.ts" />
+/// <reference path="utils.ts" />
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -137,11 +158,10 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 var IqaExtensions = /** @class */ (function () {
     function IqaExtensions($) {
-        var _a, _b, _c;
         this.$ = $;
         this.settings = new Settings($);
         // Run some checks to determine if we are inside of the iMIS staff site
-        if (((_a = this.$('html').get(0)) === null || _a === void 0 ? void 0 : _a.id) !== 'MainHtml' && ((_b = this.$('body').get(0)) === null || _b === void 0 ? void 0 : _b.id) !== 'MainBody' && ((_c = this.$('form').get(0)) === null || _c === void 0 ? void 0 : _c.id) !== 'aspnetForm') {
+        if (!Utils.isImisPage($)) {
             // Not iMIS - do nothing
             return;
         }
@@ -595,13 +615,14 @@ var IqaExtensions = /** @class */ (function () {
     return IqaExtensions;
 }());
 new IqaExtensions(jQuery);
+/// <reference path="settings/settings.ts" />
+/// <reference path="utils.ts" />
 var RiseExtensions = /** @class */ (function () {
     function RiseExtensions($) {
-        var _a, _b;
         this.$ = $;
         this.settings = new Settings($);
         // Run some checks to determine if we are inside of the iMIS staff site
-        if (((_a = this.$('head').get(0)) === null || _a === void 0 ? void 0 : _a.id) !== 'ctl00_Head1' && ((_b = this.$('form').get(0)) === null || _b === void 0 ? void 0 : _b.id) !== 'aspnetForm') {
+        if (!Utils.isImisPage($)) {
             // Not iMIS - do nothing
             return;
         }
@@ -916,16 +937,17 @@ var ConfigManager = /** @class */ (function () {
     ConfigManager.ConfigPath = "assets/search-bar-config.json";
     return ConfigManager;
 }());
+/// <reference path="../settings/settings.ts" />
+/// <reference path="../utils.ts" />
 var SearchBar = /** @class */ (function () {
     function SearchBar($) {
-        var _a, _b;
         this.$ = $;
         this.UserDetailsTab = "UserDetailsTab";
         this.CommandBarSelectTab = "CommandBarSelectTab";
         this.ConfigRoutes = [];
         this.ConfigTags = [];
         //#region SVG Paths
-        this.CsiLogoPath = "assets/images/csiLogo.svg";
+        this.CsiLogoPath = "assets/images/csiicon.svg";
         this.BuildingIconPath = "assets/images/buildingIcon.svg";
         this.CakeIconPath = "assets/images/cakeIcon.svg";
         this.EmailIconPath = "assets/images/emailIcon.svg";
@@ -982,10 +1004,10 @@ var SearchBar = /** @class */ (function () {
         this.WebsiteUrl = null;
         this.UserDetailsView = null;
         this.UserDetailsViewPath = "assets/views/userDetailsTab.html";
+        this.settings = new Settings($);
         this.config = new ConfigManager(this);
         this.Tabs = [this.CommandBarSelectTab, this.UserDetailsTab];
-        // Run some checks to determine if we are inside of the iMIS staff site
-        if (((_a = this.$('head').get(0)) === null || _a === void 0 ? void 0 : _a.id) !== 'ctl00_Head1' && ((_b = this.$('form').get(0)) === null || _b === void 0 ? void 0 : _b.id) !== 'aspnetForm') {
+        if (!Utils.isImisPage($)) {
             // Not iMIS - do nothing
             return;
         }
@@ -996,67 +1018,88 @@ var SearchBar = /** @class */ (function () {
      * Initializes the various elements of this module..
      */
     SearchBar.prototype.init = function () {
-        var _this = this;
-        this.$(function () {
-            console.log.apply(console, __spreadArray([SearchBar.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
-            _this.RVToken = _this.$("#__RequestVerificationToken").val();
-            _this.ClientContext = JSON.parse(_this.$('#__ClientContext').val());
-            // we want to prevent non-users from using the searchbar
-            console.log('this.ClientContext.isAnonymous = ', _this.ClientContext.isAnonymous);
-            if (_this.ClientContext.isAnonymous)
-                return;
-            _this.GetResource(_this.CommandBarPath).then(function (data) {
-                _this.$('body').prepend(data);
-            });
-            _this.BuildConfig();
-            _this.GetAllAssets().then(function () {
-                var _a, _b, _c, _d;
-                _this.$("#commandBarOverlay .csiLogo").replaceWith((_a = _this.CsiLogo) !== null && _a !== void 0 ? _a : "");
-                _this.$("#commandBarOverlay .externalIconWhite").replaceWith((_b = _this.ExternalIconWhite) !== null && _b !== void 0 ? _b : "");
-                // this.$("#commandBarOverlay .externalIconBlue").replaceWith(this.ExternalIconBlue);
-                _this.$("#commandBarOverlay .externalIcon").replaceWith((_c = _this.ExternalIcon) !== null && _c !== void 0 ? _c : "");
-                _this.$("#commandBarOverlay #commandBarExitButton").html((_d = _this.CloseIcon) !== null && _d !== void 0 ? _d : "");
-            });
-            var keysPressed = {};
-            // on key down
-            _this.$(document).on("keydown", function (e) { return __awaiter(_this, void 0, void 0, function () {
-                var isCommandBarVisible, input, url;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
-                            if (!(!isCommandBarVisible && e.key.toLowerCase() === "w" && e.shiftKey)) return [3 /*break*/, 2];
-                            return [4 /*yield*/, this.showOverlay()];
-                        case 1:
-                            _a.sent();
-                            e.preventDefault();
-                            return [3 /*break*/, 5];
-                        case 2:
-                            if (!(isCommandBarVisible && e.key === "Escape")) return [3 /*break*/, 4];
-                            return [4 /*yield*/, this.hideOverlay()];
-                        case 3:
-                            _a.sent();
-                            return [3 /*break*/, 5];
-                        case 4:
-                            if (isCommandBarVisible && e.key === "Enter" && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"] && this.$("#UserDetailsTab").is(":visible")) {
-                                console.log('UserDetailsTab is VISIBLE -> go to user profile');
-                                if (this.$('#commandBarInput').get(0) === document.activeElement) {
-                                    input = this.$('#commandBarInput').val();
-                                    if (input.length > 0 && $.isNumeric(input) && this.ClientContext !== null) {
-                                        url = "".concat(this.ClientContext.websiteRoot, "Party.aspx?ID=").concat(input);
-                                        window.location.replace(url);
+        return __awaiter(this, void 0, void 0, function () {
+            var config;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.settings.load()];
+                    case 1:
+                        config = _a.sent();
+                        if (!config.enableWorkbar)
+                            return [2 /*return*/];
+                        this.$(function () {
+                            console.log.apply(console, __spreadArray([SearchBar.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
+                            _this.RVToken = _this.$("#__RequestVerificationToken").val();
+                            _this.ClientContext = JSON.parse(_this.$('#__ClientContext').val());
+                            // we want to prevent non-users from using the searchbar
+                            console.log('this.ClientContext.isAnonymous = ', _this.ClientContext.isAnonymous);
+                            if (_this.ClientContext.isAnonymous)
+                                return;
+                            _this.GetResource(_this.CommandBarPath).then(function (data) {
+                                _this.$('body').prepend(data);
+                            });
+                            _this.BuildConfig();
+                            _this.GetAllAssets().then(function () {
+                                var _a, _b, _c, _d;
+                                _this.$("#commandBarOverlay #logo-placeholder").replaceWith((_a = _this.CsiLogo) !== null && _a !== void 0 ? _a : "");
+                                _this.$("#commandBarOverlay .externalIconWhite").replaceWith((_b = _this.ExternalIconWhite) !== null && _b !== void 0 ? _b : "");
+                                // this.$("#commandBarOverlay .externalIconBlue").replaceWith(this.ExternalIconBlue);
+                                _this.$("#commandBarOverlay .externalIcon").replaceWith((_c = _this.ExternalIcon) !== null && _c !== void 0 ? _c : "");
+                                _this.$("#commandBarOverlay #commandBarExitButton").html((_d = _this.CloseIcon) !== null && _d !== void 0 ? _d : "");
+                            });
+                            var keysPressed = {};
+                            // on key down
+                            _this.$(document).on("keydown", function (e) { return __awaiter(_this, void 0, void 0, function () {
+                                var isCommandBarVisible, input, url;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
+                                            // Replace space in e.key with "Spacebar"
+                                            if (e.key === " ") {
+                                                e.key = Settings.SPACEBAR;
+                                            }
+                                            if (!(!isCommandBarVisible
+                                                && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
+                                                && e.ctrlKey === config.workbarKbdCtrl
+                                                && e.altKey === config.workbarKbdAlt
+                                                && e.shiftKey === config.workbarKbdShift)) return [3 /*break*/, 2];
+                                            return [4 /*yield*/, this.showOverlay()];
+                                        case 1:
+                                            _a.sent();
+                                            e.preventDefault();
+                                            return [3 /*break*/, 5];
+                                        case 2:
+                                            if (!(isCommandBarVisible && e.key === "Escape")) return [3 /*break*/, 4];
+                                            return [4 /*yield*/, this.hideOverlay()];
+                                        case 3:
+                                            _a.sent();
+                                            return [3 /*break*/, 5];
+                                        case 4:
+                                            if (isCommandBarVisible && e.key === "Enter" && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"] && this.$("#UserDetailsTab").is(":visible")) {
+                                                console.log('UserDetailsTab is VISIBLE -> go to user profile');
+                                                if (this.$('#commandBarInput').get(0) === document.activeElement) {
+                                                    input = this.$('#commandBarInput').val();
+                                                    if (input.length > 0 && $.isNumeric(input) && this.ClientContext !== null) {
+                                                        url = "".concat(this.ClientContext.websiteRoot, "Party.aspx?ID=").concat(input);
+                                                        window.location.replace(url);
+                                                    }
+                                                }
+                                            }
+                                            _a.label = 5;
+                                        case 5: return [2 /*return*/];
                                     }
-                                }
-                            }
-                            _a.label = 5;
-                        case 5: return [2 /*return*/];
-                    }
-                });
-            }); });
-            document.addEventListener('keyup', function (event) {
-                var key = event.key.toLowerCase();
-                delete keysPressed[key];
-                // console.log('keysPressed OFF = ', keysPressed);
+                                });
+                            }); });
+                            document.addEventListener('keyup', function (event) {
+                                var key = event.key.toLowerCase();
+                                delete keysPressed[key];
+                                // console.log('keysPressed OFF = ', keysPressed);
+                            });
+                        });
+                        return [2 /*return*/];
+                }
             });
         });
     };

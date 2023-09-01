@@ -1,6 +1,8 @@
+/// <reference path="settingsModel.ts" />
+
 class Settings
 {
-    public readonly SPACEBAR = 'Spacebar';
+    public static readonly SPACEBAR = 'Spacebar';
 
     constructor(private $: JQueryStatic)
     {
@@ -22,7 +24,7 @@ class Settings
             $('#kbd-ctrl').prop('checked', config.workbarKbdCtrl);
             $('#kbd-alt').prop('checked', config.workbarKbdAlt);
             $('#kbd-shift').prop('checked', config.workbarKbdShift);
-            
+
             $('#workbar-kbd').on('keydown', (e) =>
             {
                 e.preventDefault();
@@ -31,7 +33,7 @@ class Settings
                 {
                     return;
                 }
-                
+
                 $('#kbd-ctrl').prop('checked', e.ctrlKey);
                 $('#kbd-alt').prop('checked', e.altKey);
                 $('#kbd-shift').prop('checked', e.shiftKey);
@@ -40,12 +42,22 @@ class Settings
                 e.key = e.key.charAt(0).toUpperCase() + e.key.slice(1);
 
                 // Rename ' ' to Space
-                if (e.key === ' ') e.key = this.SPACEBAR;
+                if (e.key === ' ') e.key = Settings.SPACEBAR;
 
-                $('#workbar-kbd').val(e.key);
+                // If the user enters backspace, clear the input
+                if (e.key === 'Backspace')
+                {
+                    $('#workbar-kbd').val('');
+                }
+                else
+                {
+                    $('#workbar-kbd').val(e.key);
+                }
+
+                this.save();
             });
 
-            // If any input on the page changes, trigger the save function
+            // If any input on the page changes or any key is pressed, save the settings
             $('input').on('change', () => this.save());
         });
     }
@@ -63,7 +75,7 @@ class Settings
         });
     }
 
-    public async load(): Promise<SettingsModel>
+    public async load(something?: string): Promise<SettingsModel>
     {
         return new Promise<SettingsModel>((resolve) =>
         {
@@ -71,7 +83,7 @@ class Settings
                 enableIqa: true,
                 enableRise: false,
                 enableWorkbar: true,
-                workbarShortcut: this.SPACEBAR,
+                workbarShortcut: Settings.SPACEBAR,
                 workbarKbdCtrl: true,
                 workbarKbdAlt: false,
                 workbarKbdShift: false

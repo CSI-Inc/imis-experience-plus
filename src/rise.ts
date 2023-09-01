@@ -1,3 +1,6 @@
+/// <reference path="settings/settings.ts" />
+/// <reference path="utils.ts" />
+
 class RiseExtensions
 {
     private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
@@ -15,7 +18,7 @@ class RiseExtensions
         this.settings = new Settings($);
 
         // Run some checks to determine if we are inside of the iMIS staff site
-        if (this.$('head').get(0)?.id !== 'ctl00_Head1' && this.$('form').get(0)?.id !== 'aspnetForm')
+        if (!Utils.isImisPage($))
         {
             // Not iMIS - do nothing
             return;

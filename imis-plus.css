@@ -259,6 +259,24 @@
     color: #444;
 }
 
+/* TODO: Rename commandBarOverlay to __csi__iep__commandBarOverlay and prefix all CSS classes below with #__csi__iep__commandBarOverlay */
+
+#csilogo
+{
+    display: block;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    height: 130px;
+}
+
+#csilogo > svg
+{
+    height: 100%;
+    width: 100%;
+    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+}
+
 #commandBarOverlay
 {
     font-family: inherit;
