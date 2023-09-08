@@ -3,7 +3,7 @@
 
 class RiseExtensions
 {
-    private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
+    private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.2 %c ";
     private static readonly VERSION_STYLES = [
         "background-color: #e6b222; color: white;", // CSI
         "background-color: #374ea2; color: white;", // iEP
@@ -75,9 +75,9 @@ class RiseExtensions
             // remove anything after the first <br>
             this.$('.PanelFieldValue > #LinkButtons br + *').remove();
         }
-        
+
         this.$('.PanelFieldValue > #LinkButtons').parent().addClass('InputXLargeWrapper');
-        
+
         var fullUrl = this.$('.PanelFieldValue > #LinkButtons').find('a').attr('href');
         var freeLink = this.$("#ctl01_TemplateBody_WebPartControl_PublishFileName_TextField").val();
 
@@ -90,7 +90,7 @@ class RiseExtensions
                 </button>
             </div>
         `);
-        
+
         // if freelink is not empty, then we have a custom URL
         if (freeLink)
         {

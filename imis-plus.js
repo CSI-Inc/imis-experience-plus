@@ -605,7 +605,7 @@ var IqaExtensions = /** @class */ (function () {
             return $(newElements);
         };
     };
-    IqaExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
+    IqaExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.2 %c ";
     IqaExtensions.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
@@ -781,7 +781,7 @@ var RiseExtensions = /** @class */ (function () {
             return $(newElements);
         };
     };
-    RiseExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
+    RiseExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.2 %c ";
     RiseExtensions.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
@@ -791,6 +791,379 @@ var RiseExtensions = /** @class */ (function () {
     return RiseExtensions;
 }());
 new RiseExtensions(jQuery);
+var ApiHelper = /** @class */ (function () {
+    function ApiHelper() {
+    }
+    ApiHelper.prototype.GetParty = function (input, rvToken, baseUrl) {
+        return __awaiter(this, void 0, void 0, function () {
+            var options, response, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        options = {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': rvToken
+                            }
+                        };
+                        return [4 /*yield*/, fetch("".concat(baseUrl, "api/Party/").concat(input), options)];
+                    case 1:
+                        response = _a.sent();
+                        if (!(response.status == 200)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, response.json()];
+                    case 2:
+                        results = _a.sent();
+                        console.log('GetParty results = ', results);
+                        return [2 /*return*/, results];
+                    case 3: return [2 /*return*/, null];
+                }
+            });
+        });
+    };
+    ApiHelper.prototype.GetEvent = function (input, rvToken, baseUrl) {
+        return __awaiter(this, void 0, void 0, function () {
+            var options, response, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        options = {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': rvToken
+                            }
+                        };
+                        return [4 /*yield*/, fetch("".concat(baseUrl, "api/Event/").concat(input), options)];
+                    case 1:
+                        response = _a.sent();
+                        if (!(response.status == 200)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, response.json()];
+                    case 2:
+                        results = _a.sent();
+                        console.log('GetEvent results = ', results);
+                        return [2 /*return*/, results];
+                    case 3: return [2 /*return*/, null];
+                }
+            });
+        });
+    };
+    ApiHelper.prototype.GetEventCategory = function (input, rvToken, baseUrl) {
+        return __awaiter(this, void 0, void 0, function () {
+            var options, response, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        options = {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': rvToken
+                            }
+                        };
+                        return [4 /*yield*/, fetch("".concat(baseUrl, "api/EventCategory/").concat(input), options)];
+                    case 1:
+                        response = _a.sent();
+                        if (!(response.status == 200)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, response.json()];
+                    case 2:
+                        results = _a.sent();
+                        console.log('GetEventCategory results = ', results);
+                        return [2 /*return*/, results.Description];
+                    case 3: return [2 /*return*/, null];
+                }
+            });
+        });
+    };
+    ApiHelper.prototype.GetUserName = function (input, rvToken, baseUrl) {
+        return __awaiter(this, void 0, void 0, function () {
+            var options, response, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        options = {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': rvToken
+                            }
+                        };
+                        return [4 /*yield*/, fetch("".concat(baseUrl, "api/User/").concat(input), options)];
+                    case 1:
+                        response = _a.sent();
+                        if (!(response.status == 200)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, response.json()];
+                    case 2:
+                        results = _a.sent();
+                        console.log('GetUserName results = ', results);
+                        return [2 /*return*/, results.UserName];
+                    case 3: return [2 /*return*/, null];
+                }
+            });
+        });
+    };
+    ApiHelper.prototype.FindUserIdByName = function (input, rvToken, baseUrl) {
+        return __awaiter(this, void 0, void 0, function () {
+            var options, response, results;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        options = {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': rvToken
+                            }
+                        };
+                        return [4 /*yield*/, fetch("".concat(baseUrl, "api/User?username=").concat(input), options)];
+                    case 1:
+                        response = _a.sent();
+                        return [4 /*yield*/, response.json()];
+                    case 2:
+                        results = _a.sent();
+                        if (results.Count !== 1) {
+                            return [2 /*return*/, null];
+                        }
+                        else {
+                            console.log('FindUserIdByName results = ', results);
+                            return [2 /*return*/, results.Items.$values[0].Party.Id];
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ApiHelper.prototype.Test = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        result = '';
+                        return [4 /*yield*/, fetch('https://cdn.cloud.csiinc.com/timewise/version.json', { cache: 'no-cache', method: 'GET' })
+                                .then(function (response) { return response.json(); })
+                                .then(function (data) {
+                                console.log(data);
+                                result = data;
+                            })
+                                .catch(function (error) {
+                                console.error(error);
+                            })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    return ApiHelper;
+}());
+var AssetHelper = /** @class */ (function () {
+    function AssetHelper() {
+        //#region Asset Paths
+        //View Paths
+        this.CommandBarPath = "assets/components/commandBar.html";
+        this.EventDetailsViewPath = "assets/views/eventDetailsTab.html";
+        this.OpenSearchViewPath = "assets/views/openSearch.html";
+        this.UserDetailsViewPath = "assets/views/userDetailsTab.html";
+        //SVG Paths
+        this.BrowsersIconPath = "assets/images/browserIcon.svg";
+        this.BuildingIconPath = "assets/images/buildingIcon.svg";
+        this.CakeIconPath = "assets/images/cakeIcon.svg";
+        this.CalendarIconPath = "assets/images/calendarIcon.svg";
+        this.CloseIconPath = "assets/images/closeIcon.svg";
+        this.CsiLogoPath = "assets/images/csiicon.svg";
+        this.EmailIconPath = "assets/images/emailIcon.svg";
+        this.ExternalIconBluePath = "assets/images/externalIconBlue.svg";
+        this.ExternalIconPath = "assets/images/externalIcon.svg";
+        this.ExternalIconWhitePath = "assets/images/externalIconWhite.svg";
+        this.IdCardBluePath = "assets/images/idCardBlue.svg";
+        this.LockIconPath = "assets/images/lockIcon.svg";
+        this.MailboxIconPath = "assets/images/mailboxIcon.svg";
+        this.MenuIconPath = "assets/images/menuIcon.svg";
+        this.PhoneIconPath = "assets/images/phoneIcon.svg";
+        this.UserTagIconPath = "assets/images/userTagIcon.svg";
+        //Component Paths
+        this.ControlButtonPath = "assets/components/buttons/control.html";
+        this.ControlButton2Path = "assets/components/buttons/control2.html";
+        this.EnterButtonPath = "assets/components/buttons/enter.html";
+        this.EnterButton2Path = "assets/components/buttons/enter2.html";
+        this.PlusButtonPath = "assets/components/buttons/plus.html";
+        this.PrimaryButtonPath = "assets/components/buttons/primary.html";
+        this.ShiftButtonPath = "assets/components/buttons/shift.html";
+        //#endregion
+        //#region Assets
+        // Views
+        this.CommandBar = null;
+        this.EventDetailsView = null;
+        this.OpenSearchView = null;
+        this.UserDetailsView = null;
+        // Icons
+        this.BrowsersIcon = null;
+        this.BuildingIcon = null;
+        this.CakeIcon = null;
+        this.CalendarIcon = null;
+        this.CloseIcon = null;
+        this.CsiLogo = null;
+        this.EmailIcon = null;
+        this.ExternalIconBlue = null;
+        this.ExternalIcon = null;
+        this.ExternalIconWhite = null;
+        this.IdCardBlue = null;
+        this.LockIcon = null;
+        this.MailboxIcon = null;
+        this.MenuIcon = null;
+        this.PhoneIcon = null;
+        this.UserTagIcon = null;
+        // Components
+        this.ControlButton = null;
+        this.ControlButton2 = null;
+        this.EnterButton = null;
+        this.EnterButton2 = null;
+        this.PlusButton = null;
+        this.PrimaryButton = null;
+        this.ShiftButton = null;
+    }
+    //#endregion
+    AssetHelper.prototype.GetResource = function (path) {
+        return __awaiter(this, void 0, void 0, function () {
+            var url;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        url = chrome.runtime.getURL(path);
+                        return [4 /*yield*/, $.get({ url: url, dataType: 'html', type: 'GET' })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    AssetHelper.prototype.GetAllAssets = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2;
+            return __generator(this, function (_3) {
+                switch (_3.label) {
+                    case 0:
+                        _a = this;
+                        return [4 /*yield*/, this.GetResource(this.CommandBarPath)];
+                    case 1:
+                        _a.CommandBar = _3.sent();
+                        _b = this;
+                        return [4 /*yield*/, this.GetResource(this.EventDetailsViewPath)];
+                    case 2:
+                        _b.EventDetailsView = _3.sent();
+                        _c = this;
+                        return [4 /*yield*/, this.GetResource(this.OpenSearchViewPath)];
+                    case 3:
+                        _c.OpenSearchView = _3.sent();
+                        _d = this;
+                        return [4 /*yield*/, this.GetResource(this.UserDetailsViewPath)];
+                    case 4:
+                        _d.UserDetailsView = _3.sent();
+                        _e = this;
+                        return [4 /*yield*/, this.GetResource(this.BrowsersIconPath)];
+                    case 5:
+                        _e.BrowsersIcon = _3.sent();
+                        _f = this;
+                        return [4 /*yield*/, this.GetResource(this.BuildingIconPath)];
+                    case 6:
+                        _f.BuildingIcon = _3.sent();
+                        _g = this;
+                        return [4 /*yield*/, this.GetResource(this.CakeIconPath)];
+                    case 7:
+                        _g.CakeIcon = _3.sent();
+                        _h = this;
+                        return [4 /*yield*/, this.GetResource(this.CalendarIconPath)];
+                    case 8:
+                        _h.CalendarIcon = _3.sent();
+                        _j = this;
+                        return [4 /*yield*/, this.GetResource(this.CloseIconPath)];
+                    case 9:
+                        _j.CloseIcon = _3.sent();
+                        _k = this;
+                        return [4 /*yield*/, this.GetResource(this.CsiLogoPath)];
+                    case 10:
+                        _k.CsiLogo = _3.sent();
+                        _l = this;
+                        return [4 /*yield*/, this.GetResource(this.EmailIconPath)];
+                    case 11:
+                        _l.EmailIcon = _3.sent();
+                        _m = this;
+                        return [4 /*yield*/, this.GetResource(this.ExternalIconBluePath)];
+                    case 12:
+                        _m.ExternalIconBlue = _3.sent();
+                        _o = this;
+                        return [4 /*yield*/, this.GetResource(this.ExternalIconPath)];
+                    case 13:
+                        _o.ExternalIcon = _3.sent();
+                        _p = this;
+                        return [4 /*yield*/, this.GetResource(this.ExternalIconWhitePath)];
+                    case 14:
+                        _p.ExternalIconWhite = _3.sent();
+                        _q = this;
+                        return [4 /*yield*/, this.GetResource(this.IdCardBluePath)];
+                    case 15:
+                        _q.IdCardBlue = _3.sent();
+                        _r = this;
+                        return [4 /*yield*/, this.GetResource(this.LockIconPath)];
+                    case 16:
+                        _r.LockIcon = _3.sent();
+                        _s = this;
+                        return [4 /*yield*/, this.GetResource(this.MailboxIconPath)];
+                    case 17:
+                        _s.MailboxIcon = _3.sent();
+                        _t = this;
+                        return [4 /*yield*/, this.GetResource(this.MenuIconPath)];
+                    case 18:
+                        _t.MenuIcon = _3.sent();
+                        _u = this;
+                        return [4 /*yield*/, this.GetResource(this.PhoneIconPath)];
+                    case 19:
+                        _u.PhoneIcon = _3.sent();
+                        _v = this;
+                        return [4 /*yield*/, this.GetResource(this.UserTagIconPath)];
+                    case 20:
+                        _v.UserTagIcon = _3.sent();
+                        _w = this;
+                        return [4 /*yield*/, this.GetResource(this.ControlButtonPath)];
+                    case 21:
+                        _w.ControlButton = _3.sent();
+                        _x = this;
+                        return [4 /*yield*/, this.GetResource(this.ControlButton2Path)];
+                    case 22:
+                        _x.ControlButton2 = _3.sent();
+                        _y = this;
+                        return [4 /*yield*/, this.GetResource(this.EnterButtonPath)];
+                    case 23:
+                        _y.EnterButton = _3.sent();
+                        _z = this;
+                        return [4 /*yield*/, this.GetResource(this.EnterButton2Path)];
+                    case 24:
+                        _z.EnterButton2 = _3.sent();
+                        _0 = this;
+                        return [4 /*yield*/, this.GetResource(this.PlusButtonPath)];
+                    case 25:
+                        _0.PlusButton = _3.sent();
+                        _1 = this;
+                        return [4 /*yield*/, this.GetResource(this.PrimaryButtonPath)];
+                    case 26:
+                        _1.PrimaryButton = _3.sent();
+                        _2 = this;
+                        return [4 /*yield*/, this.GetResource(this.ShiftButtonPath)];
+                    case 27:
+                        _2.ShiftButton = _3.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return AssetHelper;
+}());
 var CleanUp = /** @class */ (function () {
     function CleanUp() {
     }
@@ -827,11 +1200,20 @@ var CleanUp = /** @class */ (function () {
         var purpose = (_b = (_a = json === null || json === void 0 ? void 0 : json.replace('Permanent Address', 'Permanent')) === null || _a === void 0 ? void 0 : _a.replace('Address', '')) === null || _b === void 0 ? void 0 : _b.trim();
         return purpose ? purpose : 'Other';
     };
+    CleanUp.Status = function (json) {
+        if (json) {
+            if (json.toLowerCase() === "a")
+                return "Active";
+        }
+        return "Inactive";
+    };
     return CleanUp;
 }());
 var ConfigManager = /** @class */ (function () {
-    function ConfigManager(searchBar) {
+    function ConfigManager(searchBar, apiHelper, assetHelper) {
         this.searchBar = searchBar;
+        this.apiHelper = apiHelper;
+        this.assetHelper = assetHelper;
     }
     ConfigManager.GetConfigInstance = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -849,35 +1231,58 @@ var ConfigManager = /** @class */ (function () {
             });
         });
     };
-    ConfigManager.prototype.SetEventListeners = function (includeTags) {
+    ConfigManager.prototype.SetEventListeners = function (rvToken, baseUrl, includeTags) {
         var _this = this;
         if (includeTags === void 0) { includeTags = false; }
         // Add hover effects
         $('.commandBarListItem')
             .on("mouseenter", function (e) { return $(e.currentTarget).addClass('commandBarHover'); })
-            .on("mouseleave", function (e) { return $(e.currentTarget).removeClass('commandBarHover'); });
+            .on("mouseleave", function (e) { return $(e.currentTarget).removeClass('commandBarHover'); })
+            .on('click', function (e) {
+            var anchorId = $(e.currentTarget).find('a').attr('id');
+            console.log('anchorId = ', anchorId);
+            if (anchorId == "usernameLookup" || anchorId == "eventCodeLookup") {
+                // this is to prevent event conflict with "eventCodeLookup" & "usernameLookup" on click listeners
+            }
+            else {
+                _this.searchBar.ActivateTab('');
+            }
+        });
         if (includeTags) {
-            $('#eventCodeLookup').on("click", function () {
-                return __awaiter(this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        alert('eventCodeLookup do something...');
-                        return [2 /*return*/];
-                    });
-                });
-            });
-            $('#usernameLookup').on("click", function () { return __awaiter(_this, void 0, void 0, function () {
-                var currentActionBarValue, imisId;
+            var input = $('#commandBarInput').val();
+            $('#eventCodeLookup').on("click", function () { return __awaiter(_this, void 0, void 0, function () {
+                var event;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0:
-                            currentActionBarValue = $('#commandBarInput').val();
-                            return [4 /*yield*/, this.searchBar.FindUserIdByName(currentActionBarValue)];
+                        case 0: return [4 /*yield*/, this.apiHelper.GetEvent(input, rvToken, baseUrl)];
+                        case 1:
+                            event = _a.sent();
+                            console.log('event = ', event);
+                            if (event === null)
+                                return [2 /*return*/];
+                            this.searchBar.ActivateTab('');
+                            return [4 /*yield*/, this.searchBar.SetEventDetails(event)];
+                        case 2:
+                            _a.sent();
+                            this.searchBar.ActivateTab(this.searchBar.EventDetailsTab);
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            $('#usernameLookup').on("click", function () { return __awaiter(_this, void 0, void 0, function () {
+                var imisId;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.apiHelper.FindUserIdByName(input, rvToken, baseUrl)];
                         case 1:
                             imisId = _a.sent();
+                            console.log('imisId = ', imisId);
                             if (imisId === null)
                                 return [2 /*return*/];
-                            console.log('final userId = ', imisId);
-                            this.searchBar.SetUserDetails(imisId);
+                            this.searchBar.ActivateTab('');
+                            return [4 /*yield*/, this.searchBar.SetUserDetails(imisId)];
+                        case 2:
+                            _a.sent();
                             this.searchBar.ActivateTab(this.searchBar.UserDetailsTab);
                             return [2 /*return*/];
                     }
@@ -897,14 +1302,6 @@ var ConfigManager = /** @class */ (function () {
         });
         return result;
     };
-    // static myTest(): void
-    // {
-    //     alert("TEST");
-    // }
-    // static myTest(userInput: string): void
-    // {
-    //     alert(userInput);
-    // }
     ConfigManager.prototype.BuildTagsHTML = function (data, seed, userInput) {
         var _this = this;
         var result = '';
@@ -920,13 +1317,13 @@ var ConfigManager = /** @class */ (function () {
                     content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a id=\"usernameLookup\" href=\"javascript:void(0);\" role=\"link\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
                     break;
                 case "documentation lookup":
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(_this.searchBar.ExternalIcon, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(_this.assetHelper.ExternalIcon, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
                     break;
                 case "keyword search":
                     content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
                     break;
                 case "imis glossary":
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none; vertical-align: middle;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(_this.searchBar.ExternalIcon, "</span>") : '', "\n                        </a>\n                    </li>\n                    ");
+                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none; vertical-align: middle;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(_this.assetHelper.ExternalIcon, "</span>") : '', "\n                        </a>\n                    </li>\n                    ");
                 default:
                     break;
             }
@@ -943,70 +1340,20 @@ var SearchBar = /** @class */ (function () {
     function SearchBar($) {
         this.$ = $;
         this.UserDetailsTab = "UserDetailsTab";
+        this.EventDetailsTab = "EventDetailsTab";
         this.CommandBarSelectTab = "CommandBarSelectTab";
         this.ConfigRoutes = [];
         this.ConfigTags = [];
-        //#region SVG Paths
-        this.CsiLogoPath = "assets/images/csiicon.svg";
-        this.BuildingIconPath = "assets/images/buildingIcon.svg";
-        this.CakeIconPath = "assets/images/cakeIcon.svg";
-        this.EmailIconPath = "assets/images/emailIcon.svg";
-        this.MailboxIconPath = "assets/images/mailboxIcon.svg";
-        this.PhoneIconPath = "assets/images/phoneIcon.svg";
-        this.UserTagIconPath = "assets/images/userTagIcon.svg";
-        this.ExternalIconPath = "assets/images/externalIcon.svg";
-        this.ExternalIconBluePath = "assets/images/externalIconBlue.svg";
-        this.ExternalIconWhitePath = "assets/images/externalIconWhite.svg";
-        this.IdCardBluePath = "assets/images/idCardBlue.svg";
-        this.BrowsersIconPath = "assets/images/browserIcon.svg";
-        this.LockIconPath = "assets/images/lockIcon.svg";
-        this.CloseIconPath = "assets/images/closeIcon.svg";
-        //#endregion
-        //#region Component Paths
-        this.CommandBarPath = "assets/components/commandBar.html";
-        this.ShiftButtonPath = "assets/components/buttons/shift.html";
-        this.PlusButtonPath = "assets/components/buttons/plus.html";
-        this.EnterButtonPath = "assets/components/buttons/enter.html";
-        this.EnterButton2Path = "assets/components/buttons/enter2.html";
-        this.ControlButtonPath = "assets/components/buttons/control.html";
-        this.ControlButton2Path = "assets/components/buttons/control2.html";
-        this.PrimaryButtonPath = "assets/components/buttons/primary.html";
-        //#endregion
-        //#region Assets
-        this.CsiLogo = null;
-        this.CommandBar = null;
-        this.ShiftButton = null;
-        this.PlusButton = null;
-        this.EnterButton = null;
-        this.EnterButton2 = null;
-        this.ControlButton = null;
-        this.ControlButton2 = null;
-        this.PrimaryButton = null;
-        // Icons
-        this.CakeIcon = null;
-        this.BuildingIcon = null;
-        this.EmailIcon = null;
-        this.MailboxIcon = null;
-        this.PhoneIcon = null;
-        this.UserTagIcon = null;
-        this.ExternalIcon = null;
-        this.ExternalIconBlue = null;
-        this.ExternalIconWhite = null;
-        this.IdCardBlue = null;
-        this.BrowsersIcon = null;
-        this.LockIcon = null;
-        this.CloseIcon = null;
-        //#endregion
         // TESTING
         this.RVToken = null;
         this.DocumentationUrl = "https://help.imis.com/enterprise/search.htm";
         this.ClientContext = null;
         this.WebsiteUrl = null;
-        this.UserDetailsView = null;
-        this.UserDetailsViewPath = "assets/views/userDetailsTab.html";
         this.settings = new Settings($);
-        this.config = new ConfigManager(this);
-        this.Tabs = [this.CommandBarSelectTab, this.UserDetailsTab];
+        this.assetHelper = new AssetHelper();
+        this.apiHelper = new ApiHelper();
+        this.config = new ConfigManager(this, this.apiHelper, this.assetHelper);
+        this.Tabs = [this.CommandBarSelectTab, this.UserDetailsTab, this.EventDetailsTab];
         if (!Utils.isImisPage($)) {
             // Not iMIS - do nothing
             return;
@@ -1030,30 +1377,50 @@ var SearchBar = /** @class */ (function () {
                             return [2 /*return*/];
                         this.$(function () {
                             console.log.apply(console, __spreadArray([SearchBar.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
+                            // TODO:
+                            // 1) make call happen once a day by adding a time stamp
+                            // 2) actually update the json file
+                            _this.apiHelper.Test().then(function (data) {
+                                if (!("imis_experience_plus__search_bar_config_version" in localStorage)) // setting not found, first time running, prime local storage
+                                 {
+                                    localStorage.setItem("imis_experience_plus__search_bar_config_version", "1.0.0");
+                                }
+                                var localVersion = localStorage.getItem("imis_experience_plus__search_bar_config_version");
+                                console.log('data = ', data);
+                                console.log('localStorage.getItem("imis_experience_plus__search_bar_config_version") = ', localVersion);
+                                if (data.version != localVersion) {
+                                    console.log("UPDATE REQUIRED");
+                                    //update local json config
+                                    // --- do it ---
+                                    //set new local storage version
+                                    localStorage.setItem("imis_experience_plus__search_bar_config_version", data.version);
+                                }
+                                else {
+                                    console.log("NO UPDATE REQUIRED");
+                                }
+                            });
                             _this.RVToken = _this.$("#__RequestVerificationToken").val();
                             _this.ClientContext = JSON.parse(_this.$('#__ClientContext').val());
                             // we want to prevent non-users from using the searchbar
-                            console.log('this.ClientContext.isAnonymous = ', _this.ClientContext.isAnonymous);
                             if (_this.ClientContext.isAnonymous)
                                 return;
-                            _this.GetResource(_this.CommandBarPath).then(function (data) {
-                                _this.$('body').prepend(data);
-                            });
-                            _this.BuildConfig();
-                            _this.GetAllAssets().then(function () {
-                                var _a, _b, _c, _d;
-                                _this.$("#commandBarOverlay #logo-placeholder").replaceWith((_a = _this.CsiLogo) !== null && _a !== void 0 ? _a : "");
-                                _this.$("#commandBarOverlay .externalIconWhite").replaceWith((_b = _this.ExternalIconWhite) !== null && _b !== void 0 ? _b : "");
-                                // this.$("#commandBarOverlay .externalIconBlue").replaceWith(this.ExternalIconBlue);
-                                _this.$("#commandBarOverlay .externalIcon").replaceWith((_c = _this.ExternalIcon) !== null && _c !== void 0 ? _c : "");
-                                _this.$("#commandBarOverlay #commandBarExitButton").html((_d = _this.CloseIcon) !== null && _d !== void 0 ? _d : "");
+                            _this.assetHelper.GetAllAssets().then(function () {
+                                var _a, _b, _c, _d, _e;
+                                _this.$('body').prepend((_a = _this.assetHelper.CommandBar) !== null && _a !== void 0 ? _a : "");
+                                _this.$("#commandBarOverlay #logo-placeholder").replaceWith((_b = _this.assetHelper.CsiLogo) !== null && _b !== void 0 ? _b : "");
+                                _this.$("#commandBarOverlay .externalIconWhite").replaceWith((_c = _this.assetHelper.ExternalIconWhite) !== null && _c !== void 0 ? _c : "");
+                                _this.$("#commandBarOverlay .externalIcon").replaceWith((_d = _this.assetHelper.ExternalIcon) !== null && _d !== void 0 ? _d : "");
+                                _this.$("#commandBarOverlay #commandBarExitButton").html((_e = _this.assetHelper.CloseIcon) !== null && _e !== void 0 ? _e : "");
+                                _this.BuildOpenSearch();
+                                _this.BuildConfig();
                             });
                             var keysPressed = {};
                             // on key down
                             _this.$(document).on("keydown", function (e) { return __awaiter(_this, void 0, void 0, function () {
-                                var isCommandBarVisible, input, url;
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
+                                var isCommandBarVisible;
+                                var _a;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
                                         case 0:
                                             isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
                                             // Replace space in e.key with "Spacebar"
@@ -1067,27 +1434,25 @@ var SearchBar = /** @class */ (function () {
                                                 && e.shiftKey === config.workbarKbdShift)) return [3 /*break*/, 2];
                                             return [4 /*yield*/, this.showOverlay()];
                                         case 1:
-                                            _a.sent();
+                                            _b.sent();
                                             e.preventDefault();
                                             return [3 /*break*/, 5];
                                         case 2:
                                             if (!(isCommandBarVisible && e.key === "Escape")) return [3 /*break*/, 4];
                                             return [4 /*yield*/, this.hideOverlay()];
                                         case 3:
-                                            _a.sent();
+                                            _b.sent();
                                             return [3 /*break*/, 5];
                                         case 4:
-                                            if (isCommandBarVisible && e.key === "Enter" && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"] && this.$("#UserDetailsTab").is(":visible")) {
-                                                console.log('UserDetailsTab is VISIBLE -> go to user profile');
+                                            if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
                                                 if (this.$('#commandBarInput').get(0) === document.activeElement) {
-                                                    input = this.$('#commandBarInput').val();
-                                                    if (input.length > 0 && $.isNumeric(input) && this.ClientContext !== null) {
-                                                        url = "".concat(this.ClientContext.websiteRoot, "Party.aspx?ID=").concat(input);
-                                                        window.location.replace(url);
-                                                    }
+                                                    this.ActivateTab('');
+                                                    // $("#userCardGoToProfile > a")[0].click();
+                                                    console.log('$("#userCardGoToProfile > a") = ', $("#userCardGoToProfile > a"));
+                                                    (_a = this.$("#userCardGoToProfile > a").get(0)) === null || _a === void 0 ? void 0 : _a.click();
                                                 }
                                             }
-                                            _a.label = 5;
+                                            _b.label = 5;
                                         case 5: return [2 /*return*/];
                                     }
                                 });
@@ -1095,7 +1460,6 @@ var SearchBar = /** @class */ (function () {
                             document.addEventListener('keyup', function (event) {
                                 var key = event.key.toLowerCase();
                                 delete keysPressed[key];
-                                // console.log('keysPressed OFF = ', keysPressed);
                             });
                         });
                         return [2 /*return*/];
@@ -1103,13 +1467,13 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    SearchBar.prototype.GetUserCardActions = function (userId) {
+    SearchBar.prototype.BuildUserCardActions = function (userId) {
         var _a, _b;
         var profileUrl = "".concat((_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.websiteRoot, "Party.aspx?ID=").concat(userId);
         var credentialsUrl = "".concat((_b = this.ClientContext) === null || _b === void 0 ? void 0 : _b.websiteRoot, "AsiCommon/Controls/Contact/User/UserEdit.aspx?ID=").concat(userId);
-        return "\n                <div id=\"userCardActions\" class=\"userDetails\">\n                    <div id=\"userCardGoToProfile\" class=\"userCardActionArea\">\n                        ".concat(this.IdCardBlue, "\n                        <a href=\"").concat(profileUrl, "\" class=\"userActionCard\">Profile</a>\n                        ").concat(this.EnterButton2, "\n                    </div>\n                    <div id=\"userCardUserCredentials\" class=\"userCardActionArea\">\n                        ").concat(this.LockIcon, "\n                        <a id=\"userCardUserCredentialsUrl\" href=\"").concat(credentialsUrl, "\" class=\"userActionCard\">User Credentials</a>\n                    </div>\n                </div>\n            ");
+        return "\n                <div id=\"userCardActions\" class=\"userDetails\">\n                    <div id=\"userCardGoToProfile\" class=\"userCardActionArea\">\n                        ".concat(this.assetHelper.IdCardBlue, "\n                        <a href=\"").concat(profileUrl, "\" class=\"userActionCard\">Profile</a>\n                        ").concat(this.assetHelper.EnterButton2, "\n                    </div>\n                    <div id=\"userCardUserCredentials\" class=\"userCardActionArea\">\n                        ").concat(this.assetHelper.LockIcon, "\n                        <a id=\"userCardUserCredentialsUrl\" href=\"").concat(credentialsUrl, "\" class=\"userActionCard\">User Credentials</a>\n                    </div>\n                </div>\n            ");
     };
-    SearchBar.prototype.GetProfile = function (data) {
+    SearchBar.prototype.BuildProfile = function (data) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22;
         var status = (_a = data === null || data === void 0 ? void 0 : data.Status) === null || _a === void 0 ? void 0 : _a.Description;
         var memberType = (_b = data === null || data === void 0 ? void 0 : data.AdditionalAttributes) === null || _b === void 0 ? void 0 : _b.$values[0].Value;
@@ -1136,285 +1500,152 @@ var SearchBar = /** @class */ (function () {
         var companyName = (_19 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _19 === void 0 ? void 0 : _19.Name;
         var companyId = (_20 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _20 === void 0 ? void 0 : _20.OrganizationPartyId;
         var userTitle = (_21 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _21 === void 0 ? void 0 : _21.Title;
-        return "\n            <div id=\"userCardProfile\" class=\"userDetails\">\n                <h3 id=\"destinationUsersName\" style=\"color: #005e7d; margin: 2px\">".concat(data === null || data === void 0 ? void 0 : data.Name, "</h3>\n                <div id=\"details\" style=\"font-size: 90%;\">\n                    <div id=\"userDetailsTop\" style=\"margin: 0px 0px 5px 1px;\">\n                        <span id=\"destinationUsersId\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersIdLabel\">ID: </span>").concat(data === null || data === void 0 ? void 0 : data.Id, "\n                        </span>\n                        <span id=\"destinationUsersStatus\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersStatusLabel\">Status: </span>").concat(status, "\n                        </span>\n                        <span id=\"destinationUsersMemberType\" class=\"userDetails userSpecificDetail\">\n                            <span class=\"Label workBarLabel destinationUsersTypeLabel\">Type: </span>").concat(memberType, "\n                        </span>\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(birthDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.CakeIcon, "\n                            <span class=\"textBadge\">Date of Birth</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(birthDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber0\">\n                        ").concat(phone0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone0Type, "</span>\n                            <a href=\"tel:").concat(phone0, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone0, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber1\">\n                        ").concat(phone1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone1Type, "</span>\n                            <a href=\"tel:").concat(phone1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail1\">\n                        ").concat(email1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.EmailIcon, "\n                            ").concat(email1IsPrimary ? "".concat(this.PrimaryButton) : "<span class=\"textBadge\">".concat(email1Type, "</span>"), "\n                            <a href=\"mailto:").concat(email1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail2\">\n                        ").concat(email2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.EmailIcon, "\n                            ").concat(email2IsPrimary ? "".concat(this.PrimaryButton) : "<span class=\"textBadge\">".concat(email2Type, "</span>"), "\n                            <a href=\"mailto:").concat(email2, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email2, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail3\">\n                        ").concat(email3 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.EmailIcon, "\n                            ").concat(email3IsPrimary ? "".concat(this.PrimaryButton) : "<span class=\"textBadge\">".concat(email3Type, "</span>"), "\n                            <a href=\"mailto:").concat(email3, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email3, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress0\">\n                        ").concat(address0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address0Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address0, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress1\">\n                        ").concat(address1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address1Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address1, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress2\">\n                        ").concat(address2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address2Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address2, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersCompanyName\">\n                        ").concat(companyName ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.BuildingIcon, "\n                            ").concat(companyId ? "\n                                <a href=\"".concat((_22 = this.ClientContext) === null || _22 === void 0 ? void 0 : _22.websiteRoot, "Party.aspx?ID=").concat(companyId, "\">\n                                    <span style=\"vertical-align: middle;\">").concat(companyName, "</span>\n                                    <span class=\"userDetailsBadge\">ID ").concat(companyId, "</span>\n                                </a>\n                                ") : "\n                                <span style=\"vertical-align: middle;\">".concat(companyName, "</span>\n                                <span class=\"userDetailsBadge\">Company ID Not Correctly Linked</span>"), "\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersTitle\">\n                        ").concat(userTitle ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.UserTagIcon, "\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(userTitle, "</span>\n                        </div>") : '', "\n                    </div>\n                </div>\n            </div>\n        ");
+        return "\n            <div id=\"userCardProfile\" class=\"userDetails\">\n                <h3 id=\"destinationUsersName\" style=\"color: #005e7d; margin: 2px\">".concat(data === null || data === void 0 ? void 0 : data.Name, "</h3>\n                <div id=\"details\" style=\"font-size: 90%;\">\n                    <div id=\"userDetailsTop\" style=\"margin: 0px 0px 5px 1px;\">\n                        <span id=\"destinationUsersId\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersIdLabel\">ID: </span>").concat(data === null || data === void 0 ? void 0 : data.Id, "\n                        </span>\n                        <span id=\"destinationUsersStatus\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersStatusLabel\">Status: </span>").concat(status, "\n                        </span>\n                        <span id=\"destinationUsersMemberType\" class=\"userDetails userSpecificDetail\">\n                            <span class=\"Label workBarLabel destinationUsersTypeLabel\">Type: </span>").concat(memberType, "\n                        </span>\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(birthDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.CakeIcon, "\n                            <span class=\"textBadge\">Date of Birth</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(birthDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber0\">\n                        ").concat(phone0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone0Type, "</span>\n                            <a href=\"tel:").concat(phone0, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone0, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber1\">\n                        ").concat(phone1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone1Type, "</span>\n                            <a href=\"tel:").concat(phone1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail1\">\n                        ").concat(email1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.EmailIcon, "\n                            ").concat(email1IsPrimary ? "".concat(this.assetHelper.PrimaryButton) : "<span class=\"textBadge\">".concat(email1Type, "</span>"), "\n                            <a href=\"mailto:").concat(email1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail2\">\n                        ").concat(email2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.EmailIcon, "\n                            ").concat(email2IsPrimary ? "".concat(this.assetHelper.PrimaryButton) : "<span class=\"textBadge\">".concat(email2Type, "</span>"), "\n                            <a href=\"mailto:").concat(email2, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email2, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail3\">\n                        ").concat(email3 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.EmailIcon, "\n                            ").concat(email3IsPrimary ? "".concat(this.assetHelper.PrimaryButton) : "<span class=\"textBadge\">".concat(email3Type, "</span>"), "\n                            <a href=\"mailto:").concat(email3, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email3, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress0\">\n                        ").concat(address0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address0Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address0, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress1\">\n                        ").concat(address1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address1Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address1, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress2\">\n                        ").concat(address2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address2Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address2, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersCompanyName\">\n                        ").concat(companyName ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.BuildingIcon, "\n                            ").concat(companyId ? "\n                                <a href=\"".concat((_22 = this.ClientContext) === null || _22 === void 0 ? void 0 : _22.websiteRoot, "Party.aspx?ID=").concat(companyId, "\">\n                                    <span style=\"vertical-align: middle;\">").concat(companyName, "</span>\n                                    <span class=\"userDetailsBadge\">ID ").concat(companyId, "</span>\n                                </a>\n                                ") : "\n                                <span style=\"vertical-align: middle;\">".concat(companyName, "</span>\n                                <span class=\"userDetailsBadge\">Company ID Not Correctly Linked</span>"), "\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersTitle\">\n                        ").concat(userTitle ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.UserTagIcon, "\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(userTitle, "</span>\n                        </div>") : '', "\n                    </div>\n                </div>\n            </div>\n        ");
     };
-    // private GetDocumentationInput(hasInput: boolean, encoded: string, value: string): string
-    // {
-    //     // need to strip input bc it will inject ANYTHING
-    //     if (hasInput)
-    //     {
-    //         return `
-    //             <a id="documentationLinkDestination" href="${this.DocumentationUrl}?q=${encoded}" target="_blank">
-    //                 <span id="searchDocumentation" class="TextButton">
-    //                     Search iMIS Documentation${this.ExternalIconBlue}
-    //                 </span><span style="margin-left: 4px;">${value?.trim()}</span>
-    //             </a>
-    //         `;
-    //     }
-    //     else
-    //     {
-    //         return `
-    //             <a id="documentationLinkDestination" href="${this.DocumentationUrl}" target="_blank">
-    //                 <span class="TextButton"
-    //                     style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
-    //                     Search iMIS Documentation
-    //                     ${this.ExternalIconBlue}
-    //                 </span>
-    //             </a>
-    //         `;
-    //     }
-    // }
-    SearchBar.prototype.GetUserChangeDetails = function (username, data) {
+    SearchBar.prototype.BuildUserChangeDetails = function (username, data) {
         var _a, _b, _c, _d;
         var createdOn = CleanUp.Date((_a = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _a === void 0 ? void 0 : _a.CreatedOn);
         var createdBy = (_b = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _b === void 0 ? void 0 : _b.CreatedBy;
         var updatedOn = CleanUp.Date((_c = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _c === void 0 ? void 0 : _c.UpdatedOn);
         var updatedBy = (_d = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _d === void 0 ? void 0 : _d.UpdatedBy;
-        return "\n            <div class=\"userDetails\" id=\"userCardChangeDetails\">\n                <span id=\"destinationUsersCreatedOn\">\n                    <span class=\"Label workBarLabel\">Created: </span>".concat(createdOn, "\n                </span>\n                <span id=\"destinationUsersCreatedBy\">by ").concat(createdBy, "</span>\n                <span id=\"destinationUsersUpdatedOn\">\n                    <span class=\"Label workBarLabel\">Last Updated: </span>").concat(updatedOn, "\n                </span>\n                <span id=\"destinationUsersUpdatedBy\">by ").concat(updatedBy, "</span>\n                <span id=\"destinationUsersUsername\">\n                    ").concat(username ? "\n                        <span class=\"Label workBarLabel workBarUsernameLabel\">Username: </span>".concat(username, "\n                    ") : '', "\n                </span> \n            </div>\n        ");
+        return "\n            <div class=\"userDetails\" id=\"userCardChangeDetails\">\n                <span id=\"destinationUsersCreatedOn\">\n                    <span class=\"Label workBarLabel\">Created: </span>".concat(createdOn, "\n                </span>\n                <span id=\"destinationUsersCreatedBy\">by ").concat(createdBy, "</span>\n                <span id=\"destinationUsersUpdatedOn\">\n                    <span class=\"Label workBarLabel\">Last Updated: </span>").concat(updatedOn, "\n                </span>\n                <span id=\"destinationUsersUpdatedBy\">by ").concat(updatedBy, "</span>\n                <span id=\"destinationUsersUsername\">\n                    ").concat(username ? "\n                        <span class=\"Label workBarLabel workBarUsernameLabel\">Username: </span>".concat(username, "\n                    ") : '', "\n                </span>\n            </div>\n        ");
     };
-    SearchBar.prototype.GetResource = function (path) {
-        return __awaiter(this, void 0, void 0, function () {
-            var url;
+    SearchBar.prototype.BuildOpenSearch = function () {
+        var _this = this;
+        var _a;
+        var view = this.assetHelper.OpenSearchView;
+        var result = view === null || view === void 0 ? void 0 : view.replace("<svg class=\"menu-icon\"></svg>", (_a = this.assetHelper.MenuIcon) !== null && _a !== void 0 ? _a : "");
+        this.$('.searchfieldplus-dropdown').parent().append(this.$.parseHTML(result !== null && result !== void 0 ? result : ""));
+        this.$('.menu-icon-container')
+            .on('mouseenter', function (e) {
+            _this.$(e).animate({ width: 104 }, 100, 'linear');
+            setTimeout(function () {
+                _this.$('.hover-text').animate({ 'font-size': '90%' }, 100, 'linear');
+                _this.$('.hover-text').show();
+            }, 25);
+        })
+            .on("mouseleave", function (e) {
+            _this.$('.hover-text').hide().css('font-size', '1px');
+            _this.$(e).css('width', 'auto');
+        })
+            .on("click", function (e) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        url = chrome.runtime.getURL(path);
-                        return [4 /*yield*/, $.get({ url: url, dataType: 'html', type: 'GET' })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0: return [4 /*yield*/, this.showOverlay()];
+                    case 1:
+                        _a.sent();
+                        e.preventDefault();
+                        return [2 /*return*/];
                 }
             });
-        });
+        }); });
     };
-    SearchBar.prototype.GetAllAssets = function () {
+    SearchBar.prototype.BuildEvent = function (event, staffContactName, eventCategoryDescription) {
+        var name = event === null || event === void 0 ? void 0 : event.Name;
+        var id = event === null || event === void 0 ? void 0 : event.EventId;
+        var status = CleanUp.Status(event === null || event === void 0 ? void 0 : event.Status);
+        // var category = event?.Category?.EventCategoryId;
+        var startDate = CleanUp.Date(event === null || event === void 0 ? void 0 : event.StartDateTime);
+        var endDate = CleanUp.Date(event === null || event === void 0 ? void 0 : event.EndDateTime);
+        var description = event === null || event === void 0 ? void 0 : event.Description;
+        var virtualMeetingUrl = "https://www.google.com";
+        // var virtualMeetingUrl = event?.VirtualMeetingUrl ?? "https://www.google.com";
+        // TODO: Fix this - not real
+        // staffContact = "Joe Russell";
+        // eventCategory = "EDUC"
+        return "\n            <div id=\"userCardProfile\" class=\"userDetails\">\n                <h3 id=\"destinationUsersName\" style=\"color: #005e7d; margin: 2px\">".concat(name, "</h3>\n                <div id=\"details\" style=\"font-size: 90%;\">\n                    <div id=\"userDetailsTop\" style=\"margin: 0px 0px 5px 1px;\">\n                        <span id=\"destinationUsersId\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersIdLabel\">ID: </span>").concat(id, "\n                        </span>\n                        <span id=\"destinationUsersStatus\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersStatusLabel\">Status: </span>").concat(status, "\n                        </span>\n                        <span id=\"destinationUsersMemberType\" class=\"userDetails userSpecificDetail\">\n                            <span class=\"Label workBarLabel destinationUsersTypeLabel\">Category: </span>").concat(eventCategoryDescription, "\n                        </span>\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(startDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.CalendarIcon, "\n                            <span class=\"textBadge\">Start Date</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(startDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(endDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.CalendarIcon, "\n                            <span class=\"textBadge\">End Date</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(endDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <br />\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(staffContactName ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.UserTagIcon, "\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(staffContactName, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(description ? "\n                        <div style=\"padding:2px 0;\">\n                            <span style=\"display:inline-block; vertical-align: middle;\">".concat(description, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(virtualMeetingUrl ? "\n                        <div style=\"padding:2px 0;\">\n                            <span class=\"textBadge\">Virtual Meeting URL</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">".concat(virtualMeetingUrl, "</span>\n                        </div>") : '', "\n                    </div>\n                </div>\n            </div>\n        ");
+    };
+    SearchBar.prototype.SetEventDetails = function (event) {
+        var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function () {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y;
-            return __generator(this, function (_z) {
-                switch (_z.label) {
+            var input, url, rvToken, content, eventCategoryId, eventCategory, _e, eventCategoryDescription, staffContactId, contactData, _f, staffContactName, eventHtml;
+            return __generator(this, function (_g) {
+                switch (_g.label) {
                     case 0:
-                        _a = this;
-                        return [4 /*yield*/, this.GetResource(this.CommandBarPath)];
+                        input = this.$('#commandBarInput').val();
+                        url = (_b = (_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
+                        rvToken = (_c = this.RVToken) !== null && _c !== void 0 ? _c : "";
+                        console.log('event = ', event);
+                        if (!event) return [3 /*break*/, 7];
+                        content = this.assetHelper.EventDetailsView;
+                        this.$("#EventDetailsTab").replaceWith(content !== null && content !== void 0 ? content : "");
+                        eventCategoryId = (_d = event === null || event === void 0 ? void 0 : event.Category) === null || _d === void 0 ? void 0 : _d.EventCategoryId;
+                        console.log('eventCategoryId = ', eventCategoryId);
+                        if (!eventCategoryId) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.apiHelper.GetEventCategory(eventCategoryId, rvToken, url)];
                     case 1:
-                        _a.CommandBar = _z.sent();
-                        _b = this;
-                        return [4 /*yield*/, this.GetResource(this.CsiLogoPath)];
+                        _e = _g.sent();
+                        return [3 /*break*/, 3];
                     case 2:
-                        _b.CsiLogo = _z.sent();
-                        _c = this;
-                        return [4 /*yield*/, this.GetResource(this.ExternalIconPath)];
+                        _e = null;
+                        _g.label = 3;
                     case 3:
-                        _c.ExternalIcon = _z.sent();
-                        _d = this;
-                        return [4 /*yield*/, this.GetResource(this.ExternalIconBluePath)];
+                        eventCategory = _e;
+                        console.log('eventCategory = ', eventCategory);
+                        eventCategoryDescription = eventCategory === null || eventCategory === void 0 ? void 0 : eventCategory.Description;
+                        console.log('eventCategoryDescription = ', eventCategoryDescription);
+                        staffContactId = event === null || event === void 0 ? void 0 : event.NotificationPartyId;
+                        console.log('staffContactId = ', staffContactId);
+                        if (!staffContactId) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.apiHelper.GetParty(staffContactId, rvToken, url)];
                     case 4:
-                        _d.ExternalIconBlue = _z.sent();
-                        _e = this;
-                        return [4 /*yield*/, this.GetResource(this.ExternalIconWhitePath)];
+                        _f = _g.sent();
+                        return [3 /*break*/, 6];
                     case 5:
-                        _e.ExternalIconWhite = _z.sent();
-                        _f = this;
-                        return [4 /*yield*/, this.GetResource(this.IdCardBluePath)];
+                        _f = null;
+                        _g.label = 6;
                     case 6:
-                        _f.IdCardBlue = _z.sent();
-                        _g = this;
-                        return [4 /*yield*/, this.GetResource(this.BrowsersIconPath)];
-                    case 7:
-                        _g.BrowsersIcon = _z.sent();
-                        _h = this;
-                        return [4 /*yield*/, this.GetResource(this.LockIconPath)];
-                    case 8:
-                        _h.LockIcon = _z.sent();
-                        _j = this;
-                        return [4 /*yield*/, this.GetResource(this.CloseIconPath)];
-                    case 9:
-                        _j.CloseIcon = _z.sent();
-                        _k = this;
-                        return [4 /*yield*/, this.GetResource(this.CakeIconPath)];
-                    case 10:
-                        _k.CakeIcon = _z.sent();
-                        _l = this;
-                        return [4 /*yield*/, this.GetResource(this.BuildingIconPath)];
-                    case 11:
-                        _l.BuildingIcon = _z.sent();
-                        _m = this;
-                        return [4 /*yield*/, this.GetResource(this.EmailIconPath)];
-                    case 12:
-                        _m.EmailIcon = _z.sent();
-                        _o = this;
-                        return [4 /*yield*/, this.GetResource(this.MailboxIconPath)];
-                    case 13:
-                        _o.MailboxIcon = _z.sent();
-                        _p = this;
-                        return [4 /*yield*/, this.GetResource(this.PhoneIconPath)];
-                    case 14:
-                        _p.PhoneIcon = _z.sent();
-                        _q = this;
-                        return [4 /*yield*/, this.GetResource(this.UserTagIconPath)];
-                    case 15:
-                        _q.UserTagIcon = _z.sent();
-                        _r = this;
-                        return [4 /*yield*/, this.GetResource(this.ShiftButtonPath)];
-                    case 16:
-                        _r.ShiftButton = _z.sent();
-                        _s = this;
-                        return [4 /*yield*/, this.GetResource(this.PlusButtonPath)];
-                    case 17:
-                        _s.PlusButton = _z.sent();
-                        _t = this;
-                        return [4 /*yield*/, this.GetResource(this.EnterButtonPath)];
-                    case 18:
-                        _t.EnterButton = _z.sent();
-                        _u = this;
-                        return [4 /*yield*/, this.GetResource(this.EnterButton2Path)];
-                    case 19:
-                        _u.EnterButton2 = _z.sent();
-                        _v = this;
-                        return [4 /*yield*/, this.GetResource(this.ControlButtonPath)];
-                    case 20:
-                        _v.ControlButton = _z.sent();
-                        _w = this;
-                        return [4 /*yield*/, this.GetResource(this.ControlButton2Path)];
-                    case 21:
-                        _w.ControlButton2 = _z.sent();
-                        _x = this;
-                        return [4 /*yield*/, this.GetResource(this.PrimaryButtonPath)];
-                    case 22:
-                        _x.PrimaryButton = _z.sent();
-                        // TODO: i think this html loading and replacing is driving my nuts bc i want it all to work like this:
-                        //1 Build Some Component
-                        // inside BUILD:
-                        // GET HTML (should already be loaded from GetAllAssets?)
-                        // REPLACE TEMPLATE STUFF (should make a func to rip throw all the replace calls)
-                        // SAVE TO VAR FOR REUSE (need more this.ABC variables)
-                        // TODO: i think this is how i want it below...
-                        // this.CommandBarDocumentationInputWithoutValue = await this.GetResource(this.CommandBarDocumentationInputWithoutValuePath);
-                        // `
-                        //         <a id="documentationLinkDestination" href="${this.DocumentationUrl}" target="_blank">
-                        //             <span class="TextButton"
-                        //                 style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
-                        //                 Search iMIS Documentation
-                        //                 <i class="externalIconBlue"></i>
-                        //             </span>
-                        //         </a>
-                        //     `;
-                        _y = this;
-                        return [4 /*yield*/, this.GetResource(this.UserDetailsViewPath)];
-                    case 23:
-                        // TODO: i think this html loading and replacing is driving my nuts bc i want it all to work like this:
-                        //1 Build Some Component
-                        // inside BUILD:
-                        // GET HTML (should already be loaded from GetAllAssets?)
-                        // REPLACE TEMPLATE STUFF (should make a func to rip throw all the replace calls)
-                        // SAVE TO VAR FOR REUSE (need more this.ABC variables)
-                        // TODO: i think this is how i want it below...
-                        // this.CommandBarDocumentationInputWithoutValue = await this.GetResource(this.CommandBarDocumentationInputWithoutValuePath);
-                        // `
-                        //         <a id="documentationLinkDestination" href="${this.DocumentationUrl}" target="_blank">
-                        //             <span class="TextButton"
-                        //                 style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
-                        //                 Search iMIS Documentation
-                        //                 <i class="externalIconBlue"></i>
-                        //             </span>
-                        //         </a>
-                        //     `;
-                        _y.UserDetailsView = _z.sent();
-                        return [2 /*return*/];
+                        contactData = _f;
+                        console.log('contactData = ', contactData);
+                        staffContactName = contactData === null || contactData === void 0 ? void 0 : contactData.Name;
+                        console.log('staffContactName = ', staffContactName);
+                        eventHtml = this.BuildEvent(event, staffContactName, eventCategoryDescription);
+                        this.$('#userCardProfile').replaceWith(eventHtml);
+                        // // Update Documentation Search Area with Created/Updated stuff
+                        // var changeDetails = this.BuildUserChangeDetails(username, data);
+                        // this.$("#userCardChangeDetails").replaceWith(changeDetails);
+                        return [2 /*return*/, true];
+                    case 7: return [2 /*return*/, false];
                 }
             });
         });
     };
     // Build this Tab on the fly and scrap the whole thing when you're done
     SearchBar.prototype.SetUserDetails = function (userId) {
+        var _a, _b, _c, _d;
         if (userId === void 0) { userId = ''; }
-        var input = userId ? userId : this.$('#commandBarInput').val();
-        console.log('input = ', input);
-        // Set up view
-        var content = this.UserDetailsView;
-        this.$("#UserDetailsTab").replaceWith(content !== null && content !== void 0 ? content : "");
-        // Get api data
-        var username = this.GetUserName(input); // THIS ONLY GRABS THE USERNAME
-        // TODO: this should determin whether or not to set up this view in the first place
-        // TODO: extract this and pass in userData if it has it - otherwise stay on commandTab....
-        var data = this.GetParty(input);
-        // Update view with api data -> right column
-        var profile = this.GetProfile(data);
-        this.$('#userCardProfile').replaceWith(profile);
-        // Update view with api data -> left column
-        var userActions = this.GetUserCardActions(input);
-        this.$('#userCardActions').replaceWith(userActions);
-        // Update Documentation Search Area with Created/Updated stuff
-        var changeDetails = this.GetUserChangeDetails(username, data);
-        this.$("#userCardChangeDetails").replaceWith(changeDetails);
-    };
-    SearchBar.prototype.GetParty = function (input) {
-        var _a;
-        var result = {};
-        $.ajax("".concat((_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl, "api/Party/").concat(input), {
-            type: "GET",
-            contentType: "application/json",
-            async: false,
-            headers: {
-                RequestVerificationToken: this.RVToken
-            },
-            success: function (personData) {
-                console.log('personData = ', personData);
-                result = personData;
-            },
-            error: function () {
-                console.log('no party details for this id!');
-                // might want to show a "no user found with this id" or something
-            }
-        });
-        return result;
-    };
-    SearchBar.prototype.GetUserName = function (input) {
-        var _a;
-        var result = '';
-        $.ajax("".concat((_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl, "api/User/").concat(input), {
-            type: "GET",
-            contentType: "application/json",
-            async: false,
-            headers: {
-                RequestVerificationToken: this.RVToken
-            },
-            success: function (userData) {
-                console.log('userData = ', userData);
-                result = userData.UserName;
-            },
-            error: function () {
-                console.log('no username for this contact!');
-                // DO NOTHING, ITS ALREADY SETUP TO HANDLE N/A
-            }
-        });
-        return result;
-    };
-    SearchBar.prototype.FindUserIdByName = function (input) {
-        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var options, response, results;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var input, url, rvToken, data, content, username, profile, userActions, changeDetails;
+            var _this = this;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
-                        options = {
-                            method: 'GET',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                                'RequestVerificationToken': (_a = this.RVToken) !== null && _a !== void 0 ? _a : ""
-                            }
-                        };
-                        return [4 /*yield*/, fetch("".concat((_b = this.ClientContext) === null || _b === void 0 ? void 0 : _b.baseUrl, "api/User?username=").concat(input), options)];
+                        input = userId ? userId : this.$('#commandBarInput').val();
+                        if (!input)
+                            return [2 /*return*/, false];
+                        console.log('input = ', input);
+                        url = (_b = (_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
+                        rvToken = (_c = this.RVToken) !== null && _c !== void 0 ? _c : "";
+                        return [4 /*yield*/, this.apiHelper.GetParty(input, rvToken, url)];
                     case 1:
-                        response = _c.sent();
-                        return [4 /*yield*/, response.json()];
+                        data = _e.sent();
+                        console.log('UserData = ', data);
+                        if (!data) return [3 /*break*/, 3];
+                        content = this.assetHelper.UserDetailsView;
+                        this.$("#UserDetailsTab").replaceWith(content !== null && content !== void 0 ? content : "");
+                        return [4 /*yield*/, this.apiHelper.GetUserName(input, rvToken, url)];
                     case 2:
-                        results = _c.sent();
-                        if (results.Count !== 1) {
-                            return [2 /*return*/, null];
-                        }
-                        else {
-                            return [2 /*return*/, results.Items.$values[0].Party.Id];
-                        }
-                        return [2 /*return*/];
+                        username = (_d = _e.sent()) !== null && _d !== void 0 ? _d : "";
+                        profile = this.BuildProfile(data);
+                        this.$('#userCardProfile').replaceWith(profile);
+                        userActions = this.BuildUserCardActions(input);
+                        this.$('#userCardActions').replaceWith(userActions);
+                        this.$('#userCardGoToProfile').on('click', function () { return _this.ActivateTab(''); });
+                        this.$('#userCardUserCredentialsUrl').on('click', function () { return _this.ActivateTab(''); });
+                        changeDetails = this.BuildUserChangeDetails(username, data);
+                        this.$("#userCardChangeDetails").replaceWith(changeDetails);
+                        return [2 /*return*/, true];
+                    case 3: return [2 /*return*/, false];
                 }
             });
         });
@@ -1424,47 +1655,49 @@ var SearchBar = /** @class */ (function () {
     };
     SearchBar.prototype.BuildConfig = function () {
         var _this = this;
+        var _a, _b, _c;
+        var baseUrl = (_b = (_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
+        var rvToken = (_c = this.RVToken) !== null && _c !== void 0 ? _c : "";
         ConfigManager.GetConfigInstance().then(function (data) {
             _this.ConfigRoutes = data.filter(function (d) { return !d.isTag; });
             _this.ConfigTags = data.filter(function (d) { return d.isTag; });
             var view = _this.config.BuildRoutesHTML(_this.ConfigRoutes);
             _this.$('#commandBarUl').html(view);
-            _this.config.SetEventListeners();
+            _this.config.SetEventListeners(rvToken, baseUrl);
         });
     };
     // Use this with '' for showing the spinner so that all tabs are hidden
     SearchBar.prototype.ActivateTab = function (activateTab) {
         var _this = this;
-        this.Tabs.forEach(function (tab) {
-            if (tab == activateTab) {
-                _this.$("#".concat(tab)).show();
-                if (tab == _this.CommandBarSelectTab) {
-                    _this.SetArrowEventListeners();
-                }
-            }
-            else {
-                if (tab == _this.CommandBarSelectTab) {
-                    //TODO: this is currently bleeding resources...
-                    _this.$(".commandBarListItem").off('keydown');
-                }
-                _this.$("#".concat(tab)).hide();
-            }
+        if (activateTab !== '') {
+            console.log('show tab...');
+            var showTab = this.Tabs.filter(function (t) { return t == activateTab; })[0];
+            console.log('showTab = ', showTab);
+            this.$("#".concat(showTab)).show();
+            this.$('.loaderParent').hide();
+        }
+        else {
+            this.$('.loaderParent').show();
+        }
+        var hideTabs = this.Tabs.filter(function (t) { return t !== activateTab; });
+        hideTabs.forEach(function (tab) {
+            console.log('hide tab...');
+            // if (tab == this.CommandBarSelectTab)
+            // {
+            //     //TODO: this is currently bleeding resources...
+            //     this.$(".commandBarListItem").off('keydown');
+            // }
+            _this.$("#".concat(tab)).hide();
         });
     };
     SearchBar.prototype.SetArrowEventListeners = function () {
         var _this = this;
-        this.$(".commandBarListItem:first").addClass("commandBarSelected");
-        // Get all the <li> elements into a collection
-        var listItems = this.$(".commandBarListItem");
-        // Set up a counter to keep track of which <li> is selected
         var index = 0;
-        // Initialize first li as the selected (focused) one:
+        var listItems = this.$(".commandBarListItem");
         this.$(listItems[index]).addClass("commandBarSelected");
-        // Set up a key event handler for the document
-        // this.$("#commandBarInput").on("keydown", function (event)
         this.$(document).on("keydown", function (event) {
+            var _a, _b, _c;
             if (_this.$("#CommandBarSelectTab").is(":visible")) {
-                console.log('CommandBarSelectTab is VISIBLE');
                 if (listItems.length != _this.$(".commandBarListItem").length) {
                     listItems = _this.$(".commandBarListItem");
                     index = 0;
@@ -1472,29 +1705,21 @@ var SearchBar = /** @class */ (function () {
                 switch (event.key) {
                     case "ArrowUp":
                         event.preventDefault();
-                        // Remove the highlighting from the previous element
                         _this.$(listItems[index]).removeClass("commandBarSelected");
-                        // Decrease the counter
                         index = index > 0 ? --index : 0;
-                        // Highlight the new element
                         _this.$(listItems[index]).addClass("commandBarSelected");
-                        // Scroll item into view
-                        _this.$(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+                        (_a = _this.$(listItems[index]).get(0)) === null || _a === void 0 ? void 0 : _a.scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
                         break;
                     case "ArrowDown":
                         event.preventDefault();
-                        // Remove the highlighting from the previous element
                         _this.$(listItems[index]).removeClass("commandBarSelected");
-                        // Increase counter
                         index = index < listItems.length - 1 ? ++index : listItems.length - 1;
-                        // Highlight the new element
                         _this.$(listItems[index]).addClass("commandBarSelected");
-                        // Scroll item into view
-                        _this.$(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+                        (_b = _this.$(listItems[index]).get(0)) === null || _b === void 0 ? void 0 : _b.scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
                         break;
                     case "Enter":
-                        event.preventDefault();
-                        _this.$(listItems[index]).children()[0].click();
+                        (_c = _this.$(listItems[index]).children().get(0)) === null || _c === void 0 ? void 0 : _c.click();
+                        _this.ActivateTab('');
                         break;
                 }
             }
@@ -1517,65 +1742,75 @@ var SearchBar = /** @class */ (function () {
                 }, t);
             };
         };
-        var userCheck = debounce(function () {
-            _this.$('.loaderParent').hide();
-            // i think i want this to return a success/fail value? or myb have a separate check to first talk to the api and pass in user data to this call instead and leave it void
-            _this.SetUserDetails();
-            // based on above, set this to userdetails if success or a not found tab if unsuccessful (this tab will have to have a "not found" type message somewhere)
-            // i really dont want this to inside list itmes bc it will dirty everything up and then ill have to actually manage the list
-            _this.ActivateTab(_this.UserDetailsTab);
+        var userCheck = debounce(function (currentActionBarValue) {
+            _this.SetUserDetails().then(function (foundUser) {
+                var _a, _b, _c;
+                console.log('foundUser = ', foundUser);
+                if (foundUser) {
+                    _this.ActivateTab(_this.UserDetailsTab);
+                }
+                else {
+                    if (_this.$("#CommandBarSelectTab").is(":hidden")) {
+                        _this.ActivateTab(_this.CommandBarSelectTab);
+                        _this.RemoveUserDetailsInfo();
+                        var baseUrl = (_b = (_a = _this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
+                        var rvToken = (_c = _this.RVToken) !== null && _c !== void 0 ? _c : "";
+                        var tagsHTML = _this.config.BuildTagsHTML(_this.ConfigTags, 0, currentActionBarValue);
+                        _this.$('#commandBarUl').html(tagsHTML);
+                        _this.config.SetEventListeners(rvToken, baseUrl, true);
+                        _this.SetArrowEventListeners();
+                        // add in error badge from jake (this needs to be removed everywhere in activate tab probably)
+                        if (currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10) {
+                            _this.$("#commandBarInput").siblings(".error").show();
+                        }
+                    }
+                }
+            });
         }, 500);
         this.$('#commandBarInput').on('input', function (event) {
+            var _a, _b, _c;
+            _this.$("#commandBarInput").siblings(".error").hide();
+            var baseUrl = (_b = (_a = _this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
+            var rvToken = (_c = _this.RVToken) !== null && _c !== void 0 ? _c : "";
             var currentActionBarValue = _this.$(event.target).val();
-            // i think this should encode by default?
-            // var currentActionBarValueUriEncoded = encodeURIComponent(currentActionBarValue);
             var isActionBarNumeric = $.isNumeric(currentActionBarValue);
-            // Populate Profile Jump Information
             if (isActionBarNumeric === true) {
-                console.log('isActionBarNumeric = true');
                 _this.ActivateTab('');
-                _this.$('.loaderParent').show();
-                userCheck();
+                userCheck(currentActionBarValue);
             }
             else {
                 if (_this.$("#CommandBarSelectTab").is(":hidden")) {
-                    console.log('CommandBarSelectTab not visible...');
-                    if (_this.$('.loaderParent').is(":visible")) {
-                        console.log('loaderParent is visible and not numeric... hide...');
-                        _this.$('.loaderParent').hide();
-                    }
-                    console.log('activate commandbar select tab...');
                     _this.ActivateTab(_this.CommandBarSelectTab);
                     console.log('remove user details view...');
                     _this.RemoveUserDetailsInfo();
                 }
+                if (currentActionBarValue) {
+                    var filteredSearch = function (result) { return result.score < 0.6; };
+                    var options = {
+                        includeScore: true,
+                        ignoreLocation: true,
+                        includeMatches: true,
+                        findAllMatches: true,
+                        threshold: 0.2,
+                        keys: ['category', 'displayName', 'altName'],
+                        shouldSort: true
+                    };
+                    var fuse = new Fuse(_this.ConfigRoutes, options);
+                    var results = fuse.search(currentActionBarValue);
+                    var filteredResults = results.filter(filteredSearch).map(function (fr) { return fr.item; });
+                    var routesHTML = _this.config.BuildRoutesHTML(filteredResults);
+                    var tagsHTML = _this.config.BuildTagsHTML(_this.ConfigTags, filteredResults.length, currentActionBarValue);
+                    _this.$('#commandBarUl').html(routesHTML.concat(tagsHTML));
+                    _this.config.SetEventListeners(rvToken, baseUrl, true);
+                    _this.SetArrowEventListeners();
+                }
+                else {
+                    var routesHTML = _this.config.BuildRoutesHTML(_this.ConfigRoutes);
+                    _this.$('#commandBarUl').html(routesHTML);
+                    _this.config.SetEventListeners(rvToken, baseUrl);
+                    _this.SetArrowEventListeners();
+                }
             }
-            if (currentActionBarValue) {
-                var filteredSearch = function (result) { return result.score < 0.6; };
-                var options = {
-                    includeScore: true,
-                    ignoreLocation: true,
-                    includeMatches: true,
-                    findAllMatches: true,
-                    threshold: 0.2,
-                    keys: ['category', 'displayName', 'altName'],
-                    shouldSort: true
-                };
-                var fuse = new Fuse(_this.ConfigRoutes, options);
-                var results = fuse.search(currentActionBarValue);
-                var filteredResults = results.filter(filteredSearch).map(function (fr) { return fr.item; });
-                var routesHTML = _this.config.BuildRoutesHTML(filteredResults);
-                var tagsHTML = _this.config.BuildTagsHTML(_this.ConfigTags, filteredResults.length, currentActionBarValue);
-                _this.$('#commandBarUl').html(routesHTML.concat(tagsHTML));
-                _this.config.SetEventListeners(true);
-            }
-            else {
-                var routesHTML = _this.config.BuildRoutesHTML(_this.ConfigRoutes);
-                _this.$('#commandBarUl').html(routesHTML);
-                _this.config.SetEventListeners();
-            }
-            // this.$(".commandBarListItem:first").addClass("commandBarSelected");
-            _this.SetArrowEventListeners();
         });
     };
     SearchBar.prototype.showOverlay = function () {
@@ -1584,15 +1819,12 @@ var SearchBar = /** @class */ (function () {
             return __generator(this, function (_a) {
                 //if already showing
                 if (this.$("#commandBarOverlay").is(":hidden")) {
-                    console.log('show overlay...');
                     this.ActivateTab(this.CommandBarSelectTab);
                     this.$('#commandBarOverlay').show();
                     this.$('#commandBarExitButton').on("click", function () { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0:
-                                    console.log('exit clicked...');
-                                    return [4 /*yield*/, this.hideOverlay()];
+                                case 0: return [4 /*yield*/, this.hideOverlay()];
                                 case 1:
                                     _a.sent();
                                     return [2 /*return*/];
@@ -1601,6 +1833,7 @@ var SearchBar = /** @class */ (function () {
                     }); });
                     this.CaptureInput();
                     this.$('#commandBarInput').trigger("focus");
+                    this.SetArrowEventListeners();
                     // TODO: fix extra handlers being made
                     // @ts-ignore
                     // console.log($._data(this.$('#commandBarExitButton')[0], 'events'));
@@ -1614,9 +1847,6 @@ var SearchBar = /** @class */ (function () {
                     // TODO: '#commandBarInput'(INPUT) = BLEEDING
                     // TODO: 'document'(KEYDOWN) = BLEEDING
                 }
-                else {
-                    console.log('already showing... do nothing...');
-                }
                 return [2 /*return*/];
             });
         });
@@ -1624,7 +1854,6 @@ var SearchBar = /** @class */ (function () {
     SearchBar.prototype.hideOverlay = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                console.log('hideOverlay called...');
                 this.$('#commandBarOverlay').hide();
                 // remove handlers
                 this.$('#commandBarExitButton').off("click");
@@ -1637,7 +1866,7 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    SearchBar.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
+    SearchBar.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.2 %c ";
     SearchBar.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",

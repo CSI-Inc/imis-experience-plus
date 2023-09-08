@@ -3,7 +3,7 @@
 
 class IqaExtensions
 {
-    private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
+    private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.2 %c ";
     private static readonly VERSION_STYLES = [
         "background-color: #e6b222; color: white;", // CSI
         "background-color: #374ea2; color: white;", // iEP

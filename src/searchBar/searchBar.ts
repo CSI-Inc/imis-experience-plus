@@ -3,7 +3,7 @@
 
 class SearchBar
 {
-    private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.1 %c ";
+    private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.2 %c ";
     private static readonly VERSION_STYLES = [
         "background-color: #e6b222; color: white;", // CSI
         "background-color: #374ea2; color: white;", // iEP
@@ -14,6 +14,7 @@ class SearchBar
     // Tabs
     private Tabs: string[];
     public UserDetailsTab: string = "UserDetailsTab";
+    public EventDetailsTab: string = "EventDetailsTab";
     public CommandBarSelectTab: string = "CommandBarSelectTab";
 
     // Config
@@ -21,76 +22,29 @@ class SearchBar
     private ConfigRoutes: ConfigItem[] = [];
     private ConfigTags: ConfigItem[] = [];
 
-    //#region SVG Paths
-    private CsiLogoPath: string = "assets/images/csiicon.svg"
-    private BuildingIconPath: string = "assets/images/buildingIcon.svg"
-    private CakeIconPath: string = "assets/images/cakeIcon.svg"
-    private EmailIconPath: string = "assets/images/emailIcon.svg"
-    private MailboxIconPath: string = "assets/images/mailboxIcon.svg"
-    private PhoneIconPath: string = "assets/images/phoneIcon.svg"
-    private UserTagIconPath: string = "assets/images/userTagIcon.svg"
-    public ExternalIconPath: string = "assets/images/externalIcon.svg";
-    private ExternalIconBluePath: string = "assets/images/externalIconBlue.svg";
-    private ExternalIconWhitePath: string = "assets/images/externalIconWhite.svg";
-    private IdCardBluePath: string = "assets/images/idCardBlue.svg";
-    private BrowsersIconPath: string = "assets/images/browserIcon.svg";
-    private LockIconPath: string = "assets/images/lockIcon.svg";
-    private CloseIconPath: string = "assets/images/closeIcon.svg";
-    //#endregion
-
-    //#region Component Paths
-    private CommandBarPath: string = "assets/components/commandBar.html";
-    private ShiftButtonPath: string = "assets/components/buttons/shift.html";
-    private PlusButtonPath: string = "assets/components/buttons/plus.html";
-    private EnterButtonPath: string = "assets/components/buttons/enter.html";
-    private EnterButton2Path: string = "assets/components/buttons/enter2.html";
-    private ControlButtonPath: string = "assets/components/buttons/control.html";
-    private ControlButton2Path: string = "assets/components/buttons/control2.html";
-    private PrimaryButtonPath: string = "assets/components/buttons/primary.html";
-    //#endregion
-
-    //#region Assets
-    private CsiLogo: string | null = null;
-    private CommandBar: string | null = null;
-    private ShiftButton: string | null = null;
-    private PlusButton: string | null = null;
-    private EnterButton: string | null = null;
-    private EnterButton2: string | null = null;
-    private ControlButton: string | null = null;
-    private ControlButton2: string | null = null;
-    private PrimaryButton: string | null = null;
-    // Icons
-    private CakeIcon: string | null = null;
-    private BuildingIcon: string | null = null;
-    private EmailIcon: string | null = null;
-    private MailboxIcon: string | null = null;
-    private PhoneIcon: string | null = null;
-    private UserTagIcon: string | null = null;
-    public ExternalIcon: string | null = null;
-    private ExternalIconBlue: string | null = null;
-    private ExternalIconWhite: string | null = null;
-    private IdCardBlue: string | null = null;
-    private BrowsersIcon: string | null = null;
-    private LockIcon: string | null = null;
-    private CloseIcon: string | null = null;
-    //#endregion
-
     // TESTING
     private RVToken: string | null = null;
     private DocumentationUrl: string = "https://help.imis.com/enterprise/search.htm";
     private ClientContext: ClientContext | null = null;
     private WebsiteUrl: string | null = null;
-    private UserDetailsView: string | null = null;
-    private UserDetailsViewPath: string = "assets/views/userDetailsTab.html";
 
     private settings: Settings;
+
+    private assetHelper: AssetHelper;
+
+    private apiHelper: ApiHelper;
 
     constructor(private $: JQueryStatic)
     {
         this.settings = new Settings($);
-        this.config = new ConfigManager(this);
-        
-        this.Tabs = [this.CommandBarSelectTab, this.UserDetailsTab];
+
+        this.assetHelper = new AssetHelper();
+
+        this.apiHelper = new ApiHelper();
+
+        this.config = new ConfigManager(this, this.apiHelper, this.assetHelper);
+
+        this.Tabs = [this.CommandBarSelectTab, this.UserDetailsTab, this.EventDetailsTab];
 
         if (!Utils.isImisPage($))
         {
@@ -109,34 +63,61 @@ class SearchBar
     {
         var config = await this.settings.load();
 
-        if (!config.enableWorkbar) return;   
+        if (!config.enableWorkbar) return;
 
         this.$(() =>
         {
             console.log(SearchBar.VERSION_STRING + "Loaded: Search Bar", ...SearchBar.VERSION_STYLES);
+
+            // TODO:
+            // 1) make call happen once a day by adding a time stamp
+            // 2) actually update the json file
+            this.apiHelper.Test().then((data: any) =>
+            {
+                if (!("imis_experience_plus__search_bar_config_version" in localStorage)) // setting not found, first time running, prime local storage
+                {
+                    localStorage.setItem("imis_experience_plus__search_bar_config_version", "1.0.0");
+                }
+
+                var localVersion = localStorage.getItem("imis_experience_plus__search_bar_config_version");
+                console.log('data = ', data)
+                console.log('localStorage.getItem("imis_experience_plus__search_bar_config_version") = ', localVersion);
+
+                if (data.version != localVersion)
+                {
+                    console.log("UPDATE REQUIRED");
+
+                    //update local json config
+                    // --- do it ---
+
+                    //set new local storage version
+                    localStorage.setItem("imis_experience_plus__search_bar_config_version", data.version);
+                } else
+                {
+                    console.log("NO UPDATE REQUIRED");
+                }
+            });
+
+
             this.RVToken = this.$("#__RequestVerificationToken").val() as string;
             this.ClientContext = JSON.parse(this.$('#__ClientContext').val() as string) as ClientContext;
 
             // we want to prevent non-users from using the searchbar
-            console.log('this.ClientContext.isAnonymous = ', this.ClientContext.isAnonymous);
             if (this.ClientContext.isAnonymous) return;
 
-            this.GetResource(this.CommandBarPath).then(data =>
+            this.assetHelper.GetAllAssets().then(() =>
             {
-                this.$('body').prepend(data);
-            });
-            this.BuildConfig();
-            this.GetAllAssets().then(() =>
-            {
-                this.$("#commandBarOverlay #logo-placeholder").replaceWith(this.CsiLogo ?? "");
-                this.$("#commandBarOverlay .externalIconWhite").replaceWith(this.ExternalIconWhite ?? "");
-                // this.$("#commandBarOverlay .externalIconBlue").replaceWith(this.ExternalIconBlue);
-                this.$("#commandBarOverlay .externalIcon").replaceWith(this.ExternalIcon ?? "");
-                this.$("#commandBarOverlay #commandBarExitButton").html(this.CloseIcon ?? "");
+                this.$('body').prepend(this.assetHelper.CommandBar ?? "");
+                this.$("#commandBarOverlay #logo-placeholder").replaceWith(this.assetHelper.CsiLogo ?? "");
+                this.$("#commandBarOverlay .externalIconWhite").replaceWith(this.assetHelper.ExternalIconWhite ?? "");
+                this.$("#commandBarOverlay .externalIcon").replaceWith(this.assetHelper.ExternalIcon ?? "");
+                this.$("#commandBarOverlay #commandBarExitButton").html(this.assetHelper.CloseIcon ?? "");
+                this.BuildOpenSearch();
+                this.BuildConfig();
             });
 
             let keysPressed: { [key: string]: boolean } = {};
-            
+
             // on key down
             this.$(document).on("keydown", async e =>
             {
@@ -164,17 +145,14 @@ class SearchBar
                     await this.hideOverlay();
                 }
                 // Go to User Profile
-                else if (isCommandBarVisible && e.key === "Enter" && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"] && this.$("#UserDetailsTab").is(":visible"))
+                else if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
                 {
-                    console.log('UserDetailsTab is VISIBLE -> go to user profile');
                     if (this.$('#commandBarInput').get(0) === document.activeElement)
                     {
-                        var input = this.$('#commandBarInput').val() as string;
-                        if (input.length > 0 && $.isNumeric(input) && this.ClientContext !== null)
-                        {
-                            var url = `${this.ClientContext.websiteRoot}Party.aspx?ID=${input}`;
-                            window.location.replace(url);
-                        }
+                        this.ActivateTab('');
+                        // $("#userCardGoToProfile > a")[0].click();
+                        console.log('$("#userCardGoToProfile > a") = ', $("#userCardGoToProfile > a"));
+                        this.$("#userCardGoToProfile > a").get(0)?.click();
                     }
                 }
             });
@@ -183,31 +161,30 @@ class SearchBar
             {
                 var key = event.key.toLowerCase();
                 delete keysPressed[key];
-                // console.log('keysPressed OFF = ', keysPressed);
             });
         });
     }
 
-    private GetUserCardActions(userId: string)
+    private BuildUserCardActions(userId: string): string
     {
         var profileUrl = `${this.ClientContext?.websiteRoot}Party.aspx?ID=${userId}`;
         var credentialsUrl = `${this.ClientContext?.websiteRoot}AsiCommon/Controls/Contact/User/UserEdit.aspx?ID=${userId}`;
         return `
                 <div id="userCardActions" class="userDetails">
                     <div id="userCardGoToProfile" class="userCardActionArea">
-                        ${this.IdCardBlue}
+                        ${this.assetHelper.IdCardBlue}
                         <a href="${profileUrl}" class="userActionCard">Profile</a>
-                        ${this.EnterButton2}
+                        ${this.assetHelper.EnterButton2}
                     </div>
                     <div id="userCardUserCredentials" class="userCardActionArea">
-                        ${this.LockIcon}
+                        ${this.assetHelper.LockIcon}
                         <a id="userCardUserCredentialsUrl" href="${credentialsUrl}" class="userActionCard">User Credentials</a>
                     </div>
                 </div>
             `;
     }
 
-    private GetProfile(data: any)
+    private BuildProfile(data: any): string
     {
         var status = data?.Status?.Description;
         var memberType = data?.AdditionalAttributes?.$values[0].Value;
@@ -252,7 +229,7 @@ class SearchBar
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
                         ${birthDate ? `
                         <div style="padding:2px 0;">
-                            ${this.CakeIcon}
+                            ${this.assetHelper.CakeIcon}
                             <span class="textBadge">Date of Birth</span>
                             <span style="display:inline-block; vertical-align: middle;">${birthDate}</span>
                         </div>`: ''}
@@ -260,7 +237,7 @@ class SearchBar
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersPhoneNumber0">
                         ${phone0 ? `
                         <div style="padding:2px 0;">
-                            ${this.PhoneIcon}
+                            ${this.assetHelper.PhoneIcon}
                             <span class="textBadge">${phone0Type}</span>
                             <a href="tel:${phone0}" style="display:inline-block; vertical-align: middle;">${phone0}</a>
                         </div>`: ''}
@@ -268,7 +245,7 @@ class SearchBar
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersPhoneNumber1">
                         ${phone1 ? `
                         <div style="padding:2px 0;">
-                            ${this.PhoneIcon}
+                            ${this.assetHelper.PhoneIcon}
                             <span class="textBadge">${phone1Type}</span>
                             <a href="tel:${phone1}" style="display:inline-block; vertical-align: middle;">${phone1}</a>
                         </div>`: ''}
@@ -276,31 +253,31 @@ class SearchBar
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersEmail1">
                         ${email1 ? `
                         <div style="padding:2px 0;">
-                            ${this.EmailIcon}
-                            ${email1IsPrimary ? `${this.PrimaryButton}` : `<span class="textBadge">${email1Type}</span>`}
+                            ${this.assetHelper.EmailIcon}
+                            ${email1IsPrimary ? `${this.assetHelper.PrimaryButton}` : `<span class="textBadge">${email1Type}</span>`}
                             <a href="mailto:${email1}" style="display:inline-block; vertical-align: middle;">${email1}</a>
                         </div>`: ''}
                     </div>
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersEmail2">
                         ${email2 ? `
                         <div style="padding:2px 0;">
-                            ${this.EmailIcon}
-                            ${email2IsPrimary ? `${this.PrimaryButton}` : `<span class="textBadge">${email2Type}</span>`}
+                            ${this.assetHelper.EmailIcon}
+                            ${email2IsPrimary ? `${this.assetHelper.PrimaryButton}` : `<span class="textBadge">${email2Type}</span>`}
                             <a href="mailto:${email2}" style="display:inline-block; vertical-align: middle;">${email2}</a>
                         </div>`: ''}
                     </div>
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersEmail3">
                         ${email3 ? `
                         <div style="padding:2px 0;">
-                            ${this.EmailIcon}
-                            ${email3IsPrimary ? `${this.PrimaryButton}` : `<span class="textBadge">${email3Type}</span>`}
+                            ${this.assetHelper.EmailIcon}
+                            ${email3IsPrimary ? `${this.assetHelper.PrimaryButton}` : `<span class="textBadge">${email3Type}</span>`}
                             <a href="mailto:${email3}" style="display:inline-block; vertical-align: middle;">${email3}</a>
                         </div>`: ''}
                     </div>
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersAddress0">
                         ${address0 ? `
                         <div style="padding:2px 0;">
-                            ${this.MailboxIcon}
+                            ${this.assetHelper.MailboxIcon}
                             <span class="textBadge">${address0Type}</span>
                             <span style="display:inline-block; vertical-align: middle;">${address0}</span>
                         </div>` : ''}
@@ -308,7 +285,7 @@ class SearchBar
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersAddress1">
                         ${address1 ? `
                         <div style="padding:2px 0;">
-                            ${this.MailboxIcon}
+                            ${this.assetHelper.MailboxIcon}
                             <span class="textBadge">${address1Type}</span>
                             <span style="display:inline-block; vertical-align: middle;">${address1}</span>
                         </div>` : ''}
@@ -316,7 +293,7 @@ class SearchBar
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersAddress2">
                         ${address2 ? `
                         <div style="padding:2px 0;">
-                            ${this.MailboxIcon}
+                            ${this.assetHelper.MailboxIcon}
                             <span class="textBadge">${address2Type}</span>
                             <span style="display:inline-block; vertical-align: middle;">${address2}</span>
                         </div>` : ''}
@@ -324,7 +301,7 @@ class SearchBar
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersCompanyName">
                         ${companyName ? `
                         <div style="padding:2px 0;">
-                            ${this.BuildingIcon}
+                            ${this.assetHelper.BuildingIcon}
                             ${companyId ? `
                                 <a href="${this.ClientContext?.websiteRoot}Party.aspx?ID=${companyId}">
                                     <span style="vertical-align: middle;">${companyName}</span>
@@ -339,7 +316,7 @@ class SearchBar
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersTitle">
                         ${userTitle ? `
                         <div style="padding:2px 0;">
-                            ${this.UserTagIcon}
+                            ${this.assetHelper.UserTagIcon}
                             <span style="display:inline-block; vertical-align: middle;">${userTitle}</span>
                         </div>` : ''}
                     </div>
@@ -348,34 +325,7 @@ class SearchBar
         `;
     }
 
-    // private GetDocumentationInput(hasInput: boolean, encoded: string, value: string): string
-    // {
-    //     // need to strip input bc it will inject ANYTHING
-    //     if (hasInput)
-    //     {
-    //         return `
-    //             <a id="documentationLinkDestination" href="${this.DocumentationUrl}?q=${encoded}" target="_blank">
-    //                 <span id="searchDocumentation" class="TextButton">
-    //                     Search iMIS Documentation${this.ExternalIconBlue}
-    //                 </span><span style="margin-left: 4px;">${value?.trim()}</span>
-    //             </a>
-    //         `;
-    //     }
-    //     else
-    //     {
-    //         return `
-    //             <a id="documentationLinkDestination" href="${this.DocumentationUrl}" target="_blank">
-    //                 <span class="TextButton"
-    //                     style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
-    //                     Search iMIS Documentation
-    //                     ${this.ExternalIconBlue}
-    //                 </span>
-    //             </a>
-    //         `;
-    //     }
-    // }
-
-    private GetUserChangeDetails(username: string, data: any): string
+    private BuildUserChangeDetails(username: string, data: any): string
     {
         var createdOn = CleanUp.Date(data?.UpdateInformation?.CreatedOn);
         var createdBy = data?.UpdateInformation?.CreatedBy;
@@ -395,168 +345,187 @@ class SearchBar
                     ${username ? `
                         <span class="Label workBarLabel workBarUsernameLabel">Username: </span>${username}
                     ` : ''}
-                </span> 
+                </span>
             </div>
         `;
     }
 
-    private async GetResource(path: string): Promise<string>
+    private BuildOpenSearch(): void
     {
-        var url = chrome.runtime.getURL(path);
-        return await $.get({ url, dataType: 'html', type: 'GET' });
+        var view = this.assetHelper.OpenSearchView;
+        var result = view?.replace(`<svg class="menu-icon"></svg>`, this.assetHelper.MenuIcon ?? "");
+        this.$('.searchfieldplus-dropdown').parent().append(this.$.parseHTML(result ?? ""));
+        this.$('.menu-icon-container')
+            .on('mouseenter', e =>
+            {
+                this.$(e).animate({ width: 104 }, 100, 'linear');
+                setTimeout(() =>
+                {
+                    this.$('.hover-text').animate({ 'font-size': '90%' }, 100, 'linear');
+                    this.$('.hover-text').show();
+                }, 25);
+            })
+            .on("mouseleave", e =>
+            {
+                this.$('.hover-text').hide().css('font-size', '1px');
+                this.$(e).css('width', 'auto');
+            })
+            .on("click", async e =>
+            {
+                await this.showOverlay();
+                e.preventDefault();
+            });
     }
 
-    private async GetAllAssets(): Promise<void>
+    private BuildEvent(event: any, staffContactName: string, eventCategoryDescription: string): string
     {
-        this.CommandBar = await this.GetResource(this.CommandBarPath);
-        this.CsiLogo = await this.GetResource(this.CsiLogoPath);
-        this.ExternalIcon = await this.GetResource(this.ExternalIconPath);
-        this.ExternalIconBlue = await this.GetResource(this.ExternalIconBluePath);
-        this.ExternalIconWhite = await this.GetResource(this.ExternalIconWhitePath);
-        this.IdCardBlue = await this.GetResource(this.IdCardBluePath);
-        this.BrowsersIcon = await this.GetResource(this.BrowsersIconPath);
-        this.LockIcon = await this.GetResource(this.LockIconPath);
-        this.CloseIcon = await this.GetResource(this.CloseIconPath);
-        this.CakeIcon = await this.GetResource(this.CakeIconPath);
-        this.BuildingIcon = await this.GetResource(this.BuildingIconPath);
-        this.EmailIcon = await this.GetResource(this.EmailIconPath);
-        this.MailboxIcon = await this.GetResource(this.MailboxIconPath);
-        this.PhoneIcon = await this.GetResource(this.PhoneIconPath);
-        this.UserTagIcon = await this.GetResource(this.UserTagIconPath);
-        this.ShiftButton = await this.GetResource(this.ShiftButtonPath);
-        this.PlusButton = await this.GetResource(this.PlusButtonPath);
-        this.EnterButton = await this.GetResource(this.EnterButtonPath);
-        this.EnterButton2 = await this.GetResource(this.EnterButton2Path);
-        this.ControlButton = await this.GetResource(this.ControlButtonPath);
-        this.ControlButton2 = await this.GetResource(this.ControlButton2Path);
-        this.PrimaryButton = await this.GetResource(this.PrimaryButtonPath);
-
-        // TODO: i think this html loading and replacing is driving my nuts bc i want it all to work like this:
-        //1 Build Some Component
-        // inside BUILD:
-        // GET HTML (should already be loaded from GetAllAssets?)
-        // REPLACE TEMPLATE STUFF (should make a func to rip throw all the replace calls)
-        // SAVE TO VAR FOR REUSE (need more this.ABC variables)
-
-        // TODO: i think this is how i want it below...
-        // this.CommandBarDocumentationInputWithoutValue = await this.GetResource(this.CommandBarDocumentationInputWithoutValuePath);
-        // `
-        //         <a id="documentationLinkDestination" href="${this.DocumentationUrl}" target="_blank">
-        //             <span class="TextButton"
-        //                 style="border: 1px solid lightgray; border-radius: 3px; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; color: #005e7d;">
-        //                 Search iMIS Documentation
-        //                 <i class="externalIconBlue"></i>
-        //             </span>
-        //         </a>
-        //     `;
-
-        this.UserDetailsView = await this.GetResource(this.UserDetailsViewPath);
-        // console.log('this.UserDetailsView = ', this.UserDetailsView);
+        var name = event?.Name;
+        var id = event?.EventId;
+        var status = CleanUp.Status(event?.Status);
+        // var category = event?.Category?.EventCategoryId;
+        var startDate = CleanUp.Date(event?.StartDateTime);
+        var endDate = CleanUp.Date(event?.EndDateTime);
+        var description = event?.Description;
+        var virtualMeetingUrl = "https://www.google.com";
+        // var virtualMeetingUrl = event?.VirtualMeetingUrl ?? "https://www.google.com";
+        // TODO: Fix this - not real
+        // staffContact = "Joe Russell";
+        // eventCategory = "EDUC"
+        return `
+            <div id="userCardProfile" class="userDetails">
+                <h3 id="destinationUsersName" style="color: #005e7d; margin: 2px">${name}</h3>
+                <div id="details" style="font-size: 90%;">
+                    <div id="userDetailsTop" style="margin: 0px 0px 5px 1px;">
+                        <span id="destinationUsersId" class="userDetails userSpecificDetail userIndividual" style="padding-right: 6px;">
+                            <span class="Label workBarLabel destinationUsersIdLabel">ID: </span>${id}
+                        </span>
+                        <span id="destinationUsersStatus" class="userDetails userSpecificDetail userIndividual" style="padding-right: 6px;">
+                            <span class="Label workBarLabel destinationUsersStatusLabel">Status: </span>${status}
+                        </span>
+                        <span id="destinationUsersMemberType" class="userDetails userSpecificDetail">
+                            <span class="Label workBarLabel destinationUsersTypeLabel">Category: </span>${eventCategoryDescription}
+                        </span>
+                    </div>
+                    <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
+                        ${startDate ? `
+                        <div style="padding:2px 0;">
+                            ${this.assetHelper.CalendarIcon}
+                            <span class="textBadge">Start Date</span>
+                            <span style="display:inline-block; vertical-align: middle;">${startDate}</span>
+                        </div>`: ''}
+                    </div>
+                    <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
+                        ${endDate ? `
+                        <div style="padding:2px 0;">
+                            ${this.assetHelper.CalendarIcon}
+                            <span class="textBadge">End Date</span>
+                            <span style="display:inline-block; vertical-align: middle;">${endDate}</span>
+                        </div>`: ''}
+                    </div>
+                    <br />
+                    <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
+                        ${staffContactName ? `
+                        <div style="padding:2px 0;">
+                            ${this.assetHelper.UserTagIcon}
+                            <span style="display:inline-block; vertical-align: middle;">${staffContactName}</span>
+                        </div>`: ''}
+                    </div>
+                    <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
+                        ${description ? `
+                        <div style="padding:2px 0;">
+                            <span style="display:inline-block; vertical-align: middle;">${description}</span>
+                        </div>`: ''}
+                    </div>
+                    <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
+                        ${virtualMeetingUrl ? `
+                        <div style="padding:2px 0;">
+                            <span class="textBadge">Virtual Meeting URL</span>
+                            <span style="display:inline-block; vertical-align: middle;">${virtualMeetingUrl}</span>
+                        </div>`: ''}
+                    </div>
+                </div>
+            </div>
+        `;
     }
 
-    // Build this Tab on the fly and scrap the whole thing when you're done
-    public SetUserDetails(userId = ''): void
+    public async SetEventDetails(event: any): Promise<boolean>
     {
-        var input = userId ? userId : this.$('#commandBarInput').val() as string;
-        console.log('input = ', input);
-
-        // Set up view
-        var content = this.UserDetailsView;
-        this.$("#UserDetailsTab").replaceWith(content ?? "");
-
-        // Get api data
-        var username = this.GetUserName(input); // THIS ONLY GRABS THE USERNAME
-
-        // TODO: this should determin whether or not to set up this view in the first place
-        // TODO: extract this and pass in userData if it has it - otherwise stay on commandTab....
-        var data = this.GetParty(input);
-
-        // Update view with api data -> right column
-        var profile = this.GetProfile(data)
-        this.$('#userCardProfile').replaceWith(profile);
-
-        // Update view with api data -> left column
-        var userActions = this.GetUserCardActions(input);
-        this.$('#userCardActions').replaceWith(userActions);
-
-        // Update Documentation Search Area with Created/Updated stuff
-        var changeDetails = this.GetUserChangeDetails(username, data);
-        this.$("#userCardChangeDetails").replaceWith(changeDetails);
-    }
-
-    private GetParty(input: string): Object
-    {
-        var result = {};
-        $.ajax(`${this.ClientContext?.baseUrl}api/Party/${input}`, {
-            type: "GET",
-            contentType: "application/json",
-            async: false,
-            headers:
-            {
-                RequestVerificationToken: this.RVToken
-            },
-            success: function (personData)
-            {
-                console.log('personData = ', personData);
-                result = personData;
-            },
-            error: function ()
-            {
-                console.log('no party details for this id!');
-                // might want to show a "no user found with this id" or something
-            }
-        });
-        return result;
-    }
-
-    private GetUserName(input: string): string
-    {
-        var result = '';
-        $.ajax(`${this.ClientContext?.baseUrl}api/User/${input}`, {
-            type: "GET",
-            contentType: "application/json",
-            async: false,
-            headers:
-            {
-                RequestVerificationToken: this.RVToken
-            },
-            success: function (userData)
-            {
-                console.log('userData = ', userData);
-                result = userData.UserName;
-            },
-            error: function ()
-            {
-                console.log('no username for this contact!');
-                // DO NOTHING, ITS ALREADY SETUP TO HANDLE N/A
-            }
-        });
-        return result;
-    }
-
-    public async FindUserIdByName(input: string): Promise<string | null>
-    {
-        const options: RequestInit = {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'RequestVerificationToken': this.RVToken ?? ""
-            }
-        };
-
-        // Use the Fetch API to get the User/_execute endpoint from the API from the client context base URL
-        const response = await fetch(`${this.ClientContext?.baseUrl}api/User?username=${input}`, options);
-
-        let results = await response.json();
-
-        if (results.Count !== 1)
+        var input = this.$('#commandBarInput').val() as string;
+        var url = this.ClientContext?.baseUrl ?? "";
+        var rvToken = this.RVToken ?? "";
+        console.log('event = ', event);
+        if (event)
         {
-            return null;
+            // Set up view
+            var content = this.assetHelper.EventDetailsView;
+            this.$("#EventDetailsTab").replaceWith(content ?? "");
+
+            var eventCategoryId = event?.Category?.EventCategoryId;
+            console.log('eventCategoryId = ', eventCategoryId);
+            var eventCategory = eventCategoryId ? await this.apiHelper.GetEventCategory(eventCategoryId, rvToken, url) as any : null;
+            console.log('eventCategory = ', eventCategory);
+            var eventCategoryDescription = eventCategory?.Description;
+            console.log('eventCategoryDescription = ', eventCategoryDescription);
+
+            var staffContactId = event?.NotificationPartyId;
+            console.log('staffContactId = ', staffContactId);
+            var contactData = staffContactId ? await this.apiHelper.GetParty(staffContactId, rvToken, url) as any : null;
+            console.log('contactData = ', contactData);
+            var staffContactName = contactData?.Name;
+            console.log('staffContactName = ', staffContactName);
+
+            var eventHtml = this.BuildEvent(event, staffContactName, eventCategoryDescription)
+            this.$('#userCardProfile').replaceWith(eventHtml);
+
+            // // Update Documentation Search Area with Created/Updated stuff
+            // var changeDetails = this.BuildUserChangeDetails(username, data);
+            // this.$("#userCardChangeDetails").replaceWith(changeDetails);
+
+            return true;
         }
         else
         {
-            return results.Items.$values[0].Party.Id;
+            return false;
+        }
+    }
+
+    // Build this Tab on the fly and scrap the whole thing when you're done
+    public async SetUserDetails(userId = ''): Promise<boolean>
+    {
+        var input = userId ? userId : this.$('#commandBarInput').val() as string;
+        if (!input) return false;
+        console.log('input = ', input);
+        var url = this.ClientContext?.baseUrl ?? "";
+        var rvToken = this.RVToken ?? "";
+        var data = await this.apiHelper.GetParty(input, rvToken, url);
+        console.log('UserData = ', data);
+        if (data)
+        {
+            // Set up view
+            var content = this.assetHelper.UserDetailsView;
+            this.$("#UserDetailsTab").replaceWith(content ?? "");
+
+            var username = await this.apiHelper.GetUserName(input, rvToken, url) ?? "";
+
+            // Update view with api data -> left column
+            var profile = this.BuildProfile(data)
+            this.$('#userCardProfile').replaceWith(profile);
+
+            // Update view with api data -> right column
+            var userActions = this.BuildUserCardActions(input);
+            this.$('#userCardActions').replaceWith(userActions);
+            this.$('#userCardGoToProfile').on('click', () => this.ActivateTab(''));
+            this.$('#userCardUserCredentialsUrl').on('click', () => this.ActivateTab(''));
+
+            // Update Documentation Search Area with Created/Updated stuff
+            var changeDetails = this.BuildUserChangeDetails(username, data);
+            this.$("#userCardChangeDetails").replaceWith(changeDetails);
+
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -567,57 +536,56 @@ class SearchBar
 
     private BuildConfig(): void
     {
+        var baseUrl = this.ClientContext?.baseUrl ?? "";
+        var rvToken = this.RVToken ?? "";
         ConfigManager.GetConfigInstance().then(data =>
         {
             this.ConfigRoutes = data.filter(d => !d.isTag);
             this.ConfigTags = data.filter(d => d.isTag);
             var view = this.config.BuildRoutesHTML(this.ConfigRoutes);
             this.$('#commandBarUl').html(view);
-            this.config.SetEventListeners();
+            this.config.SetEventListeners(rvToken, baseUrl);
         });
     }
 
     // Use this with '' for showing the spinner so that all tabs are hidden
     public ActivateTab(activateTab: string): void
     {
-        this.Tabs.forEach(tab =>
+        if (activateTab !== '')
         {
-            if (tab == activateTab)
-            {
-                this.$(`#${tab}`).show();
-                if (tab == this.CommandBarSelectTab)
-                {
-                    this.SetArrowEventListeners();
-                }
-            }
-            else
-            {
-                if (tab == this.CommandBarSelectTab)
-                {
-                    //TODO: this is currently bleeding resources...
-                    this.$(".commandBarListItem").off('keydown');
-                }
-                this.$(`#${tab}`).hide();
-            }
+            console.log('show tab...');
+            var showTab = this.Tabs.filter(t => t == activateTab)[0];
+            console.log('showTab = ', showTab);
+            this.$(`#${showTab}`).show();
+            this.$('.loaderParent').hide();
+        }
+        else
+        {
+            this.$('.loaderParent').show();
+        }
+
+        var hideTabs = this.Tabs.filter(t => t !== activateTab);
+        hideTabs.forEach(tab =>
+        {
+            console.log('hide tab...');
+            // if (tab == this.CommandBarSelectTab)
+            // {
+            //     //TODO: this is currently bleeding resources...
+            //     this.$(".commandBarListItem").off('keydown');
+            // }
+            this.$(`#${tab}`).hide();
         });
     }
 
     private SetArrowEventListeners(): void
     {
-        this.$(".commandBarListItem:first").addClass("commandBarSelected");
-        // Get all the <li> elements into a collection
-        var listItems = this.$(".commandBarListItem");
-        // Set up a counter to keep track of which <li> is selected
         var index = 0;
-        // Initialize first li as the selected (focused) one:
+        var listItems = this.$(".commandBarListItem");
         this.$(listItems[index]).addClass("commandBarSelected");
-        // Set up a key event handler for the document
-        // this.$("#commandBarInput").on("keydown", function (event)
         this.$(document).on("keydown", event =>
         {
             if (this.$("#CommandBarSelectTab").is(":visible"))
             {
-                console.log('CommandBarSelectTab is VISIBLE');
                 if (listItems.length != this.$(".commandBarListItem").length)
                 {
                     listItems = this.$(".commandBarListItem");
@@ -627,29 +595,21 @@ class SearchBar
                 {
                     case "ArrowUp":
                         event.preventDefault();
-                        // Remove the highlighting from the previous element
                         this.$(listItems[index]).removeClass("commandBarSelected");
-                        // Decrease the counter
                         index = index > 0 ? --index : 0;
-                        // Highlight the new element
                         this.$(listItems[index]).addClass("commandBarSelected");
-                        // Scroll item into view
-                        this.$(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+                        this.$(listItems[index]).get(0)?.scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
                         break;
                     case "ArrowDown":
                         event.preventDefault();
-                        // Remove the highlighting from the previous element
                         this.$(listItems[index]).removeClass("commandBarSelected");
-                        // Increase counter
                         index = index < listItems.length - 1 ? ++index : listItems.length - 1;
-                        // Highlight the new element
                         this.$(listItems[index]).addClass("commandBarSelected");
-                        // Scroll item into view
-                        this.$(listItems[index])[0].scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
+                        this.$(listItems[index]).get(0)?.scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
                         break;
                     case "Enter":
-                        event.preventDefault();
-                        this.$(listItems[index]).children()[0].click();
+                        this.$(listItems[index]).children().get(0)?.click()
+                        this.ActivateTab('');
                         break;
                 }
             }
@@ -659,7 +619,6 @@ class SearchBar
     private CaptureInput(): void
     {
         console.log('capture input...');
-
         var debounce = (fn: { apply: (arg0: any, arg1: any[]) => void; }, t: number | undefined) =>
         {
             let id: number | undefined;
@@ -674,75 +633,88 @@ class SearchBar
             }
         };
 
-        const userCheck = debounce(() =>
+        const userCheck = debounce((currentActionBarValue: string) =>
         {
-            this.$('.loaderParent').hide();
-            // i think i want this to return a success/fail value? or myb have a separate check to first talk to the api and pass in user data to this call instead and leave it void
-            this.SetUserDetails();
-            // based on above, set this to userdetails if success or a not found tab if unsuccessful (this tab will have to have a "not found" type message somewhere)
-            // i really dont want this to inside list itmes bc it will dirty everything up and then ill have to actually manage the list
-            this.ActivateTab(this.UserDetailsTab);
+            this.SetUserDetails().then(foundUser =>
+            {
+                console.log('foundUser = ', foundUser);
+                if (foundUser)
+                {
+                    this.ActivateTab(this.UserDetailsTab);
+                } else
+                {
+                    if (this.$("#CommandBarSelectTab").is(":hidden"))
+                    {
+                        this.ActivateTab(this.CommandBarSelectTab);
+                        this.RemoveUserDetailsInfo();
+
+                        var baseUrl = this.ClientContext?.baseUrl ?? "";
+                        var rvToken = this.RVToken ?? "";
+                        var tagsHTML = this.config.BuildTagsHTML(this.ConfigTags, 0, currentActionBarValue);
+                        this.$('#commandBarUl').html(tagsHTML);
+                        this.config.SetEventListeners(rvToken, baseUrl, true);
+                        this.SetArrowEventListeners();
+
+                        // add in error badge from jake (this needs to be removed everywhere in activate tab probably)
+                        if (currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10)
+                        {
+                            this.$("#commandBarInput").siblings(".error").show();
+                        }
+                    }
+                }
+            })
         }, 500);
 
         this.$('#commandBarInput').on('input', (event) =>
         {
+            this.$("#commandBarInput").siblings(".error").hide();
+            var baseUrl = this.ClientContext?.baseUrl ?? "";
+            var rvToken = this.RVToken ?? "";
             var currentActionBarValue = this.$(event.target).val() as string;
-            // i think this should encode by default?
-            // var currentActionBarValueUriEncoded = encodeURIComponent(currentActionBarValue);
             var isActionBarNumeric = $.isNumeric(currentActionBarValue);
-            // Populate Profile Jump Information
             if (isActionBarNumeric === true)
             {
-                console.log('isActionBarNumeric = true');
                 this.ActivateTab('');
-                this.$('.loaderParent').show();
-                userCheck();
+                userCheck(currentActionBarValue);
             }
             else
             {
                 if (this.$("#CommandBarSelectTab").is(":hidden"))
                 {
-                    console.log('CommandBarSelectTab not visible...');
-                    if (this.$('.loaderParent').is(":visible"))
-                    {
-                        console.log('loaderParent is visible and not numeric... hide...');
-                        this.$('.loaderParent').hide();
-                    }
-                    console.log('activate commandbar select tab...');
                     this.ActivateTab(this.CommandBarSelectTab);
                     console.log('remove user details view...');
                     this.RemoveUserDetailsInfo();
                 }
-            }
 
-            if (currentActionBarValue)
-            {
-                var filteredSearch = (result: any) => result.score < 0.6;
-                const options = {
-                    includeScore: true,
-                    ignoreLocation: true,
-                    includeMatches: true,
-                    findAllMatches: true,
-                    threshold: 0.2,
-                    keys: ['category', 'displayName', 'altName'],
-                    shouldSort: true
+                if (currentActionBarValue)
+                {
+                    var filteredSearch = (result: any) => result.score < 0.6;
+                    const options = {
+                        includeScore: true,
+                        ignoreLocation: true,
+                        includeMatches: true,
+                        findAllMatches: true,
+                        threshold: 0.2,
+                        keys: ['category', 'displayName', 'altName'],
+                        shouldSort: true
+                    }
+                    const fuse = new Fuse(this.ConfigRoutes, options)
+                    var results: Fuzzy[] = fuse.search(currentActionBarValue);
+                    var filteredResults = results.filter(filteredSearch).map(fr => fr.item);
+                    var routesHTML = this.config.BuildRoutesHTML(filteredResults);
+                    var tagsHTML = this.config.BuildTagsHTML(this.ConfigTags, filteredResults.length, currentActionBarValue);
+                    this.$('#commandBarUl').html(routesHTML.concat(tagsHTML));
+                    this.config.SetEventListeners(rvToken, baseUrl, true);
+                    this.SetArrowEventListeners();
                 }
-                const fuse = new Fuse(this.ConfigRoutes, options)
-                var results: Fuzzy[] = fuse.search(currentActionBarValue);
-                var filteredResults = results.filter(filteredSearch).map(fr => fr.item);
-                var routesHTML = this.config.BuildRoutesHTML(filteredResults);
-                var tagsHTML = this.config.BuildTagsHTML(this.ConfigTags, filteredResults.length, currentActionBarValue);
-                this.$('#commandBarUl').html(routesHTML.concat(tagsHTML));
-                this.config.SetEventListeners(true);
+                else
+                {
+                    var routesHTML = this.config.BuildRoutesHTML(this.ConfigRoutes);
+                    this.$('#commandBarUl').html(routesHTML);
+                    this.config.SetEventListeners(rvToken, baseUrl);
+                    this.SetArrowEventListeners();
+                }
             }
-            else
-            {
-                var routesHTML = this.config.BuildRoutesHTML(this.ConfigRoutes);
-                this.$('#commandBarUl').html(routesHTML);
-                this.config.SetEventListeners();
-            }
-            // this.$(".commandBarListItem:first").addClass("commandBarSelected");
-            this.SetArrowEventListeners();
         });
     }
 
@@ -751,16 +723,15 @@ class SearchBar
         //if already showing
         if (this.$("#commandBarOverlay").is(":hidden"))
         {
-            console.log('show overlay...');
             this.ActivateTab(this.CommandBarSelectTab);
             this.$('#commandBarOverlay').show();
             this.$('#commandBarExitButton').on("click", async () =>
             {
-                console.log('exit clicked...');
                 await this.hideOverlay();
             });
             this.CaptureInput();
             this.$('#commandBarInput').trigger("focus");
+            this.SetArrowEventListeners();
 
             // TODO: fix extra handlers being made
             // @ts-ignore
@@ -776,15 +747,10 @@ class SearchBar
             // TODO: '#commandBarInput'(INPUT) = BLEEDING
             // TODO: 'document'(KEYDOWN) = BLEEDING
         }
-        else
-        {
-            console.log('already showing... do nothing...');
-        }
     }
 
     private async hideOverlay(): Promise<void>
     {
-        console.log('hideOverlay called...');
         this.$('#commandBarOverlay').hide();
 
         // remove handlers

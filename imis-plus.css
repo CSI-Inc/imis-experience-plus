@@ -259,9 +259,7 @@
     color: #444;
 }
 
-/* TODO: Rename commandBarOverlay to __csi__iep__commandBarOverlay and prefix all CSS classes below with #__csi__iep__commandBarOverlay */
-
-#csilogo
+.__csi__iep__search #csilogo
 {
     display: block;
     position: fixed;
@@ -270,14 +268,14 @@
     height: 130px;
 }
 
-#csilogo > svg
+.__csi__iep__search #csilogo > svg
 {
     height: 100%;
     width: 100%;
     filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
 }
 
-#commandBarOverlay
+.__csi__iep__search#commandBarOverlay
 {
     font-family: inherit;
     background-color: rgba(200, 200, 200, 0.5);
@@ -289,7 +287,7 @@
     height: 100%;
 }
 
-.buttonBadge
+.__csi__iep__search .buttonBadge
 {
     font-weight: 500;
     border: 1px solid lightgray;
@@ -300,17 +298,17 @@
     color: black;
 }
 
-.shift
+.__csi__iep__search .shift
 {
     margin-left: 5px;
 }
 
-.plus
+.__csi__iep__search .plus
 {
     margin: 0px 1px;
 }
 
-#commandBarPalette
+.__csi__iep__search #commandBarPalette
 {
     width: 60%;
     background-color: rgba(242, 242, 243, 1);
@@ -322,7 +320,7 @@
     border: solid 15px rgb(242, 242, 243);
 }
 
-#commandBarInput
+.__csi__iep__search #commandBarInput
 {
     width: 100%;
     height: 50px;
@@ -330,7 +328,110 @@
     font-weight: 500;
 }
 
-#commandBarPartyUrl
+.__csi__iep__search #commandBarInputDiv > .error
+{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 11px;
+    left: 150px;
+    background-color: #E08B89;
+    border: 1px solid #BB0000;
+    border-radius: 5px;
+    padding: 3px 10px;
+    color: white;
+    font-weight: 600;
+}
+
+.__csi__iep__search.menu-icon-container
+{
+    cursor: pointer;
+    margin: 1rem;
+    background-color: white;
+    padding: .1rem;
+    border-radius: 4px;
+    border: solid 1px #d7d7d7;
+    width: auto;
+}
+
+.__csi__iep__search.menu-icon-container .hover-text
+{
+    display: inline;
+    vertical-align: middle;
+    font-weight: 700;
+    font-size: 1px;
+    line-height: 96%;
+    color: #007fa8;
+    padding-right: 4px;
+}
+
+/* TODO: TESTING
+.one
+{
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.0s;
+    animation: dot 1.3s infinite;
+    animation-delay: 0.0s;
+}
+
+.two
+{
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.2s;
+    animation: dot 1.3s infinite;
+    animation-delay: 0.2s;
+}
+
+.three
+{
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.3s;
+    animation: dot 1.3s infinite;
+    animation-delay: 0.3s;
+}
+
+@-webkit-keyframes dot
+{
+    0%
+    {
+        opacity: 0;
+    }
+
+    50%
+    {
+        opacity: 0;
+    }
+
+    100%
+    {
+        opacity: 1;
+    }
+}
+
+@keyframes dot
+{
+    0%
+    {
+        opacity: 0;
+    }
+
+    50%
+    {
+        opacity: 0;
+    }
+
+    100%
+    {
+        opacity: 1;
+    }
+} */
+
+.__csi__iep__search #commandBarPartyUrl
 {
     position: absolute;
     right: 57px;
@@ -338,21 +439,21 @@
     display: none;
 }
 
-#commandBarOptionsArea
+.__csi__iep__search #commandBarOptionsArea
 {
     width: 100%;
     margin-top: 6px;
     height: auto;
 }
 
-#commandBarOptions
+.__csi__iep__search #commandBarOptions
 {
     width: 100%;
     background-color: white;
     padding: 5px;
 }
 
-#commandBarUl
+.__csi__iep__search #commandBarUl
 {
     -webkit-padding-start: 0;
     height: 376px;
@@ -360,19 +461,19 @@
     margin: 0 4px 4px 4px;
 }
 
-#userCardChange
+.__csi__iep__search #userCardChange
 {
     width: 100%;
     display: block;
     height: 36px;
 }
 
-#userCardChangeCard
+.__csi__iep__search #userCardChangeCard
 {
     display: block;
 }
 
-#userCardChangeArea
+.__csi__iep__search #userCardChangeArea
 {
     width: 100%;
     height: 100%;
@@ -384,7 +485,7 @@
     border-top: 6px solid rgb(242, 242, 243);
 }
 
-.stack
+.__csi__iep__search .stack
 {
     height: 340px;
     overflow-y: auto;
@@ -392,7 +493,7 @@
     border-top: solid 4px white;
 }
 
-#userCardProfile
+.__csi__iep__search #userCardProfile
 {
     width: 64%;
     border: solid 1px rgba(231, 231, 231, .9);
@@ -402,14 +503,14 @@
     height: 100%;
 }
 
-.userActionCard
+.__csi__iep__search .userActionCard
 {
     vertical-align: middle;
     font-weight: 500;
     font-size: 13px;
 }
 
-.userCardActionArea
+.__csi__iep__search .userCardActionArea
 {
     width: 92%;
     height: 40px;
@@ -422,17 +523,18 @@
     vertical-align: middle;
 }
 
-#destinationUsersName
+.__csi__iep__search #destinationUsersName
 {
     color: #005e7d;
 }
 
-#UserDetailsTab
+.__csi__iep__search #UserDetailsTab,
+.__csi__iep__search #EventDetailsTab
 {
     height: 380px;
 }
 
-.userDetailsBadge
+.__csi__iep__search .userDetailsBadge
 {
     text-decoration: none;
     display: inline-block;
@@ -447,13 +549,13 @@
     vertical-align: middle;
 }
 
-#destinationUsersCompanyName
+.__csi__iep__search #destinationUsersCompanyName
 {
     margin-top: 1.5rem;
     font-weight: 700;
 }
 
-#userCardActions
+.__csi__iep__search #userCardActions
 {
     width: 35%;
     border: solid 1px rgba(231, 231, 231, .9);
@@ -464,19 +566,19 @@
     background-color: rgb(242, 242, 243);
 }
 
-#userCardChangeDetails
+.__csi__iep__search #userCardChangeDetails
 {
     width: 100%;
     text-align: right;
     color: #686868;
 }
 
-#userCardChangeDetails > span
+.__csi__iep__search #userCardChangeDetails > span
 {
     vertical-align: middle;
 }
 
-#commandBarSupportButtons
+.__csi__iep__search #commandBarSupportButtons
 {
     width: 100%;
     background-color: rgb(242, 242, 243);
@@ -485,38 +587,38 @@
     text-align: center;
 }
 
-.commandBarButton
+.__csi__iep__search .commandBarButton
 {
     margin-left: 1rem;
     vertical-align: middle;
     display: inline-block;
 }
 
-.commandBarButton > .badge
+.__csi__iep__search .commandBarButton > .badge
 {
     background-color: #23B4E8
 }
 
-.commandBarHover
+.__csi__iep__search .commandBarHover
 {
     opacity: 1;
     background-color: #F3F3F3;
     cursor: pointer;
 }
 
-.commandBarSelected
+.__csi__iep__search .commandBarSelected
 {
     opacity: 1;
     background-color: #9be5ff;
     cursor: pointer;
 }
 
-span.badge
+.__csi__iep__search span.badge
 {
     background-color: #23B4E8
 }
 
-#commandBarAboutOverlay
+.__csi__iep__search #commandBarAboutOverlay
 {
     width: 100%;
     height: 346px;
@@ -528,12 +630,12 @@ span.badge
     display: none;
 }
 
-span.userDetails.displayBlock
+.__csi__iep__search span.userDetails.displayBlock
 {
     display: block;
 }
 
-.commandBarListItem
+.__csi__iep__search .commandBarListItem
 {
     font-weight: 500;
     list-style: none;
@@ -541,14 +643,14 @@ span.userDetails.displayBlock
     padding: 4px;
 }
 
-.commandBarListItem > a
+.__csi__iep__search .commandBarListItem > a
 {
     display: inline-block;
     width: 100%;
     height: 100%;
 }
 
-.commandBarListItem > a > span
+.__csi__iep__search .commandBarListItem > a > span
 {
     border: 1px solid lightgray;
     border-radius: 3px;
@@ -561,7 +663,7 @@ span.userDetails.displayBlock
     text-align: center;
 }
 
-#commandBarExitButton
+.__csi__iep__search #commandBarExitButton
 {
     position: absolute;
     cursor: pointer;
@@ -571,32 +673,22 @@ span.userDetails.displayBlock
     z-index: 9999999;
 }
 
-#searchDocumentation
+.__csi__iep__search #searchDocumentation
 {
     border: 1px solid lightgray;
     border-radius: 3px;
     background-color: #F4F5F7;
     font-size: 11px;
     padding: 2px .5ch;
-    /* margin-right: 5px; */
     color: #005e7d;
 }
 
-/*
-#commandBarExitButton {
-  position: absolute;
-  top: 20%;
-  padding: 4px 10px;
-  right: 14%;
-  z-index: 9999999;
-} */
-
-#documentationLinkDestination > span
+.__csi__iep__search #documentationLinkDestination > span
 {
     vertical-align: middle;
 }
 
-.textBadge
+.__csi__iep__search .textBadge
 {
     font-weight: 500;
     border: 1px solid lightgray;
@@ -609,7 +701,7 @@ span.userDetails.displayBlock
     color: black
 }
 
-.textBadgeNoMargin
+.__csi__iep__search .textBadgeNoMargin
 {
     font-weight: 500;
     border: 1px solid lightgray;
@@ -621,7 +713,7 @@ span.userDetails.displayBlock
     color: black
 }
 
-.loader
+.__csi__iep__search .loader
 {
     width: 48px;
     height: 48px;
@@ -629,7 +721,7 @@ span.userDetails.displayBlock
     border-bottom-color: #7c7c7c;
     border-radius: 50%;
     display: inline-block;
-    animation: rotation 1s linear infinite;
+    animation: __csi__iep__search-rotation 1s linear infinite;
     margin: auto;
     top: 0;
     bottom: 0;
@@ -638,7 +730,7 @@ span.userDetails.displayBlock
     position: absolute;
 }
 
-@keyframes rotation
+@keyframes __csi__iep__search-rotation
 {
     0%
     {

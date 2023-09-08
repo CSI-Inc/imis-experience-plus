@@ -35,4 +35,13 @@ class CleanUp
         var purpose = json?.replace('Permanent Address', 'Permanent')?.replace('Address', '')?.trim();
         return purpose ? purpose : 'Other';
     }
+
+    public static Status(json: string): string
+    {
+        if (json)
+        {
+            if (json.toLowerCase() === "a") return "Active";
+        }
+        return "Inactive";
+    }
 }

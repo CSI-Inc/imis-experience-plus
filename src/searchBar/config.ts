@@ -2,7 +2,7 @@ class ConfigManager
 {
     private static readonly ConfigPath: string = "assets/search-bar-config.json";
 
-    constructor(private searchBar: SearchBar) { }
+    constructor(private searchBar: SearchBar, private apiHelper: ApiHelper, private assetHelper: AssetHelper) { }
 
     public static async GetConfigInstance(): Promise<ConfigItem[]>
     {
@@ -14,26 +14,44 @@ class ConfigManager
         return configItems;
     }
 
-    public SetEventListeners(includeTags = false): void
+    public SetEventListeners(rvToken: string, baseUrl: string, includeTags = false): void
     {
         // Add hover effects
         $('.commandBarListItem')
             .on("mouseenter", e => $(e.currentTarget).addClass('commandBarHover'))
-            .on("mouseleave", e => $(e.currentTarget).removeClass('commandBarHover'));
+            .on("mouseleave", e => $(e.currentTarget).removeClass('commandBarHover'))
+            .on('click', e =>
+            {
+                var anchorId = $(e.currentTarget).find('a').attr('id');
+                console.log('anchorId = ', anchorId);
+                if (anchorId == "usernameLookup" || anchorId == "eventCodeLookup")
+                {
+                    // this is to prevent event conflict with "eventCodeLookup" & "usernameLookup" on click listeners
+                } else
+                {
+                    this.searchBar.ActivateTab('');
+                }
+            });
 
         if (includeTags)
         {
-            $('#eventCodeLookup').on("click", async function ()
+            var input = $('#commandBarInput').val() as string;
+            $('#eventCodeLookup').on("click", async () =>
             {
-                alert('eventCodeLookup do something...');
+                var event = await this.apiHelper.GetEvent(input, rvToken, baseUrl);
+                console.log('event = ', event);
+                if (event === null) return;
+                this.searchBar.ActivateTab('');
+                await this.searchBar.SetEventDetails(event);
+                this.searchBar.ActivateTab(this.searchBar.EventDetailsTab);
             });
             $('#usernameLookup').on("click", async () =>
             {
-                var currentActionBarValue = $('#commandBarInput').val() as string;
-                var imisId = await this.searchBar.FindUserIdByName(currentActionBarValue);
+                var imisId = await this.apiHelper.FindUserIdByName(input, rvToken, baseUrl);
+                console.log('imisId = ', imisId);
                 if (imisId === null) return;
-                console.log('final userId = ', imisId);
-                this.searchBar.SetUserDetails(imisId);
+                this.searchBar.ActivateTab('');
+                await this.searchBar.SetUserDetails(imisId);
                 this.searchBar.ActivateTab(this.searchBar.UserDetailsTab);
             });
         }
@@ -65,14 +83,6 @@ class ConfigManager
         });
         return result;
     }
-    // static myTest(): void
-    // {
-    //     alert("TEST");
-    // }
-    // static myTest(userInput: string): void
-    // {
-    //     alert(userInput);
-    // }
 
     public BuildTagsHTML(data: ConfigItem[], seed: number, userInput: string): string
     {
@@ -108,7 +118,7 @@ class ConfigManager
                     content = `
                     <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
                         <a href="${item.destination}${userInput}" style="color: #222; text-decoration: none;">
-                            ${item.category.length > -1 ? `<span>${item.category}${this.searchBar.ExternalIcon}</span>` : ''}
+                            ${item.category.length > -1 ? `<span>${item.category}${this.assetHelper.ExternalIcon}</span>` : ''}
                             ${userInput}
                         </a>
                     </li>
@@ -128,7 +138,7 @@ class ConfigManager
                     content = `
                     <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
                         <a href="${item.destination}" style="color: #222; text-decoration: none; vertical-align: middle;">
-                            ${item.category.length > -1 ? `<span>${item.category}${this.searchBar.ExternalIcon}</span>` : ''}
+                            ${item.category.length > -1 ? `<span>${item.category}${this.assetHelper.ExternalIcon}</span>` : ''}
                         </a>
                     </li>
                     `;

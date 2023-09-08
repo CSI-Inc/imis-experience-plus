@@ -1,12 +1,13 @@
-<div id="commandBarOverlay" class="commandBarPanelShadow" style="display: none;">
+<div id="commandBarOverlay" class="__csi__iep__search commandBarPanelShadow" style="display: none;">
     <a id="csilogo" href="https://www.csiinc.com/" target="_blank" rel="nofollow">
         <div id="logo-placeholder"></div>
     </a>
-    <!-- <input id="commandBarExitButton" class="TextButton PrimaryButton btn" type="button" value="x" /> -->
     <div id="commandBarPalette">
         <div id="commandBarExitButton"></div>
-        <div id=" commandBarInputDiv">
+        <div id="commandBarInputDiv">
             <input id="commandBarInput" placeholder="Let's get to work." autocomplete="off" />
+            <div class="error" title="The iMIS ID entered does not match any records." style="display: none;">No
+                Matching ID!</div>
         </div>
         <div id="commandBarOptionsArea" style="width: 100%; margin-top: 6px; display: flex;">
             <div id="commandBarOptions" style="height: 100%; padding:0px;">
@@ -16,22 +17,13 @@
                 <div id="CommandBarSelectTab">
                     <ul id="commandBarUl">
                     </ul>
-                    <!-- <div id="commandBarDocumentationSearchArea">
-                        <div id="commandBarDocumentationInput">
-                            <a id="documentationLinkDestination" href="https://help.imis.com/enterprise/index.htm"
-                                target="_blank">
-                                <span id="searchDocumentation" class="TextButton">
-                                    Search iMIS Documentation<i class="externalIconBlue"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </div> -->
                 </div>
                 <div id="UserDetailsTab"></div>
+                <div id="EventDetailsTab"></div>
             </div>
             <div id="commandBarAboutOverlay">
                 <div id="commandBarAboutOverlayAsi" style="width: 45%; height: 100%; float: left; padding: 2rem;">
-                    <h2>iMIS Work Bar: Let's get to work. </h2>
+                    <h2>iMIS Work Bar: Let's get to work.</h2>
                     <p>Putting time back in the day for associations and non-profits to focus where it matters.</p>
                     <div id="commandBarAboutOverlayAsiLogo" style="text-align: center; width: 300px; margin: 0 auto;">
                         <img src="https://www.advsol.com/images/NewSite/Logos/logo_imisems_400w.png" />
@@ -49,7 +41,7 @@
         </div>
         <div id="commandBarSupportButtons"
             style="background-color: rgb(242,242,243); padding: 6px; text-align: center; display:block;">
-            <a class="commandBarButton" href="https://www.advsol.com/ASI_Learning_Hub/SSO-LearningHub.aspx"
+            <a class="commandBarButton" href="https://www.imis.com/ASI_Learning_Hub/SSO-LearningHub.aspx"
                 target="_blank">
                 <span class="badge">
                     iMIS Learning Hub<i class="externalIconWhite"></i>
@@ -60,24 +52,17 @@
                     iMIS Marketplace<i class="externalIconWhite"></i>
                 </span>
             </a>
-            <a class="commandBarButton" href="https://www.advsol.com/IMIS20/partners/Partners/product_partners.aspx"
+            <a class="commandBarButton" href="https://www.imis.com/IMIS20/partners/Partners/product_partners.aspx"
                 target="_blank">
                 <span class="badge">
                     iMIS Product Partners<i class="externalIconWhite"></i>
                 </span>
             </a>
-            <!-- <a class="commandBarButton" style="margin-left: 1rem;"
-                href="https://help.imis.com/enterprise/features/glossary.htm" target="_blank">
-                <span class="badge" style="background-color:#23B4E8">iMIS Glossary<i class="externalIcon"></i></span>
-            </a> -->
-            <a class="commandBarButton" href="https://www.advsol.com/SupportPortal" target="_blank">
+            <a class="commandBarButton" href="https://www.imis.com/SupportPortal" target="_blank">
                 <span class="badge">
                     iMIS Support<i class="externalIconWhite"></i>
                 </span>
             </a>
-            <!-- <a id="workBarAboutButton" style="margin-left: 1rem;" class="commandBarButton" href="#">
-                <span class="badge bg-success">About</span>
-            </a> -->
         </div>
     </div>
 </div>
