@@ -33,6 +33,8 @@ class SearchBar
 
     private apiHelper: ApiHelper;
 
+    private debouncer: Debouncer = new Debouncer();
+
     constructor(private $: JQueryStatic)
     {
         this.settings = new Settings($);
@@ -153,6 +155,7 @@ class SearchBar
                         console.log('$("#userCardGoToProfile > a") = ', $("#userCardGoToProfile > a"));
                         this.$("#userCardGoToProfile > a").get(0)?.click();
                     }
+                    e.preventDefault();
                 }
             });
 
@@ -615,55 +618,41 @@ class SearchBar
         });
     }
 
-    private CaptureInput(): void
+    private checkUser(currentActionBarValue: string): void
     {
-        console.log('capture input...');
-        var debounce = (fn: { apply: (arg0: any, arg1: any[]) => void; }, t: number | undefined) =>
+        this.SetUserDetails().then(foundUser =>
         {
-            let id: number | undefined;
-            return (...args: any) =>
+            console.log('foundUser = ', foundUser);
+            if (foundUser)
             {
-                clearTimeout(id);
-                let self = this;
-                id = setTimeout(() =>
-                {
-                    fn.apply(self, args)
-                }, t)
+                this.ActivateTab(this.UserDetailsTab);
             }
-        };
-
-        const userCheck = debounce((currentActionBarValue: string) =>
-        {
-            this.SetUserDetails().then(foundUser =>
+            else
             {
-                console.log('foundUser = ', foundUser);
-                if (foundUser)
+                if (this.$("#CommandBarSelectTab").is(":hidden"))
                 {
-                    this.ActivateTab(this.UserDetailsTab);
-                } else
-                {
-                    if (this.$("#CommandBarSelectTab").is(":hidden"))
+                    this.ActivateTab(this.CommandBarSelectTab);
+                    this.RemoveUserDetailsInfo();
+
+                    var baseUrl = this.ClientContext?.baseUrl ?? "";
+                    var rvToken = this.RVToken ?? "";
+                    var tagsHTML = this.config.BuildTagsHTML(this.ConfigTags, 0, currentActionBarValue);
+                    this.$('#commandBarUl').html(tagsHTML);
+                    this.config.SetEventListeners(rvToken, baseUrl, true);
+                    this.SetArrowEventListeners();
+
+                    // add in error badge from jake (this needs to be removed everywhere in activate tab probably)
+                    if (currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10)
                     {
-                        this.ActivateTab(this.CommandBarSelectTab);
-                        this.RemoveUserDetailsInfo();
-
-                        var baseUrl = this.ClientContext?.baseUrl ?? "";
-                        var rvToken = this.RVToken ?? "";
-                        var tagsHTML = this.config.BuildTagsHTML(this.ConfigTags, 0, currentActionBarValue);
-                        this.$('#commandBarUl').html(tagsHTML);
-                        this.config.SetEventListeners(rvToken, baseUrl, true);
-                        this.SetArrowEventListeners();
-
-                        // add in error badge from jake (this needs to be removed everywhere in activate tab probably)
-                        if (currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10)
-                        {
-                            this.$("#commandBarInput").siblings(".error").show();
-                        }
+                        this.$("#commandBarInput").siblings(".error").show();
                     }
                 }
-            })
-        }, 500);
+            }
+        })
+    }
 
+    private CaptureInput(): void
+    {
         this.$('#commandBarInput').on('input', (event) =>
         {
             this.$("#commandBarInput").siblings(".error").hide();
@@ -674,10 +663,11 @@ class SearchBar
             if (isActionBarNumeric === true)
             {
                 this.ActivateTab('');
-                userCheck(currentActionBarValue);
+                this.debouncer.start(v => this.checkUser(v), 500, currentActionBarValue);
             }
             else
             {
+                this.debouncer.stop();
                 if (this.$("#CommandBarSelectTab").is(":hidden"))
                 {
                     this.ActivateTab(this.CommandBarSelectTab);

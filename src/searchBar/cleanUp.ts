@@ -1,47 +1,43 @@
 class CleanUp
 {
     // ex: pass in jsonData?.Emails?.$values[position].EmailType
-    public static EmailType(json: string): string
+    public static EmailType(data: string): string
     {
-        var email = json?.replace('_', '')?.replace('Email', '')?.replace('Address', '')?.trim();
-        return email ? email : 'Other';
+        return data?.replace('_', '')?.replace('Email', '')?.replace('Address', '')?.trim() ?? 'Other';
     }
     // ex: pass in jsonData?.UpdateInformation?.UpdatedOn
-    public static Date(json: string): string
+    public static Date(data: string): string
     {
-        if (json)
-        {
-            return new Date(json)?.toISOString()?.split('T')[0] ?? '';
-        }
-        else
-        {
-            return '';
-        }
+        return !data ? '' : new Date(data)?.toISOString()?.split('T')[0] ?? '';
     }
     // ex: pass in jsonData?.Phones?.$values[2]?.PhoneType
-    public static Phone(json: string): string
+    public static Phone(data: string): string
     {
-        var phone = json?.replace('_', '')?.replace('Phone', '')?.trim();
+        var phone = data?.replace('_', '')?.replace('Phone', '')?.trim();
         return phone ? phone : 'Other';
     }
     // ex: jsonData?.Addresses?.$values[0]?.Address?.FullAddress
-    public static FullAddress(json: string): string
+    public static FullAddress(data: string): string
     {
-        return json?.replace('UNITED STATES', 'United States')?.replace('CANADA', 'Canada')?.replace('AUSTRALIA', 'Australia')?.trim();
+        return data?.replace('UNITED STATES', 'United States')?.replace('CANADA', 'Canada')?.replace('AUSTRALIA', 'Australia')?.trim();
     }
     // ex: jsonData?.Addresses?.$values[0]?.AddressPurpose
-    public static AddressPurpose(json: string): string
+    public static AddressPurpose(purpose: string): string
     {
-        var purpose = json?.replace('Permanent Address', 'Permanent')?.replace('Address', '')?.trim();
-        return purpose ? purpose : 'Other';
+        return purpose?.replace('Permanent Address', 'Permanent')?.replace('Address', '')?.trim() ?? 'Other';
     }
 
-    public static Status(json: string): string
+    /** Converts an event status code to a human-readable string. */
+    public static Status(statusCode: string): string
     {
-        if (json)
+        switch (statusCode)
         {
-            if (json.toLowerCase() === "a") return "Active";
+            case 'A': return 'Active';
+            case 'P': return 'Pending';
+            case 'F': return 'Frozen';
+            case 'C': return 'Closed';
+            case 'X': return 'Canceled';
+            default: return 'Unknown';
         }
-        return "Inactive";
     }
 }

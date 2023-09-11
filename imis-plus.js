@@ -178,6 +178,15 @@ var Settings = /** @class */ (function () {
     return Settings;
 }());
 new Settings(jQuery);
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var Utils = /** @class */ (function () {
     function Utils() {
     }
@@ -192,17 +201,41 @@ var Utils = /** @class */ (function () {
     Utils.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
     return Utils;
 }());
+var Debouncer = /** @class */ (function () {
+    function Debouncer() {
+    }
+    /** Starts a debounce operation with args */
+    Debouncer.prototype.start = function (callback, delay) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
+        console.log('Started debounce operation');
+        this.stop();
+        this.id = window.setTimeout.apply(window, __spreadArray([callback, delay], args, false));
+    };
+    Object.defineProperty(Debouncer.prototype, "isRunning", {
+        /** Gets if the current debounce operation is running */
+        get: function () {
+            return this.id !== undefined;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    /** Stops the current debounce operation */
+    Debouncer.prototype.stop = function () {
+        if (this.id) {
+            console.log('Stopped debounce operation');
+            window.clearTimeout(this.id);
+        }
+        else {
+            console.log('No debounce operation to stop');
+        }
+    };
+    return Debouncer;
+}());
 /// <reference path="settings/settings.ts" />
 /// <reference path="utils.ts" />
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 var IqaExtensions = /** @class */ (function () {
     function IqaExtensions($) {
         this.$ = $;
@@ -1213,44 +1246,41 @@ var CleanUp = /** @class */ (function () {
     function CleanUp() {
     }
     // ex: pass in jsonData?.Emails?.$values[position].EmailType
-    CleanUp.EmailType = function (json) {
-        var _a, _b, _c;
-        var email = (_c = (_b = (_a = json === null || json === void 0 ? void 0 : json.replace('_', '')) === null || _a === void 0 ? void 0 : _a.replace('Email', '')) === null || _b === void 0 ? void 0 : _b.replace('Address', '')) === null || _c === void 0 ? void 0 : _c.trim();
-        return email ? email : 'Other';
+    CleanUp.EmailType = function (data) {
+        var _a, _b, _c, _d;
+        return (_d = (_c = (_b = (_a = data === null || data === void 0 ? void 0 : data.replace('_', '')) === null || _a === void 0 ? void 0 : _a.replace('Email', '')) === null || _b === void 0 ? void 0 : _b.replace('Address', '')) === null || _c === void 0 ? void 0 : _c.trim()) !== null && _d !== void 0 ? _d : 'Other';
     };
     // ex: pass in jsonData?.UpdateInformation?.UpdatedOn
-    CleanUp.Date = function (json) {
+    CleanUp.Date = function (data) {
         var _a, _b, _c;
-        if (json) {
-            return (_c = (_b = (_a = new Date(json)) === null || _a === void 0 ? void 0 : _a.toISOString()) === null || _b === void 0 ? void 0 : _b.split('T')[0]) !== null && _c !== void 0 ? _c : '';
-        }
-        else {
-            return '';
-        }
+        return !data ? '' : (_c = (_b = (_a = new Date(data)) === null || _a === void 0 ? void 0 : _a.toISOString()) === null || _b === void 0 ? void 0 : _b.split('T')[0]) !== null && _c !== void 0 ? _c : '';
     };
     // ex: pass in jsonData?.Phones?.$values[2]?.PhoneType
-    CleanUp.Phone = function (json) {
+    CleanUp.Phone = function (data) {
         var _a, _b;
-        var phone = (_b = (_a = json === null || json === void 0 ? void 0 : json.replace('_', '')) === null || _a === void 0 ? void 0 : _a.replace('Phone', '')) === null || _b === void 0 ? void 0 : _b.trim();
+        var phone = (_b = (_a = data === null || data === void 0 ? void 0 : data.replace('_', '')) === null || _a === void 0 ? void 0 : _a.replace('Phone', '')) === null || _b === void 0 ? void 0 : _b.trim();
         return phone ? phone : 'Other';
     };
     // ex: jsonData?.Addresses?.$values[0]?.Address?.FullAddress
-    CleanUp.FullAddress = function (json) {
+    CleanUp.FullAddress = function (data) {
         var _a, _b, _c;
-        return (_c = (_b = (_a = json === null || json === void 0 ? void 0 : json.replace('UNITED STATES', 'United States')) === null || _a === void 0 ? void 0 : _a.replace('CANADA', 'Canada')) === null || _b === void 0 ? void 0 : _b.replace('AUSTRALIA', 'Australia')) === null || _c === void 0 ? void 0 : _c.trim();
+        return (_c = (_b = (_a = data === null || data === void 0 ? void 0 : data.replace('UNITED STATES', 'United States')) === null || _a === void 0 ? void 0 : _a.replace('CANADA', 'Canada')) === null || _b === void 0 ? void 0 : _b.replace('AUSTRALIA', 'Australia')) === null || _c === void 0 ? void 0 : _c.trim();
     };
     // ex: jsonData?.Addresses?.$values[0]?.AddressPurpose
-    CleanUp.AddressPurpose = function (json) {
-        var _a, _b;
-        var purpose = (_b = (_a = json === null || json === void 0 ? void 0 : json.replace('Permanent Address', 'Permanent')) === null || _a === void 0 ? void 0 : _a.replace('Address', '')) === null || _b === void 0 ? void 0 : _b.trim();
-        return purpose ? purpose : 'Other';
+    CleanUp.AddressPurpose = function (purpose) {
+        var _a, _b, _c;
+        return (_c = (_b = (_a = purpose === null || purpose === void 0 ? void 0 : purpose.replace('Permanent Address', 'Permanent')) === null || _a === void 0 ? void 0 : _a.replace('Address', '')) === null || _b === void 0 ? void 0 : _b.trim()) !== null && _c !== void 0 ? _c : 'Other';
     };
-    CleanUp.Status = function (json) {
-        if (json) {
-            if (json.toLowerCase() === "a")
-                return "Active";
+    /** Converts an event status code to a human-readable string. */
+    CleanUp.Status = function (statusCode) {
+        switch (statusCode) {
+            case 'A': return 'Active';
+            case 'P': return 'Pending';
+            case 'F': return 'Frozen';
+            case 'C': return 'Closed';
+            case 'X': return 'Canceled';
+            default: return 'Unknown';
         }
-        return "Inactive";
     };
     return CleanUp;
 }());
@@ -1394,6 +1424,7 @@ var SearchBar = /** @class */ (function () {
         this.DocumentationUrl = "https://help.imis.com/enterprise/search.htm";
         this.ClientContext = null;
         this.WebsiteUrl = null;
+        this.debouncer = new Debouncer();
         this.settings = new Settings($);
         this.assetHelper = new AssetHelper();
         this.apiHelper = new ApiHelper();
@@ -1496,6 +1527,7 @@ var SearchBar = /** @class */ (function () {
                                                     console.log('$("#userCardGoToProfile > a") = ', $("#userCardGoToProfile > a"));
                                                     (_a = this.$("#userCardGoToProfile > a").get(0)) === null || _a === void 0 ? void 0 : _a.click();
                                                 }
+                                                e.preventDefault();
                                             }
                                             _b.label = 5;
                                         case 5: return [2 /*return*/];
@@ -1770,48 +1802,34 @@ var SearchBar = /** @class */ (function () {
             }
         });
     };
-    SearchBar.prototype.CaptureInput = function () {
+    SearchBar.prototype.checkUser = function (currentActionBarValue) {
         var _this = this;
-        console.log('capture input...');
-        var debounce = function (fn, t) {
-            var id;
-            return function () {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
-                clearTimeout(id);
-                var self = _this;
-                id = setTimeout(function () {
-                    fn.apply(self, args);
-                }, t);
-            };
-        };
-        var userCheck = debounce(function (currentActionBarValue) {
-            _this.SetUserDetails().then(function (foundUser) {
-                var _a, _b, _c;
-                console.log('foundUser = ', foundUser);
-                if (foundUser) {
-                    _this.ActivateTab(_this.UserDetailsTab);
-                }
-                else {
-                    if (_this.$("#CommandBarSelectTab").is(":hidden")) {
-                        _this.ActivateTab(_this.CommandBarSelectTab);
-                        _this.RemoveUserDetailsInfo();
-                        var baseUrl = (_b = (_a = _this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
-                        var rvToken = (_c = _this.RVToken) !== null && _c !== void 0 ? _c : "";
-                        var tagsHTML = _this.config.BuildTagsHTML(_this.ConfigTags, 0, currentActionBarValue);
-                        _this.$('#commandBarUl').html(tagsHTML);
-                        _this.config.SetEventListeners(rvToken, baseUrl, true);
-                        _this.SetArrowEventListeners();
-                        // add in error badge from jake (this needs to be removed everywhere in activate tab probably)
-                        if (currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10) {
-                            _this.$("#commandBarInput").siblings(".error").show();
-                        }
+        this.SetUserDetails().then(function (foundUser) {
+            var _a, _b, _c;
+            console.log('foundUser = ', foundUser);
+            if (foundUser) {
+                _this.ActivateTab(_this.UserDetailsTab);
+            }
+            else {
+                if (_this.$("#CommandBarSelectTab").is(":hidden")) {
+                    _this.ActivateTab(_this.CommandBarSelectTab);
+                    _this.RemoveUserDetailsInfo();
+                    var baseUrl = (_b = (_a = _this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
+                    var rvToken = (_c = _this.RVToken) !== null && _c !== void 0 ? _c : "";
+                    var tagsHTML = _this.config.BuildTagsHTML(_this.ConfigTags, 0, currentActionBarValue);
+                    _this.$('#commandBarUl').html(tagsHTML);
+                    _this.config.SetEventListeners(rvToken, baseUrl, true);
+                    _this.SetArrowEventListeners();
+                    // add in error badge from jake (this needs to be removed everywhere in activate tab probably)
+                    if (currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10) {
+                        _this.$("#commandBarInput").siblings(".error").show();
                     }
                 }
-            });
-        }, 500);
+            }
+        });
+    };
+    SearchBar.prototype.CaptureInput = function () {
+        var _this = this;
         this.$('#commandBarInput').on('input', function (event) {
             var _a, _b, _c;
             _this.$("#commandBarInput").siblings(".error").hide();
@@ -1821,9 +1839,10 @@ var SearchBar = /** @class */ (function () {
             var isActionBarNumeric = $.isNumeric(currentActionBarValue);
             if (isActionBarNumeric === true) {
                 _this.ActivateTab('');
-                userCheck(currentActionBarValue);
+                _this.debouncer.start(function (v) { return _this.checkUser(v); }, 500, currentActionBarValue);
             }
             else {
+                _this.debouncer.stop();
                 if (_this.$("#CommandBarSelectTab").is(":hidden")) {
                     _this.ActivateTab(_this.CommandBarSelectTab);
                     console.log('remove user details view...');

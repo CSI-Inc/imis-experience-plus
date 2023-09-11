@@ -11,3 +11,36 @@ class Utils
             && $('form').get(0)?.id === 'aspnetForm';
     }
 }
+
+class Debouncer
+{
+    private id: number | undefined;
+    
+    /** Starts a debounce operation with args */
+    public start(callback: (...args: any[]) => void, delay: number, ...args: any[]): void
+    {
+        console.log('Started debounce operation');
+        this.stop();
+        this.id = window.setTimeout(callback, delay, ...args);
+    }
+
+    /** Gets if the current debounce operation is running */
+    public get isRunning(): boolean
+    {
+        return this.id !== undefined;
+    }
+
+    /** Stops the current debounce operation */
+    public stop(): void
+    {
+        if (this.id)
+        {
+            console.log('Stopped debounce operation');
+            window.clearTimeout(this.id);
+        }
+        else
+        {
+            console.log('No debounce operation to stop');
+        }
+    }
+}
