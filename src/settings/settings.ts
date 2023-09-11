@@ -4,6 +4,8 @@ class Settings
 {
     public static readonly SPACEBAR = 'Spacebar';
 
+    private origConfig: SettingsModel = <SettingsModel>{};
+
     constructor(private $: JQueryStatic)
     {
         // Contains interactive logic for the popout menu speceifically. Will early exit for other pages.
@@ -24,6 +26,49 @@ class Settings
             $('#kbd-ctrl').prop('checked', config.workbarKbdCtrl);
             $('#kbd-alt').prop('checked', config.workbarKbdAlt);
             $('#kbd-shift').prop('checked', config.workbarKbdShift);
+
+            $('#enable-workbar').on('change', () =>
+            {
+                this.updateDependentControlState();
+            });
+
+            this.origConfig = config;
+
+            // when any input changes or has key down, close the menu
+            
+            $('input').on('change keydown', () =>
+            {
+                if (this.origConfig.enableIqa !== $('#enable-iqa').prop('checked')
+                || this.origConfig.enableRise !== $('#enable-rise').prop('checked')
+                || this.origConfig.enableWorkbar !== $('#enable-workbar').prop('checked')
+                || this.origConfig.workbarShortcut !== $('#workbar-kbd').val()
+                || this.origConfig.workbarKbdCtrl !== $('#kbd-ctrl').prop('checked')
+                || this.origConfig.workbarKbdAlt !== $('#kbd-alt').prop('checked')
+                || this.origConfig.workbarKbdShift !== $('#kbd-shift').prop('checked'))
+                {
+                    // animate the reload notice with slide down for 100ms
+                    $('#reload-notice').slideDown(100);
+                }
+                else
+                {
+                    $('#reload-notice').slideUp(100);
+                }
+            });
+
+            // When the user clicks on the #reload-notice div, reload the current tab from this chrome extension
+            $('#reload-notice').on('click', () =>
+            {
+                // Change the span text inside the #reload-notice div to "Reloading..."
+                $('#reload-notice span').text('Reloading...').css('opacity', '0.5');
+
+                chrome.tabs.query({ active: true, currentWindow: true }, (tabs: any) =>
+                {
+                    chrome.tabs.reload(tabs[0].id)
+                        .then(() => 
+                            setTimeout(() => window.close(), 1000)
+                        );
+                });
+            });
 
             $('#workbar-kbd').on('keydown', (e) =>
             {
@@ -60,6 +105,24 @@ class Settings
             // If any input on the page changes or any key is pressed, save the settings
             $('input').on('change', () => this.save());
         });
+    }
+
+    private updateDependentControlState(): void
+    {
+        if ($('#enable-workbar').prop('checked'))
+        {
+            $('#workbar-kbd').prop('disabled', false);
+            $('#kbd-ctrl').prop('disabled', false);
+            $('#kbd-alt').prop('disabled', false);
+            $('#kbd-shift').prop('disabled', false);
+        }
+        else
+        {
+            $('#workbar-kbd').prop('disabled', true);
+            $('#kbd-ctrl').prop('disabled', true);
+            $('#kbd-alt').prop('disabled', true);
+            $('#kbd-shift').prop('disabled', true);
+        }
     }
 
     public save(): void

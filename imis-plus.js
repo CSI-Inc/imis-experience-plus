@@ -40,6 +40,7 @@ var Settings = /** @class */ (function () {
     function Settings($) {
         var _this = this;
         this.$ = $;
+        this.origConfig = {};
         // Contains interactive logic for the popout menu speceifically. Will early exit for other pages.
         this.$(function () { return __awaiter(_this, void 0, void 0, function () {
             var config;
@@ -61,6 +62,37 @@ var Settings = /** @class */ (function () {
                         $('#kbd-ctrl').prop('checked', config.workbarKbdCtrl);
                         $('#kbd-alt').prop('checked', config.workbarKbdAlt);
                         $('#kbd-shift').prop('checked', config.workbarKbdShift);
+                        $('#enable-workbar').on('change', function () {
+                            _this.updateDependentControlState();
+                        });
+                        this.origConfig = config;
+                        // when any input changes or has key down, close the menu
+                        $('input').on('change keydown', function () {
+                            if (_this.origConfig.enableIqa !== $('#enable-iqa').prop('checked')
+                                || _this.origConfig.enableRise !== $('#enable-rise').prop('checked')
+                                || _this.origConfig.enableWorkbar !== $('#enable-workbar').prop('checked')
+                                || _this.origConfig.workbarShortcut !== $('#workbar-kbd').val()
+                                || _this.origConfig.workbarKbdCtrl !== $('#kbd-ctrl').prop('checked')
+                                || _this.origConfig.workbarKbdAlt !== $('#kbd-alt').prop('checked')
+                                || _this.origConfig.workbarKbdShift !== $('#kbd-shift').prop('checked')) {
+                                // animate the reload notice with slide down for 100ms
+                                $('#reload-notice').slideDown(100);
+                            }
+                            else {
+                                $('#reload-notice').slideUp(100);
+                            }
+                        });
+                        // When the user clicks on the #reload-notice div, reload the current tab from this chrome extension
+                        $('#reload-notice').on('click', function () {
+                            // Change the span text inside the #reload-notice div to "Reloading..."
+                            $('#reload-notice span').text('Reloading...').css('opacity', '0.5');
+                            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                                chrome.tabs.reload(tabs[0].id)
+                                    .then(function () {
+                                    return setTimeout(function () { return window.close(); }, 1000);
+                                });
+                            });
+                        });
                         $('#workbar-kbd').on('keydown', function (e) {
                             e.preventDefault();
                             if (e.metaKey || e.key === 'Control' || e.key === 'Alt' || e.key === 'Shift') {
@@ -90,6 +122,20 @@ var Settings = /** @class */ (function () {
             });
         }); });
     }
+    Settings.prototype.updateDependentControlState = function () {
+        if ($('#enable-workbar').prop('checked')) {
+            $('#workbar-kbd').prop('disabled', false);
+            $('#kbd-ctrl').prop('disabled', false);
+            $('#kbd-alt').prop('disabled', false);
+            $('#kbd-shift').prop('disabled', false);
+        }
+        else {
+            $('#workbar-kbd').prop('disabled', true);
+            $('#kbd-ctrl').prop('disabled', true);
+            $('#kbd-alt').prop('disabled', true);
+            $('#kbd-shift').prop('disabled', true);
+        }
+    };
     Settings.prototype.save = function () {
         chrome.storage.sync.set({
             enableIqa: $('#enable-iqa').prop('checked'),
