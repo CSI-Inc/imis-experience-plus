@@ -143,6 +143,7 @@ var Utils = /** @class */ (function () {
             && ((_a = $('body').get(0)) === null || _a === void 0 ? void 0 : _a.id) === 'MainBody'
             && ((_b = $('form').get(0)) === null || _b === void 0 ? void 0 : _b.id) === 'aspnetForm';
     };
+    Utils.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
     return Utils;
 }());
 /// <reference path="settings/settings.ts" />
@@ -199,7 +200,7 @@ var IqaExtensions = /** @class */ (function () {
      */
     IqaExtensions.prototype.initIqaBrowserExtensions = function () {
         var _this = this;
-        console.log.apply(console, __spreadArray([IqaExtensions.VERSION_STRING + "Loaded: IQA Module"], IqaExtensions.VERSION_STYLES, false));
+        console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: IQA Module"], IqaExtensions.VERSION_STYLES, false));
         // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
         var qf = this.$('div[id*=ObjectQuickFindPanel');
@@ -263,7 +264,7 @@ var IqaExtensions = /** @class */ (function () {
     IqaExtensions.prototype.initIqaExtensions = function () {
         var _this = this;
         var _a, _b, _c;
-        console.log.apply(console, __spreadArray([IqaExtensions.VERSION_STRING + "Loaded: IQA Extensions"], IqaExtensions.VERSION_STYLES, false));
+        console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: IQA Extensions"], IqaExtensions.VERSION_STYLES, false));
         var isImis2017 = this.$('.SubTabStrip .rtsLevel.rtsLevel1 .rtsTxt:contains("Template")').length === 0;
         // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
@@ -605,7 +606,6 @@ var IqaExtensions = /** @class */ (function () {
             return $(newElements);
         };
     };
-    IqaExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.2 %c ";
     IqaExtensions.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
@@ -660,7 +660,7 @@ var RiseExtensions = /** @class */ (function () {
      */
     RiseExtensions.prototype.initRiseEditorExtensions = function () {
         var _this = this;
-        console.log.apply(console, __spreadArray([RiseExtensions.VERSION_STRING + "Loaded: RiSE Module"], RiseExtensions.VERSION_STYLES, false));
+        console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: RiSE Module"], RiseExtensions.VERSION_STYLES, false));
         // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
         // Add a class to the body for scoping CSS rules
@@ -781,7 +781,6 @@ var RiseExtensions = /** @class */ (function () {
             return $(newElements);
         };
     };
-    RiseExtensions.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.2 %c ";
     RiseExtensions.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
@@ -1376,7 +1375,7 @@ var SearchBar = /** @class */ (function () {
                         if (!config.enableWorkbar)
                             return [2 /*return*/];
                         this.$(function () {
-                            console.log.apply(console, __spreadArray([SearchBar.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
+                            console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
                             // TODO:
                             // 1) make call happen once a day by adding a time stamp
                             // 2) actually update the json file
@@ -1866,7 +1865,6 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    SearchBar.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.2 %c ";
     SearchBar.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",

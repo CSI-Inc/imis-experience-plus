@@ -1,5 +1,7 @@
 class Utils
 {
+    public static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
+
     /** Determines if the current page is an IMIS page or not. This is used to determine if the extension should be enabled or not. */
     public static isImisPage($: JQueryStatic): boolean
     {

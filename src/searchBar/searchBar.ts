@@ -3,7 +3,6 @@
 
 class SearchBar
 {
-    private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.2 %c ";
     private static readonly VERSION_STYLES = [
         "background-color: #e6b222; color: white;", // CSI
         "background-color: #374ea2; color: white;", // iEP
@@ -67,7 +66,7 @@ class SearchBar
 
         this.$(() =>
         {
-            console.log(SearchBar.VERSION_STRING + "Loaded: Search Bar", ...SearchBar.VERSION_STYLES);
+            console.log(Utils.VERSION_STRING + "Loaded: Search Bar", ...SearchBar.VERSION_STYLES);
 
             // TODO:
             // 1) make call happen once a day by adding a time stamp
