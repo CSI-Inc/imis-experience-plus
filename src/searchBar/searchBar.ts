@@ -151,9 +151,17 @@ class SearchBar
                     if (this.$('#commandBarInput').get(0) === document.activeElement)
                     {
                         this.ActivateTab('');
-                        // $("#userCardGoToProfile > a")[0].click();
-                        console.log('$("#userCardGoToProfile > a") = ', $("#userCardGoToProfile > a"));
-                        this.$("#userCardGoToProfile > a").get(0)?.click();
+                        this.$("#userProfile").get(0)?.click();
+                    }
+                    e.preventDefault();
+                }
+                // Go to Event Details
+                else if (isCommandBarVisible && e.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
+                {
+                    if (this.$('#commandBarInput').get(0) === document.activeElement)
+                    {
+                        this.ActivateTab('');
+                        this.$("#eventDetails").get(0)?.click();
                     }
                     e.preventDefault();
                 }
@@ -173,14 +181,33 @@ class SearchBar
         var credentialsUrl = `${this.ClientContext?.websiteRoot}AsiCommon/Controls/Contact/User/UserEdit.aspx?ID=${userId}`;
         return `
                 <div id="userCardActions" class="userDetails">
-                    <div id="userCardGoToProfile" class="userCardActionArea">
+                    <div class="userCardActionArea">
                         ${this.assetHelper.IdCardBlue}
-                        <a href="${profileUrl}" class="userActionCard">Profile</a>
+                        <a id="userProfile" href="${profileUrl}" class="userActionCard">Profile</a>
                         ${this.assetHelper.EnterButton2}
                     </div>
-                    <div id="userCardUserCredentials" class="userCardActionArea">
+                    <div class="userCardActionArea">
                         ${this.assetHelper.LockIcon}
-                        <a id="userCardUserCredentialsUrl" href="${credentialsUrl}" class="userActionCard">User Credentials</a>
+                        <a id="userCredentials" href="${credentialsUrl}" class="userActionCard">User Credentials</a>
+                    </div>
+                </div>
+            `;
+    }
+
+    private BuildEventCardActions(eventKey: string): string
+    {
+        var eventDetailsUrl = `${this.ClientContext?.websiteRoot}EventDetail?EventKey=${eventKey}`;
+        var eventDashboardUrl = `${this.ClientContext?.websiteRoot}EventDashboard?EventKey=${eventKey}`;
+        return `
+                <div id="userCardActions" class="userDetails">
+                    <div class="userCardActionArea">
+                        ${this.assetHelper.CalendarLinesPenIcon}
+                        <a id="eventDetails" href="${eventDetailsUrl}" class="userActionCard">Event Details</a>
+                        ${this.assetHelper.EnterButton2}
+                    </div>
+                    <div class="userCardActionArea">
+                        ${this.assetHelper.ChartLineIcon}
+                        <a id="eventDashboard" href="${eventDashboardUrl}" class="userActionCard">Event Dashboard</a>
                     </div>
                 </div>
             `;
@@ -200,12 +227,16 @@ class SearchBar
         var email1Type = CleanUp.EmailType(data?.Emails?.$values[0]?.EmailType);
         var email2 = data?.Emails?.$values[1]?.Address;
         var email2IsPrimary = data?.Emails?.$values[1]?.IsPrimary;
+        console.log('email2IsPrimary = ', email2IsPrimary);
         var email2Type = CleanUp.EmailType(data?.Emails?.$values[1]?.EmailType);
+        console.log('email2Type = ', email2Type);
         var email3 = data?.Emails?.$values[2]?.Address;
         var email3IsPrimary = data?.Emails?.$values[2]?.IsPrimary;
         var email3Type = CleanUp.EmailType(data?.Emails?.$values[2]?.EmailType);
         var address0 = CleanUp.FullAddress(data?.Addresses?.$values[0]?.Address?.FullAddress);
         var address0Type = CleanUp.AddressPurpose(data?.Addresses?.$values[0]?.AddressPurpose);
+        console.log('address0 = ', address0);
+        console.log('address0Type = ', address0Type);
         var address1 = CleanUp.FullAddress(data?.Addresses?.$values[1]?.Address?.FullAddress);
         var address1Type = CleanUp.AddressPurpose(data?.Addresses?.$values[1]?.AddressPurpose);
         var address2 = CleanUp.FullAddress(data?.Addresses?.$values[2]?.Address?.FullAddress);
@@ -219,13 +250,13 @@ class SearchBar
                 <div id="details" style="font-size: 90%;">
                     <div id="userDetailsTop" style="margin: 0px 0px 5px 1px;">
                         <span id="destinationUsersId" class="userDetails userSpecificDetail userIndividual" style="padding-right: 6px;">
-                            <span class="Label workBarLabel destinationUsersIdLabel">ID: </span>${data?.Id}
+                            <span class="Label workBarLabel destinationUsersIdLabel">ID </span>${data?.Id}
                         </span>
                         <span id="destinationUsersStatus" class="userDetails userSpecificDetail userIndividual" style="padding-right: 6px;">
-                            <span class="Label workBarLabel destinationUsersStatusLabel">Status: </span>${status}
+                            <span class="Label workBarLabel destinationUsersStatusLabel">Status </span>${status}
                         </span>
                         <span id="destinationUsersMemberType" class="userDetails userSpecificDetail">
-                            <span class="Label workBarLabel destinationUsersTypeLabel">Type: </span>${memberType}
+                            <span class="Label workBarLabel destinationUsersTypeLabel">Type </span>${memberType}
                         </span>
                     </div>
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
@@ -327,7 +358,7 @@ class SearchBar
         `;
     }
 
-    private BuildUserChangeDetails(username: string, data: any): string
+    private BuildProfileFooter(username: string, data: any): string
     {
         var createdOn = CleanUp.Date(data?.UpdateInformation?.CreatedOn);
         var createdBy = data?.UpdateInformation?.CreatedBy;
@@ -336,16 +367,16 @@ class SearchBar
         return `
             <div class="userDetails" id="userCardChangeDetails">
                 <span id="destinationUsersCreatedOn">
-                    <span class="Label workBarLabel">Created: </span>${createdOn}
+                    <span class="Label workBarLabel">Created </span>${createdOn}
                 </span>
                 <span id="destinationUsersCreatedBy">by ${createdBy}</span>
                 <span id="destinationUsersUpdatedOn">
-                    <span class="Label workBarLabel">Last Updated: </span>${updatedOn}
+                    <span class="Label workBarLabel">Last Updated </span>${updatedOn}
                 </span>
                 <span id="destinationUsersUpdatedBy">by ${updatedBy}</span>
                 <span id="destinationUsersUsername">
                     ${username ? `
-                        <span class="Label workBarLabel workBarUsernameLabel">Username: </span>${username}
+                        <span class="Label workBarLabel workBarUsernameLabel">Username </span>${username}
                     ` : ''}
                 </span>
             </div>
@@ -356,7 +387,8 @@ class SearchBar
     {
         var view = this.assetHelper.OpenSearchView;
         var result = view?.replace(`<svg class="menu-icon"></svg>`, this.assetHelper.MenuIcon ?? "");
-        this.$('.searchfieldplus-dropdown').parent().append(this.$.parseHTML(result ?? ""));
+        this.$('#masterTopBarAuxiliary > .navbar-left').css('display', 'flex');
+        this.$('#masterTopBarAuxiliary > .navbar-left').append(this.$.parseHTML(result ?? ""));
         this.$('.menu-icon-container')
             .on('mouseenter', e =>
             {
@@ -384,28 +416,21 @@ class SearchBar
         var name = event?.Name;
         var id = event?.EventId;
         var status = CleanUp.Status(event?.Status);
-        // var category = event?.Category?.EventCategoryId;
         var startDate = CleanUp.Date(event?.StartDateTime);
         var endDate = CleanUp.Date(event?.EndDateTime);
-        var description = event?.Description;
-        var virtualMeetingUrl = "https://www.google.com";
-        // var virtualMeetingUrl = event?.VirtualMeetingUrl ?? "https://www.google.com";
-        // TODO: Fix this - not real
-        // staffContact = "Joe Russell";
-        // eventCategory = "EDUC"
+        var description = (event?.Description ?? "").trim().replace(/(<([^>]+)>)/gi, "");
+        // TODO: remove - this is for testing
+        var virtualMeetingUrl = event?.VirtualMeetingUrl ? event?.VirtualMeetingUrl : "https://www.google.com";
         return `
             <div id="userCardProfile" class="userDetails">
                 <h3 id="destinationUsersName" style="color: #005e7d; margin: 2px">${name}</h3>
                 <div id="details" style="font-size: 90%;">
                     <div id="userDetailsTop" style="margin: 0px 0px 5px 1px;">
                         <span id="destinationUsersId" class="userDetails userSpecificDetail userIndividual" style="padding-right: 6px;">
-                            <span class="Label workBarLabel destinationUsersIdLabel">ID: </span>${id}
-                        </span>
-                        <span id="destinationUsersStatus" class="userDetails userSpecificDetail userIndividual" style="padding-right: 6px;">
-                            <span class="Label workBarLabel destinationUsersStatusLabel">Status: </span>${status}
+                            <span class="Label workBarLabel destinationUsersIdLabel">ID </span>${id}
                         </span>
                         <span id="destinationUsersMemberType" class="userDetails userSpecificDetail">
-                            <span class="Label workBarLabel destinationUsersTypeLabel">Category: </span>${eventCategoryDescription}
+                            <span class="Label workBarLabel destinationUsersTypeLabel">Category </span>${eventCategoryDescription ?? ""}
                         </span>
                     </div>
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
@@ -424,28 +449,43 @@ class SearchBar
                             <span style="display:inline-block; vertical-align: middle;">${endDate}</span>
                         </div>`: ''}
                     </div>
-                    <br />
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
                         ${staffContactName ? `
                         <div style="padding:2px 0;">
                             ${this.assetHelper.UserTagIcon}
+                            <span class="textBadge">Staff Contact</span>
                             <span style="display:inline-block; vertical-align: middle;">${staffContactName}</span>
-                        </div>`: ''}
-                    </div>
-                    <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
-                        ${description ? `
-                        <div style="padding:2px 0;">
-                            <span style="display:inline-block; vertical-align: middle;">${description}</span>
                         </div>`: ''}
                     </div>
                     <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
                         ${virtualMeetingUrl ? `
                         <div style="padding:2px 0;">
+                            ${this.assetHelper.LinkSolidIcon}
                             <span class="textBadge">Virtual Meeting URL</span>
                             <span style="display:inline-block; vertical-align: middle;">${virtualMeetingUrl}</span>
                         </div>`: ''}
                     </div>
+                    <br />
+                    <div class="userDetails userSpecificDetail displayBlock" id="destinationUsersBirthdate">
+                        ${description ? `
+                        <div style="padding:2px 0;">
+                            ${this.assetHelper.DescriptionIcon}
+                            <span class="textBadge">Description</span>
+                            <span style="display:inline-block; vertical-align: middle; padding-top:4px;">${description}</span>
+                        </div>`: ''}
+                    </div>
                 </div>
+            </div>
+        `;
+    }
+
+    private BuildEventFooter(status: string): string
+    {
+        return `
+            <div class="userDetails" id="userCardChangeDetails">
+                <span id="destinationUsersCreatedOn">
+                    <span class="Label workBarLabel">Status </span>${status}
+                </span>
             </div>
         `;
     }
@@ -463,25 +503,23 @@ class SearchBar
             this.$("#EventDetailsTab").replaceWith(content ?? "");
 
             var eventCategoryId = event?.Category?.EventCategoryId;
-            console.log('eventCategoryId = ', eventCategoryId);
-            var eventCategory = eventCategoryId ? await this.apiHelper.GetEventCategory(eventCategoryId, rvToken, url) as any : null;
-            console.log('eventCategory = ', eventCategory);
-            var eventCategoryDescription = eventCategory?.Description;
-            console.log('eventCategoryDescription = ', eventCategoryDescription);
+            var eventCategoryDescription = eventCategoryId ? await this.apiHelper.GetEventCategory(eventCategoryId, rvToken, url) as any : null;
 
             var staffContactId = event?.NotificationPartyId;
-            console.log('staffContactId = ', staffContactId);
             var contactData = staffContactId ? await this.apiHelper.GetParty(staffContactId, rvToken, url) as any : null;
-            console.log('contactData = ', contactData);
             var staffContactName = contactData?.Name;
-            console.log('staffContactName = ', staffContactName);
 
             var eventHtml = this.BuildEvent(event, staffContactName, eventCategoryDescription)
             this.$('#userCardProfile').replaceWith(eventHtml);
 
-            // // Update Documentation Search Area with Created/Updated stuff
-            // var changeDetails = this.BuildUserChangeDetails(username, data);
-            // this.$("#userCardChangeDetails").replaceWith(changeDetails);
+            var eventActions = this.BuildEventCardActions(input);
+            this.$('#userCardActions').replaceWith(eventActions);
+            this.$('#eventDetails').on('click', () => this.ActivateTab(''));
+            this.$('#eventDashboard').on('click', () => this.ActivateTab(''));
+
+            // Update view footer
+            var changeDetails = this.BuildEventFooter(CleanUp.Status(event?.Status));
+            this.$("#userCardChangeDetails").replaceWith(changeDetails);
 
             return true;
         }
@@ -500,7 +538,7 @@ class SearchBar
         var url = this.ClientContext?.baseUrl ?? "";
         var rvToken = this.RVToken ?? "";
         var data = await this.apiHelper.GetParty(input, rvToken, url);
-        console.log('UserData = ', data);
+        console.log('GetParty = ', data);
         if (data)
         {
             // Set up view
@@ -509,18 +547,18 @@ class SearchBar
 
             var username = await this.apiHelper.GetUserName(input, rvToken, url) ?? "";
 
-            // Update view with api data -> left column
+            // Update view left column
             var profile = this.BuildProfile(data)
             this.$('#userCardProfile').replaceWith(profile);
 
-            // Update view with api data -> right column
+            // Update view right column
             var userActions = this.BuildUserCardActions(input);
             this.$('#userCardActions').replaceWith(userActions);
-            this.$('#userCardGoToProfile').on('click', () => this.ActivateTab(''));
-            this.$('#userCardUserCredentialsUrl').on('click', () => this.ActivateTab(''));
+            this.$('#userProfile').on('click', () => this.ActivateTab(''));
+            this.$('#userCredentials').on('click', () => this.ActivateTab(''));
 
-            // Update Documentation Search Area with Created/Updated stuff
-            var changeDetails = this.BuildUserChangeDetails(username, data);
+            // Update view footer
+            var changeDetails = this.BuildProfileFooter(username, data);
             this.$("#userCardChangeDetails").replaceWith(changeDetails);
 
             return true;
@@ -588,11 +626,14 @@ class SearchBar
         {
             if (this.$("#CommandBarSelectTab").is(":visible"))
             {
+                console.log('listItems.length = ', listItems.length);
+                console.log('this.$(".commandBarListItem").length = ', this.$(".commandBarListItem").length);
                 if (listItems.length != this.$(".commandBarListItem").length)
                 {
                     listItems = this.$(".commandBarListItem");
                     index = 0;
                 }
+                console.log('arrow navigation index START = ', index);
                 switch (event.key)
                 {
                     case "ArrowUp":
@@ -610,10 +651,11 @@ class SearchBar
                         this.$(listItems[index]).get(0)?.scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
                         break;
                     case "Enter":
-                        this.$(listItems[index]).children().get(0)?.click()
-                        this.ActivateTab('');
+                        this.$(listItems[index]).children().get(0)?.click();
                         break;
                 }
+
+                console.log('arrow navigation index END = ', index);
             }
         });
     }
@@ -641,11 +683,11 @@ class SearchBar
                     this.config.SetEventListeners(rvToken, baseUrl, true);
                     this.SetArrowEventListeners();
 
-                    // add in error badge from jake (this needs to be removed everywhere in activate tab probably)
-                    if (currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10)
-                    {
-                        this.$("#commandBarInput").siblings(".error").show();
-                    }
+                    // // add in error badge from jake (this needs to be removed everywhere in activate tab probably)
+                    // if (currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10)
+                    // {
+                    //     this.$("#commandBarInput").siblings(".error").show();
+                    // }
                 }
             }
         })
@@ -655,7 +697,7 @@ class SearchBar
     {
         this.$('#commandBarInput').on('input', (event) =>
         {
-            this.$("#commandBarInput").siblings(".error").hide();
+            // this.$("#commandBarInput").siblings(".error").hide();
             var baseUrl = this.ClientContext?.baseUrl ?? "";
             var rvToken = this.RVToken ?? "";
             var currentActionBarValue = this.$(event.target).val() as string;
@@ -713,6 +755,12 @@ class SearchBar
         if (this.$("#commandBarOverlay").is(":hidden"))
         {
             this.ActivateTab(this.CommandBarSelectTab);
+            this.RemoveUserDetailsInfo();
+            // this.$("#commandBarInput").siblings(".error").hide();
+
+            var routesHTML = this.config.BuildRoutesHTML(this.ConfigRoutes);
+            this.$('#commandBarUl').html(routesHTML);
+
             this.$('#commandBarOverlay').show();
             this.$('#commandBarExitButton').on("click", async () =>
             {
@@ -740,6 +788,7 @@ class SearchBar
 
     private async hideOverlay(): Promise<void>
     {
+        console.log('HIDE OVERLAY');
         this.$('#commandBarOverlay').hide();
 
         // remove handlers
@@ -750,7 +799,6 @@ class SearchBar
         this.$('#commandBarInput').val('');
 
         // todo: add search results / config clearing
-
         this.RemoveUserDetailsInfo();
     }
 }

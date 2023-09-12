@@ -3,7 +3,9 @@ class CleanUp
     // ex: pass in jsonData?.Emails?.$values[position].EmailType
     public static EmailType(data: string): string
     {
-        return data?.replace('_', '')?.replace('Email', '')?.replace('Address', '')?.trim() ?? 'Other';
+        // return data?.replace('_', '')?.replace('Email', '')?.replace('Address', '')?.trim() ?? 'Other';
+        var email = data?.replace('_', '')?.replace('Email', '')?.replace('Address', '')?.trim();
+        return email ? email : 'Other';
     }
     // ex: pass in jsonData?.UpdateInformation?.UpdatedOn
     public static Date(data: string): string
@@ -22,9 +24,10 @@ class CleanUp
         return data?.replace('UNITED STATES', 'United States')?.replace('CANADA', 'Canada')?.replace('AUSTRALIA', 'Australia')?.trim();
     }
     // ex: jsonData?.Addresses?.$values[0]?.AddressPurpose
-    public static AddressPurpose(purpose: string): string
+    public static AddressPurpose(data: string): string
     {
-        return purpose?.replace('Permanent Address', 'Permanent')?.replace('Address', '')?.trim() ?? 'Other';
+        var purpose = data?.replace('Permanent Address', 'Permanent')?.replace('Address', '')?.trim();
+        return purpose ? purpose : 'Other';
     }
 
     /** Converts an event status code to a human-readable string. */

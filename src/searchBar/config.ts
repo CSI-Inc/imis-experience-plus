@@ -97,7 +97,7 @@ class ConfigManager
                     // different id so that Config.SetEventListeners can setup specific functions for events and username
                     content = `
                     <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
-                        <a id="eventCodeLookup" href="javascript:void(0);" role="link" style="color: #222; text-decoration: none;">
+                        <a id="eventCodeLookup" style="color: #222; text-decoration: none;">
                             ${item.category.length > -1 ? `<span>${item.category}</span>` : ''}
                             ${userInput}
                         </a>
@@ -107,7 +107,7 @@ class ConfigManager
                 case "username lookup":
                     content = `
                     <li data-index="${counter}" class="commandBarListItem" name="commandBar" id="commandBar${counter}">
-                        <a id="usernameLookup" href="javascript:void(0);" role="link" style="color: #222; text-decoration: none;">
+                        <a id="usernameLookup" style="color: #222; text-decoration: none;">
                             ${item.category.length > -1 ? `<span>${item.category}</span>` : ''}
                             ${userInput}
                         </a>

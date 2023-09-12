@@ -1,6 +1,6 @@
 class Utils
 {
-    public static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
+    public static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.3 %c ";
 
     /** Determines if the current page is an IMIS page or not. This is used to determine if the extension should be enabled or not. */
     public static isImisPage($: JQueryStatic): boolean
@@ -15,7 +15,7 @@ class Utils
 class Debouncer
 {
     private id: number | undefined;
-    
+
     /** Starts a debounce operation with args */
     public start(callback: (...args: any[]) => void, delay: number, ...args: any[]): void
     {

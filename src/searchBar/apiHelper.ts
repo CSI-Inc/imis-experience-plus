@@ -12,17 +12,17 @@ class ApiHelper
                 'RequestVerificationToken': rvToken
             }
         };
-
-        const response = await fetch(`${baseUrl}api/Party/${input}`, options);
-        if (response.status == 200)
+        const response = await fetch(`${baseUrl}api/Party?PartyId=${input}`, options);
+        // console.log('response = ', response);
+        let results = await response.json();
+        if (results.Count !== 1)
         {
-            let results = await response.json();
-            console.log('GetParty results = ', results);
-            return results;
+            return null;
         }
         else
         {
-            return null;
+            console.log('GetParty results = ', results);
+            return results.Items.$values[0];
         }
     }
 
@@ -36,17 +36,17 @@ class ApiHelper
                 'RequestVerificationToken': rvToken
             }
         };
-
-        const response = await fetch(`${baseUrl}api/Event/${input}`, options);
-        if (response.status == 200)
+        const response = await fetch(`${baseUrl}api/Event?EventId=${input}`, options);
+        // console.log('response = ', response);
+        let results = await response.json();
+        if (results.Count !== 1)
         {
-            let results = await response.json();
-            console.log('GetEvent results = ', results);
-            return results;
+            return null;
         }
         else
         {
-            return null;
+            console.log('GetEvent results = ', results);
+            return results.Items.$values[0];
         }
     }
 
@@ -60,17 +60,17 @@ class ApiHelper
                 'RequestVerificationToken': rvToken
             }
         };
-
-        const response = await fetch(`${baseUrl}api/EventCategory/${input}`, options);
-        if (response.status == 200)
+        const response = await fetch(`${baseUrl}api/EventCategory?EventCategoryId=${input}`, options);
+        // console.log('response = ', response);
+        let results = await response.json();
+        if (results.Count !== 1)
         {
-            let results = await response.json();
-            console.log('GetEventCategory results = ', results);
-            return results.Description;
+            return null;
         }
         else
         {
-            return null;
+            console.log('GetEventCategory results = ', results);
+            return results.Items.$values[0].Description;
         }
     }
 
@@ -84,17 +84,17 @@ class ApiHelper
                 'RequestVerificationToken': rvToken
             }
         };
-
-        const response = await fetch(`${baseUrl}api/User/${input}`, options);
-        if (response.status == 200)
+        const response = await fetch(`${baseUrl}api/User?UserId=${input}`, options);
+        // console.log('response = ', response);
+        let results = await response.json();
+        if (results.Count !== 1)
         {
-            let results = await response.json();
-            console.log('GetUserName results = ', results);
-            return results.UserName;
+            return null;
         }
         else
         {
-            return null;
+            console.log('GetUserName results = ', results);
+            return results.Items.$values[0].UserName;
         }
     }
 
@@ -108,11 +108,9 @@ class ApiHelper
                 'RequestVerificationToken': rvToken
             }
         };
-
-        const response = await fetch(`${baseUrl}api/User?username=${input}`, options);
-
+        const response = await fetch(`${baseUrl}api/User?UserName=${input}`, options);
+        // console.log('response = ', response);
         let results = await response.json();
-
         if (results.Count !== 1)
         {
             return null;
@@ -120,7 +118,7 @@ class ApiHelper
         else
         {
             console.log('FindUserIdByName results = ', results);
-            return results.Items.$values[0].Party.Id;
+            return results.Items.$values[0].UserId;
         }
     }
 
