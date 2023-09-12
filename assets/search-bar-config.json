@@ -928,10 +928,10 @@
     "isShortcut": false
   },
   {
-    "category": "iMIS Glossary",
-    "displayName": "",
+    "category": "Resource",
+    "displayName": "iMIS Glossary",
     "altName": "",
-    "isTag": true,
+    "isTag": false,
     "destination": "https://help.imis.com/enterprise/features/glossary.htm",
     "isShortcut": false
   }

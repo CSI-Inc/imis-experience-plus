@@ -1408,44 +1408,37 @@ var ConfigManager = /** @class */ (function () {
             }); });
         }
     };
+    ConfigManager.prototype.isValidUrl = function (urlString) {
+        try {
+            return Boolean(new URL(urlString));
+        }
+        catch (e) {
+            return false;
+        }
+    };
     ConfigManager.prototype.BuildRoutesHTML = function (data) {
+        var _this = this;
         var result = '';
         data.forEach(function (item, i) {
-            var content = "\n                <li data-index=\"".concat(i, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(i, "\">\n                    <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none;\">\n                        ").concat(item.category.length > -1 ?
-                "<span style=\"border: 1px solid lightgray; border-radius: 3px; float: left; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px; min-width: 90px; text-align: center;\">\n                                ".concat(item.category, "\n                            </span>")
-                : '', "\n                        ").concat(item.displayName, "\n                        ").concat(item.isShortcut ?
-                "<span style=\"border: 1px solid lightgray; border-radius: 3px; float: right; background-color:#F4F5F7; font-size: 11px; padding: 2px .5ch; margin-right: 5px;\">\n                            ~".concat(item.destination, "\n                        </span>")
-                : '', "\n                    </a>\n                </li>\n                ");
+            var category = item.category.length > -1 ? "<span class=\"searchCategory\">".concat(item.category, " ").concat(_this.isValidUrl(item.destination) ? _this.assetHelper.ExternalIcon : '', "</span>") : '';
+            var shortcut = item.isShortcut ? "<span class=\"searchDestination\">~".concat(item.destination, "</span>") : '';
+            var content = "\n                <li data-index=\"".concat(i, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(i, "\">\n                    <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none;\">\n                        ").concat(category, "\n                        ").concat(item.displayName, "\n                        ").concat(shortcut, "\n                    </a>\n                </li>\n                ");
             result = result.concat(content);
         });
         return result;
+    };
+    ConfigManager.prototype.Camalize = function (input) {
+        return input.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, function (match, chr) { return chr.toUpperCase(); });
     };
     ConfigManager.prototype.BuildTagsHTML = function (data, seed, userInput) {
         var _this = this;
         var result = '';
         data.forEach(function (item, i) {
-            var content = '';
             var counter = seed + i;
-            switch (item.category.toLowerCase()) {
-                case "event code lookup":
-                    // different id so that Config.SetEventListeners can setup specific functions for events and username
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a id=\"eventCodeLookup\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
-                    break;
-                case "username lookup":
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a id=\"usernameLookup\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
-                    break;
-                case "documentation lookup":
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(_this.assetHelper.ExternalIcon, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
-                    break;
-                case "keyword search":
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination).concat(userInput, "\" style=\"color: #222; text-decoration: none;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category, "</span>") : '', "\n                            ").concat(userInput, "\n                        </a>\n                    </li>\n                    ");
-                    break;
-                case "imis glossary":
-                    content = "\n                    <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                        <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none; vertical-align: middle;\">\n                            ").concat(item.category.length > -1 ? "<span>".concat(item.category).concat(_this.assetHelper.ExternalIcon, "</span>") : '', "\n                        </a>\n                    </li>\n                    ");
-                default:
-                    break;
-            }
-            result = result.concat(content);
+            var id = _this.Camalize(item.category);
+            var destination = id == "eventCodeLookup" || id == "usernameLookup" ? undefined : "href=\"".concat(item.destination).concat(userInput, "\"");
+            var category = item.category.length > -1 ? "<span class=\"searchCategory\">".concat(item.category, " ").concat(_this.isValidUrl(item.destination) ? _this.assetHelper.ExternalIcon : '', "</span>") : '';
+            result.concat("\n                <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                    <a id=\"").concat(id, "\" ").concat(destination, " style=\"color: #222; text-decoration: none;\">\n                        ").concat(category, "\n                        ").concat(userInput, "\n                    </a>\n                </li>\n            "));
         });
         return result;
     };

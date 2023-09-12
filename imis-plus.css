@@ -664,17 +664,29 @@
     height: 100%;
 }
 
-.__csi__iep__search .commandBarListItem > a > span
+.__csi__iep__search .commandBarListItem > a .searchCategory
 {
     border: 1px solid lightgray;
     border-radius: 3px;
     float: left;
     background-color: #F4F5F7;
     font-size: 11px;
-    padding: 2px .5ch;
+    padding: 2px 4px;
     margin-right: 5px;
     min-width: 90px;
     text-align: center;
+    padding-right: 4px
+}
+
+.__csi__iep__search .commandBarListItem > a .searchDestination
+{
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    float: right;
+    background-color: #F4F5F7;
+    font-size: 11px;
+    padding: 2px .5ch;
+    margin-right: 5px;
 }
 
 .__csi__iep__search #commandBarExitButton
