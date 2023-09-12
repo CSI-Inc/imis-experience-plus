@@ -1893,7 +1893,7 @@ var SearchBar = /** @class */ (function () {
         var _this = this;
         this.$('#commandBarInput').on('input', function (event) {
             var _a, _b, _c;
-            // this.$("#commandBarInput").siblings(".error").hide();
+            _this.$(".commandBarListItem:first")[0].scrollIntoView();
             var baseUrl = (_b = (_a = _this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
             var rvToken = (_c = _this.RVToken) !== null && _c !== void 0 ? _c : "";
             var currentActionBarValue = _this.$(event.target).val();

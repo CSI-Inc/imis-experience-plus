@@ -697,7 +697,7 @@ class SearchBar
     {
         this.$('#commandBarInput').on('input', (event) =>
         {
-            // this.$("#commandBarInput").siblings(".error").hide();
+            this.$(".commandBarListItem:first")[0].scrollIntoView();
             var baseUrl = this.ClientContext?.baseUrl ?? "";
             var rvToken = this.RVToken ?? "";
             var currentActionBarValue = this.$(event.target).val() as string;
