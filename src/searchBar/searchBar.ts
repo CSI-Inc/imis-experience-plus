@@ -70,107 +70,84 @@ class SearchBar
         {
             console.log(Utils.VERSION_STRING + "Loaded: Search Bar", ...SearchBar.VERSION_STYLES);
 
-            // TODO:
-            // 1) make call happen once a day by adding a time stamp
-            // 2) actually update the json file
-            this.apiHelper.Test().then((data: any) =>
-            {
-                if (!("imis_experience_plus__search_bar_config_version" in localStorage)) // setting not found, first time running, prime local storage
-                {
-                    localStorage.setItem("imis_experience_plus__search_bar_config_version", "1.0.0");
-                }
-
-                var localVersion = localStorage.getItem("imis_experience_plus__search_bar_config_version");
-                console.log('data = ', data)
-                console.log('localStorage.getItem("imis_experience_plus__search_bar_config_version") = ', localVersion);
-
-                if (data.version != localVersion)
-                {
-                    console.log("UPDATE REQUIRED");
-
-                    //update local json config
-                    // --- do it ---
-
-                    //set new local storage version
-                    localStorage.setItem("imis_experience_plus__search_bar_config_version", data.version);
-                } else
-                {
-                    console.log("NO UPDATE REQUIRED");
-                }
-            });
-
-
             this.RVToken = this.$("#__RequestVerificationToken").val() as string;
             this.ClientContext = JSON.parse(this.$('#__ClientContext').val() as string) as ClientContext;
 
             // we want to prevent non-users from using the searchbar
             if (this.ClientContext.isAnonymous) return;
 
-            this.assetHelper.GetAllAssets().then(() =>
+            this.config.CheckForConfigUpdate().then(() =>
             {
-                this.$('body').prepend(this.assetHelper.CommandBar ?? "");
-                this.$("#commandBarOverlay #logo-placeholder").replaceWith(this.assetHelper.CsiLogo ?? "");
-                this.$("#commandBarOverlay .externalIconWhite").replaceWith(this.assetHelper.ExternalIconWhite ?? "");
-                this.$("#commandBarOverlay .externalIcon").replaceWith(this.assetHelper.ExternalIcon ?? "");
-                this.$("#commandBarOverlay #commandBarExitButton").html(this.assetHelper.CloseIcon ?? "");
-                this.BuildOpenSearch();
-                this.BuildConfig();
-            });
-
-            let keysPressed: { [key: string]: boolean } = {};
-
-            // on key down
-            this.$(document).on("keydown", async e =>
-            {
-                var isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
-
-                // Replace space in e.key with "Spacebar"
-                if (e.key === " ")
-                {
-                    e.key = Settings.SPACEBAR;
-                }
-
-                // Open CommandBar
-                if (!isCommandBarVisible
-                    && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
-                    && e.ctrlKey === config.workbarKbdCtrl
-                    && e.altKey === config.workbarKbdAlt
-                    && e.shiftKey === config.workbarKbdShift)
-                {
-                    await this.showOverlay();
-                    e.preventDefault();
-                }
-                // Close Command Bar
-                else if (isCommandBarVisible && e.key === "Escape")
-                {
-                    await this.hideOverlay();
-                }
-                // Go to User Profile
-                else if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
-                {
-                    if (this.$('#commandBarInput').get(0) === document.activeElement)
+                console.log('CheckForConfigUpdate complete');
+                this.assetHelper.GetAllAssets()
+                    .then(() =>
                     {
-                        this.ActivateTab('');
-                        this.$("#userProfile").get(0)?.click();
-                    }
-                    e.preventDefault();
-                }
-                // Go to Event Details
-                else if (isCommandBarVisible && e.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
-                {
-                    if (this.$('#commandBarInput').get(0) === document.activeElement)
-                    {
-                        this.ActivateTab('');
-                        this.$("#eventDetails").get(0)?.click();
-                    }
-                    e.preventDefault();
-                }
-            });
+                        console.log('GetAllAssets complete');
+                        this.$('body').prepend(this.assetHelper.CommandBar ?? "");
+                        this.$("#commandBarOverlay #logo-placeholder").replaceWith(this.assetHelper.CsiLogo ?? "");
+                        this.$("#commandBarOverlay .externalIconWhite").replaceWith(this.assetHelper.ExternalIconWhite ?? "");
+                        this.$("#commandBarOverlay .externalIcon").replaceWith(this.assetHelper.ExternalIcon ?? "");
+                        this.$("#commandBarOverlay #commandBarExitButton").html(this.assetHelper.CloseIcon ?? "");
+                        this.BuildOpenSearch();
+                    })
+                    .then(() => this.config.GetConfig())
+                    .then(configJson => this.BuildConfig(configJson));
 
-            document.addEventListener('keyup', (event) =>
-            {
-                var key = event.key.toLowerCase();
-                delete keysPressed[key];
+                let keysPressed: { [key: string]: boolean } = {};
+
+                // on key down
+                this.$(document).on("keydown", async e =>
+                {
+                    var isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
+
+                    // Replace space in e.key with "Spacebar"
+                    if (e.key === " ")
+                    {
+                        e.key = Settings.SPACEBAR;
+                    }
+
+                    // Open CommandBar
+                    if (!isCommandBarVisible
+                        && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
+                        && e.ctrlKey === config.workbarKbdCtrl
+                        && e.altKey === config.workbarKbdAlt
+                        && e.shiftKey === config.workbarKbdShift)
+                    {
+                        await this.showOverlay();
+                        e.preventDefault();
+                    }
+                    // Close Command Bar
+                    else if (isCommandBarVisible && e.key === "Escape")
+                    {
+                        await this.hideOverlay();
+                    }
+                    // Go to User Profile
+                    else if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
+                    {
+                        if (this.$('#commandBarInput').get(0) === document.activeElement)
+                        {
+                            this.ActivateTab('');
+                            this.$("#userProfile").get(0)?.click();
+                        }
+                        e.preventDefault();
+                    }
+                    // Go to Event Details
+                    else if (isCommandBarVisible && e.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
+                    {
+                        if (this.$('#commandBarInput').get(0) === document.activeElement)
+                        {
+                            this.ActivateTab('');
+                            this.$("#eventDetails").get(0)?.click();
+                        }
+                        e.preventDefault();
+                    }
+                });
+
+                document.addEventListener('keyup', (event) =>
+                {
+                    var key = event.key.toLowerCase();
+                    delete keysPressed[key];
+                });
             });
         });
     }
@@ -227,16 +204,12 @@ class SearchBar
         var email1Type = CleanUp.EmailType(data?.Emails?.$values[0]?.EmailType);
         var email2 = data?.Emails?.$values[1]?.Address;
         var email2IsPrimary = data?.Emails?.$values[1]?.IsPrimary;
-        console.log('email2IsPrimary = ', email2IsPrimary);
         var email2Type = CleanUp.EmailType(data?.Emails?.$values[1]?.EmailType);
-        console.log('email2Type = ', email2Type);
         var email3 = data?.Emails?.$values[2]?.Address;
         var email3IsPrimary = data?.Emails?.$values[2]?.IsPrimary;
         var email3Type = CleanUp.EmailType(data?.Emails?.$values[2]?.EmailType);
         var address0 = CleanUp.FullAddress(data?.Addresses?.$values[0]?.Address?.FullAddress);
         var address0Type = CleanUp.AddressPurpose(data?.Addresses?.$values[0]?.AddressPurpose);
-        console.log('address0 = ', address0);
-        console.log('address0Type = ', address0Type);
         var address1 = CleanUp.FullAddress(data?.Addresses?.$values[1]?.Address?.FullAddress);
         var address1Type = CleanUp.AddressPurpose(data?.Addresses?.$values[1]?.AddressPurpose);
         var address2 = CleanUp.FullAddress(data?.Addresses?.$values[2]?.Address?.FullAddress);
@@ -574,28 +547,43 @@ class SearchBar
         this.$("#UserDetailsTab").empty();
     }
 
-    private BuildConfig(): void
+    private BuildConfig(configJson: ConfigItem[]): void
     {
+        console.log('BuildConfig');
         var baseUrl = this.ClientContext?.baseUrl ?? "";
         var rvToken = this.RVToken ?? "";
-        ConfigManager.GetConfigInstance().then(data =>
-        {
-            this.ConfigRoutes = data.filter(d => !d.isTag);
-            this.ConfigTags = data.filter(d => d.isTag);
-            var view = this.config.BuildRoutesHTML(this.ConfigRoutes);
-            this.$('#commandBarUl').html(view);
-            this.config.SetEventListeners(rvToken, baseUrl);
-        });
+        this.ConfigRoutes = configJson.filter(d => !d.isTag);
+        this.ConfigTags = configJson.filter(d => d.isTag);
+        var view = this.config.BuildRoutesHTML(this.ConfigRoutes);
+        this.$('#commandBarUl').html(view);
+        this.config.SetEventListeners(rvToken, baseUrl);
+        console.log('BuildConfig complete');
+    }
+
+    public GetLoader(): string
+    {
+        return `<div class="lookupLoader" style="display: inline; margin-left: 6px;">
+                    <span class="spinner"></span>
+                </div>`;
+    }
+
+    public GetInputErrorBadge(): string
+    {
+        return `<span class="inputErrorBadge">No Matching Record Found</span>`;
+    }
+
+    public GetLookupErrorBadge(): string
+    {
+        return `<span class="lookupErrorBadge">No Matching Record Found</span>`;
     }
 
     // Use this with '' for showing the spinner so that all tabs are hidden
     public ActivateTab(activateTab: string): void
     {
+        console.log('ActivateTab = ', activateTab);
         if (activateTab !== '')
         {
-            console.log('show tab...');
             var showTab = this.Tabs.filter(t => t == activateTab)[0];
-            console.log('showTab = ', showTab);
             this.$(`#${showTab}`).show();
             this.$('.loaderParent').hide();
         }
@@ -626,14 +614,14 @@ class SearchBar
         {
             if (this.$("#CommandBarSelectTab").is(":visible"))
             {
-                console.log('listItems.length = ', listItems.length);
-                console.log('this.$(".commandBarListItem").length = ', this.$(".commandBarListItem").length);
+                // console.log('listItems.length = ', listItems.length);
+                // console.log('this.$(".commandBarListItem").length = ', this.$(".commandBarListItem").length);
                 if (listItems.length != this.$(".commandBarListItem").length)
                 {
                     listItems = this.$(".commandBarListItem");
                     index = 0;
                 }
-                console.log('arrow navigation index START = ', index);
+                // console.log('arrow navigation index START = ', index);
                 switch (event.key)
                 {
                     case "ArrowUp":
@@ -655,7 +643,7 @@ class SearchBar
                         break;
                 }
 
-                console.log('arrow navigation index END = ', index);
+                // console.log('arrow navigation index END = ', index);
             }
         });
     }
@@ -697,7 +685,12 @@ class SearchBar
     {
         this.$('#commandBarInput').on('input', (event) =>
         {
-            this.$(".commandBarListItem:first")[0].scrollIntoView();
+
+            if (this.$(".commandBarListItem")[0])
+            {
+                this.$(".commandBarListItem")[0].scrollIntoView();
+            }
+            this.$('#commandBarInputDiv').find('.lookupErrorBadge')?.remove();
             var baseUrl = this.ClientContext?.baseUrl ?? "";
             var rvToken = this.RVToken ?? "";
             var currentActionBarValue = this.$(event.target).val() as string;
@@ -789,6 +782,7 @@ class SearchBar
     private async hideOverlay(): Promise<void>
     {
         console.log('HIDE OVERLAY');
+        this.$('#commandBarInputDiv').find('.lookupErrorBadge')?.remove();
         this.$('#commandBarOverlay').hide();
 
         // remove handlers

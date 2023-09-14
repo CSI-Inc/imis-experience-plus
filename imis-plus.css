@@ -328,21 +328,28 @@
     font-weight: 500;
 }
 
-.__csi__iep__search #commandBarInputDiv > .error
+.__csi__iep__search .inputErrorBadge
 {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: center;
     position: absolute;
-    top: 11px;
+    top: 16px;
     left: 150px;
+    color: black;
     background-color: #E08B89;
     border: 1px solid #BB0000;
-    border-radius: 5px;
-    padding: 3px 10px;
-    color: white;
-    font-weight: 600;
+    border-radius: 3px;
+}
+
+.__csi__iep__search .lookupErrorBadge
+{
+    display: inline-flex;
+    font-weight: 500;
+    font-size: 11px;
+    color: black;
+    background-color: #E08B89;
+    border: 1px solid #BB0000;
+    border-radius: 3px;
+    padding: 2px 4px;
+    margin-left: 5px;
 }
 
 .__csi__iep__search.menu-icon-container
@@ -659,16 +666,40 @@
 
 .__csi__iep__search .commandBarListItem > a
 {
-    display: inline-block;
+    display: block;
+    /* display: flex; */
+    /* display: inline; */
     width: 100%;
     height: 100%;
 }
 
+.__csi__iep__search .lookupLoader > .spinner
+{
+    position: relative;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    background-color: #F4F5F7;
+    vertical-align: middle;
+    opacity: 1;
+    border: 5px solid #23b4e8;
+    border-bottom-color: #7c7c7c;
+    border-radius: 50%;
+    display: inline-block;
+    animation: __csi__iep__search-rotation 1s linear infinite;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 .__csi__iep__search .commandBarListItem > a .searchCategory
 {
+    /* display: inline-flex; */
+    display: inline-block;
     border: 1px solid lightgray;
     border-radius: 3px;
-    float: left;
+    /* float: left; */
     background-color: #F4F5F7;
     font-size: 11px;
     padding: 2px 4px;
@@ -687,6 +718,11 @@
     font-size: 11px;
     padding: 2px .5ch;
     margin-right: 5px;
+}
+
+.__csi__iep__search .commandBarListItem > a .searchDisplayName
+{
+    vertical-align: middle;
 }
 
 .__csi__iep__search #commandBarExitButton

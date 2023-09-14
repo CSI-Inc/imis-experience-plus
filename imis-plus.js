@@ -1032,25 +1032,22 @@ var ApiHelper = /** @class */ (function () {
             });
         });
     };
-    ApiHelper.prototype.Test = function () {
+    ApiHelper.prototype.GetLatestConfigJson = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        result = '';
-                        return [4 /*yield*/, fetch('https://cdn.cloud.csiinc.com/timewise/version.json', { cache: 'no-cache', method: 'GET' })
+                        console.log('GetLatestConfigJson');
+                        return [4 /*yield*/, fetch('https://cdn.cloud.csiinc.com/iep/config.json', { cache: 'no-cache', method: 'GET' })
                                 .then(function (response) { return response.json(); })
                                 .then(function (data) {
-                                console.log(data);
-                                result = data;
+                                return data;
                             })
                                 .catch(function (error) {
                                 console.error(error);
+                                return null;
                             })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/, result];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -1333,18 +1330,133 @@ var ConfigManager = /** @class */ (function () {
         this.apiHelper = apiHelper;
         this.assetHelper = assetHelper;
     }
-    ConfigManager.GetConfigInstance = function () {
+    ConfigManager.prototype.CheckForConfigUpdate = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var url, configItems;
+            var lastUpdatedKey, now, lastUpdatedValue, lastUpdatedDate;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        url = chrome.runtime.getURL(this.ConfigPath);
-                        return [4 /*yield*/, fetch(url).then(function (data) { return data.json(); })];
+                        console.log('CheckForConfigUpdate');
+                        lastUpdatedKey = 'iep__searchbBar__lastUpdated';
+                        now = new Date();
+                        now.setUTCHours(0, 0, 0, 0);
+                        if (!(lastUpdatedKey in localStorage)) return [3 /*break*/, 4];
+                        console.log('lastUpdatedKey in localStorage');
+                        lastUpdatedValue = localStorage.getItem(lastUpdatedKey);
+                        lastUpdatedDate = new Date(lastUpdatedValue);
+                        lastUpdatedDate.setUTCHours(0, 0, 0, 0);
+                        if (!(lastUpdatedValue != null && lastUpdatedDate < now)) return [3 /*break*/, 2];
+                        console.log('lastUpdatedValue != null && lastUpdatedDate < now');
+                        return [4 /*yield*/, this.apiHelper.GetLatestConfigJson().then(function (data) { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            console.log('CheckForConfigUpdate -> GetLatestConfigJson -> data = ', data);
+                                            if (!(data && data.length > 0)) return [3 /*break*/, 2];
+                                            return [4 /*yield*/, this.SetConfig(data).then(function (result) {
+                                                    var _a;
+                                                    console.log('CheckForConfigUpdate -> UpdateConfig -> result = ', result);
+                                                    if (result) {
+                                                        localStorage.setItem(lastUpdatedKey, (_a = now.toISOString()) === null || _a === void 0 ? void 0 : _a.split('T')[0]);
+                                                    }
+                                                })];
+                                        case 1:
+                                            _a.sent();
+                                            _a.label = 2;
+                                        case 2: return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
                     case 1:
-                        configItems = (_a.sent())
-                            .sort(function (a, b) { return a.displayName.localeCompare(b.displayName); });
-                        return [2 /*return*/, configItems];
+                        _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        console.log('......Continue......');
+                        _a.label = 3;
+                    case 3: return [3 /*break*/, 6];
+                    case 4:
+                        console.log('prime chrome storage');
+                        return [4 /*yield*/, this.GetConfig().then(function (data) { return __awaiter(_this, void 0, void 0, function () {
+                                var result;
+                                var _a;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0: return [4 /*yield*/, this.SetConfig(data)];
+                                        case 1:
+                                            result = _b.sent();
+                                            if (result) {
+                                                localStorage.setItem(lastUpdatedKey, (_a = now.toISOString()) === null || _a === void 0 ? void 0 : _a.split('T')[0]);
+                                            }
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
+                    case 5:
+                        _a.sent();
+                        _a.label = 6;
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ConfigManager.prototype.SetConfig = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log('UpdateConfig');
+                        return [4 /*yield*/, chrome.storage.local.set({ 'JsonConfig': data })
+                                .then(function () { return true; })
+                                .catch(function () { return false; })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    ConfigManager.prototype.GetConfig = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log('GetConfig');
+                        return [4 /*yield*/, chrome.storage.local.get(['JsonConfig'])
+                                .then(function (data) { return __awaiter(_this, void 0, void 0, function () {
+                                var _this = this;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            console.log('Chrome Data = ', data);
+                                            if (!(data && data.JsonConfig && data.JsonConfig.length > 0)) return [3 /*break*/, 1];
+                                            console.log('found json data in Chrome storage');
+                                            return [2 /*return*/, data.JsonConfig.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); })];
+                                        case 1: return [4 /*yield*/, this.apiHelper.GetLatestConfigJson().then(function (data) { return __awaiter(_this, void 0, void 0, function () {
+                                                return __generator(this, function (_a) {
+                                                    switch (_a.label) {
+                                                        case 0:
+                                                            console.log('GetConfig -> GetLatestConfigJson -> Server Data = ', data);
+                                                            if (!(data && data.length > 0)) return [3 /*break*/, 1];
+                                                            console.log('NO json data in Chrome storage... getting from SERVER...');
+                                                            return [2 /*return*/, data.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); })];
+                                                        case 1:
+                                                            console.log('NO json data in Chrome storage AND server failed... getting from LOCAL...');
+                                                            return [4 /*yield*/, fetch(chrome.runtime.getURL(ConfigManager.ConfigPath))
+                                                                    .then(function (data) { return data.json(); })
+                                                                    .then(function (data) {
+                                                                    return data.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); });
+                                                                })];
+                                                        case 2: 
+                                                        // something went wrong -> get from local
+                                                        return [2 /*return*/, _a.sent()];
+                                                    }
+                                                });
+                                            }); })];
+                                        case 2: return [2 /*return*/, _a.sent()];
+                                    }
+                                });
+                            }); })];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -1358,12 +1470,13 @@ var ConfigManager = /** @class */ (function () {
             .on("mouseleave", function (e) { return $(e.currentTarget).removeClass('commandBarHover'); })
             .on('click', function (e) {
             var anchorId = $(e.currentTarget).find('a').attr('id');
-            console.log('anchorId = ', anchorId);
             if (anchorId == "usernameLookup" || anchorId == "eventCodeLookup") {
                 // this is to prevent event conflict with "eventCodeLookup" & "usernameLookup" on click listeners
             }
             else {
-                _this.searchBar.ActivateTab('');
+                if ($(e.currentTarget).find('.lookupLoader').length == 0) {
+                    $(e.currentTarget).find('a').append(_this.searchBar.GetLoader());
+                }
             }
         });
         if (includeTags) {
@@ -1372,18 +1485,24 @@ var ConfigManager = /** @class */ (function () {
                 var event;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.apiHelper.GetEvent(input, rvToken, baseUrl)];
+                        case 0:
+                            $('#eventCodeLookup').append(this.searchBar.GetLoader());
+                            return [4 /*yield*/, this.apiHelper.GetEvent(input, rvToken, baseUrl)];
                         case 1:
                             event = _a.sent();
                             console.log('event = ', event);
-                            if (event === null)
-                                return [2 /*return*/];
-                            this.searchBar.ActivateTab('');
-                            return [4 /*yield*/, this.searchBar.SetEventDetails(event)];
-                        case 2:
+                            if (!(event == null)) return [3 /*break*/, 2];
+                            $('#eventCodeLookup .lookupLoader').remove();
+                            if ($('#eventCodeLookup').find('.lookupErrorBadge').length == 0) {
+                                $('#eventCodeLookup').append(this.searchBar.GetLookupErrorBadge());
+                            }
+                            return [2 /*return*/];
+                        case 2: return [4 /*yield*/, this.searchBar.SetEventDetails(event)];
+                        case 3:
                             _a.sent();
                             this.searchBar.ActivateTab(this.searchBar.EventDetailsTab);
-                            return [2 /*return*/];
+                            _a.label = 4;
+                        case 4: return [2 /*return*/];
                     }
                 });
             }); });
@@ -1391,18 +1510,24 @@ var ConfigManager = /** @class */ (function () {
                 var imisId;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.apiHelper.FindUserIdByName(input, rvToken, baseUrl)];
+                        case 0:
+                            $('#usernameLookup').append(this.searchBar.GetLoader());
+                            return [4 /*yield*/, this.apiHelper.FindUserIdByName(input, rvToken, baseUrl)];
                         case 1:
                             imisId = _a.sent();
                             console.log('imisId = ', imisId);
-                            if (imisId === null)
-                                return [2 /*return*/];
-                            this.searchBar.ActivateTab('');
-                            return [4 /*yield*/, this.searchBar.SetUserDetails(imisId)];
-                        case 2:
+                            if (!(imisId == null)) return [3 /*break*/, 2];
+                            $('#usernameLookup .lookupLoader').remove();
+                            if ($('#usernameLookup').find('.lookupErrorBadge').length == 0) {
+                                $('#usernameLookup').append(this.searchBar.GetLookupErrorBadge());
+                            }
+                            return [2 /*return*/];
+                        case 2: return [4 /*yield*/, this.searchBar.SetUserDetails(imisId)];
+                        case 3:
                             _a.sent();
                             this.searchBar.ActivateTab(this.searchBar.UserDetailsTab);
-                            return [2 /*return*/];
+                            _a.label = 4;
+                        case 4: return [2 /*return*/];
                     }
                 });
             }); });
@@ -1416,29 +1541,32 @@ var ConfigManager = /** @class */ (function () {
             return false;
         }
     };
+    ConfigManager.prototype.Camalize = function (input) {
+        return input.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, function (match, chr) { return chr.toUpperCase(); });
+    };
     ConfigManager.prototype.BuildRoutesHTML = function (data) {
         var _this = this;
         var result = '';
         data.forEach(function (item, i) {
-            var category = item.category.length > -1 ? "<span class=\"searchCategory\">".concat(item.category, " ").concat(_this.isValidUrl(item.destination) ? _this.assetHelper.ExternalIcon : '', "</span>") : '';
+            var _a;
+            var category = item.category.length > -1 ? "<span class=\"searchCategory\">".concat(item.category, "</span>") : '';
+            var externalLinkBadge = _this.isValidUrl(item.destination) ? (_a = _this.assetHelper.ExternalIcon) === null || _a === void 0 ? void 0 : _a.replace("margin-left: 6px;", "margin-left: 3px;") : '';
             var shortcut = item.isShortcut ? "<span class=\"searchDestination\">~".concat(item.destination, "</span>") : '';
-            var content = "\n                <li data-index=\"".concat(i, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(i, "\">\n                    <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none;\">\n                        ").concat(category, "\n                        ").concat(item.displayName, "\n                        ").concat(shortcut, "\n                    </a>\n                </li>\n                ");
-            result = result.concat(content);
+            result = result.concat("\n                <li data-index=\"".concat(i, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(i, "\">\n                    <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none;\">\n                        ").concat(category, "\n                        <span class=\"searchDisplayName\">").concat(item.displayName, "</span>\n                        ").concat(externalLinkBadge, "\n                        ").concat(shortcut, "\n                    </a>\n                </li>\n            "));
         });
         return result;
-    };
-    ConfigManager.prototype.Camalize = function (input) {
-        return input.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, function (match, chr) { return chr.toUpperCase(); });
     };
     ConfigManager.prototype.BuildTagsHTML = function (data, seed, userInput) {
         var _this = this;
         var result = '';
         data.forEach(function (item, i) {
+            var _a;
             var counter = seed + i;
             var id = _this.Camalize(item.category);
-            var destination = id == "eventCodeLookup" || id == "usernameLookup" ? undefined : "href=\"".concat(item.destination).concat(userInput, "\"");
-            var category = item.category.length > -1 ? "<span class=\"searchCategory\">".concat(item.category, " ").concat(_this.isValidUrl(item.destination) ? _this.assetHelper.ExternalIcon : '', "</span>") : '';
-            result.concat("\n                <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                    <a id=\"").concat(id, "\" ").concat(destination, " style=\"color: #222; text-decoration: none;\">\n                        ").concat(category, "\n                        ").concat(userInput, "\n                    </a>\n                </li>\n            "));
+            var destination = id == "eventCodeLookup" || id == "usernameLookup" ? '' : "href=\"".concat(item.destination).concat(userInput, "\" ");
+            var category = item.category.length > -1 ? "<span class=\"searchCategory\">".concat(item.category, "</span>") : '';
+            var externalLinkBadge = _this.isValidUrl(item.destination) ? (_a = _this.assetHelper.ExternalIcon) === null || _a === void 0 ? void 0 : _a.replace("margin-left: 6px;", "margin-left: 3px;") : '';
+            result = result.concat("\n                <li data-index=\"".concat(counter, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(counter, "\">\n                    <a id=\"").concat(id, "\" ").concat(destination, "style=\"color: #222; text-decoration: none;\">\n                        ").concat(category, "\n                        <span class=\"searchDisplayName\">").concat(userInput, "</span>\n                        ").concat(externalLinkBadge, "\n                    </a>\n                </li>\n            "));
         });
         return result;
     };
@@ -1489,96 +1617,80 @@ var SearchBar = /** @class */ (function () {
                             return [2 /*return*/];
                         this.$(function () {
                             console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
-                            // TODO:
-                            // 1) make call happen once a day by adding a time stamp
-                            // 2) actually update the json file
-                            _this.apiHelper.Test().then(function (data) {
-                                if (!("imis_experience_plus__search_bar_config_version" in localStorage)) // setting not found, first time running, prime local storage
-                                 {
-                                    localStorage.setItem("imis_experience_plus__search_bar_config_version", "1.0.0");
-                                }
-                                var localVersion = localStorage.getItem("imis_experience_plus__search_bar_config_version");
-                                console.log('data = ', data);
-                                console.log('localStorage.getItem("imis_experience_plus__search_bar_config_version") = ', localVersion);
-                                if (data.version != localVersion) {
-                                    console.log("UPDATE REQUIRED");
-                                    //update local json config
-                                    // --- do it ---
-                                    //set new local storage version
-                                    localStorage.setItem("imis_experience_plus__search_bar_config_version", data.version);
-                                }
-                                else {
-                                    console.log("NO UPDATE REQUIRED");
-                                }
-                            });
                             _this.RVToken = _this.$("#__RequestVerificationToken").val();
                             _this.ClientContext = JSON.parse(_this.$('#__ClientContext').val());
                             // we want to prevent non-users from using the searchbar
                             if (_this.ClientContext.isAnonymous)
                                 return;
-                            _this.assetHelper.GetAllAssets().then(function () {
-                                var _a, _b, _c, _d, _e;
-                                _this.$('body').prepend((_a = _this.assetHelper.CommandBar) !== null && _a !== void 0 ? _a : "");
-                                _this.$("#commandBarOverlay #logo-placeholder").replaceWith((_b = _this.assetHelper.CsiLogo) !== null && _b !== void 0 ? _b : "");
-                                _this.$("#commandBarOverlay .externalIconWhite").replaceWith((_c = _this.assetHelper.ExternalIconWhite) !== null && _c !== void 0 ? _c : "");
-                                _this.$("#commandBarOverlay .externalIcon").replaceWith((_d = _this.assetHelper.ExternalIcon) !== null && _d !== void 0 ? _d : "");
-                                _this.$("#commandBarOverlay #commandBarExitButton").html((_e = _this.assetHelper.CloseIcon) !== null && _e !== void 0 ? _e : "");
-                                _this.BuildOpenSearch();
-                                _this.BuildConfig();
-                            });
-                            var keysPressed = {};
-                            // on key down
-                            _this.$(document).on("keydown", function (e) { return __awaiter(_this, void 0, void 0, function () {
-                                var isCommandBarVisible;
-                                var _a, _b;
-                                return __generator(this, function (_c) {
-                                    switch (_c.label) {
-                                        case 0:
-                                            isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
-                                            // Replace space in e.key with "Spacebar"
-                                            if (e.key === " ") {
-                                                e.key = Settings.SPACEBAR;
-                                            }
-                                            if (!(!isCommandBarVisible
-                                                && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
-                                                && e.ctrlKey === config.workbarKbdCtrl
-                                                && e.altKey === config.workbarKbdAlt
-                                                && e.shiftKey === config.workbarKbdShift)) return [3 /*break*/, 2];
-                                            return [4 /*yield*/, this.showOverlay()];
-                                        case 1:
-                                            _c.sent();
-                                            e.preventDefault();
-                                            return [3 /*break*/, 5];
-                                        case 2:
-                                            if (!(isCommandBarVisible && e.key === "Escape")) return [3 /*break*/, 4];
-                                            return [4 /*yield*/, this.hideOverlay()];
-                                        case 3:
-                                            _c.sent();
-                                            return [3 /*break*/, 5];
-                                        case 4:
-                                            if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
-                                                if (this.$('#commandBarInput').get(0) === document.activeElement) {
-                                                    this.ActivateTab('');
-                                                    (_a = this.$("#userProfile").get(0)) === null || _a === void 0 ? void 0 : _a.click();
+                            _this.config.CheckForConfigUpdate().then(function () {
+                                console.log('CheckForConfigUpdate complete');
+                                _this.assetHelper.GetAllAssets()
+                                    .then(function () {
+                                    var _a, _b, _c, _d, _e;
+                                    console.log('GetAllAssets complete');
+                                    _this.$('body').prepend((_a = _this.assetHelper.CommandBar) !== null && _a !== void 0 ? _a : "");
+                                    _this.$("#commandBarOverlay #logo-placeholder").replaceWith((_b = _this.assetHelper.CsiLogo) !== null && _b !== void 0 ? _b : "");
+                                    _this.$("#commandBarOverlay .externalIconWhite").replaceWith((_c = _this.assetHelper.ExternalIconWhite) !== null && _c !== void 0 ? _c : "");
+                                    _this.$("#commandBarOverlay .externalIcon").replaceWith((_d = _this.assetHelper.ExternalIcon) !== null && _d !== void 0 ? _d : "");
+                                    _this.$("#commandBarOverlay #commandBarExitButton").html((_e = _this.assetHelper.CloseIcon) !== null && _e !== void 0 ? _e : "");
+                                    _this.BuildOpenSearch();
+                                })
+                                    .then(function () { return _this.config.GetConfig(); })
+                                    .then(function (configJson) { return _this.BuildConfig(configJson); });
+                                var keysPressed = {};
+                                // on key down
+                                _this.$(document).on("keydown", function (e) { return __awaiter(_this, void 0, void 0, function () {
+                                    var isCommandBarVisible;
+                                    var _a, _b;
+                                    return __generator(this, function (_c) {
+                                        switch (_c.label) {
+                                            case 0:
+                                                isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
+                                                // Replace space in e.key with "Spacebar"
+                                                if (e.key === " ") {
+                                                    e.key = Settings.SPACEBAR;
                                                 }
+                                                if (!(!isCommandBarVisible
+                                                    && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
+                                                    && e.ctrlKey === config.workbarKbdCtrl
+                                                    && e.altKey === config.workbarKbdAlt
+                                                    && e.shiftKey === config.workbarKbdShift)) return [3 /*break*/, 2];
+                                                return [4 /*yield*/, this.showOverlay()];
+                                            case 1:
+                                                _c.sent();
                                                 e.preventDefault();
-                                            }
-                                            // Go to Event Details
-                                            else if (isCommandBarVisible && e.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
-                                                if (this.$('#commandBarInput').get(0) === document.activeElement) {
-                                                    this.ActivateTab('');
-                                                    (_b = this.$("#eventDetails").get(0)) === null || _b === void 0 ? void 0 : _b.click();
+                                                return [3 /*break*/, 5];
+                                            case 2:
+                                                if (!(isCommandBarVisible && e.key === "Escape")) return [3 /*break*/, 4];
+                                                return [4 /*yield*/, this.hideOverlay()];
+                                            case 3:
+                                                _c.sent();
+                                                return [3 /*break*/, 5];
+                                            case 4:
+                                                if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
+                                                    if (this.$('#commandBarInput').get(0) === document.activeElement) {
+                                                        this.ActivateTab('');
+                                                        (_a = this.$("#userProfile").get(0)) === null || _a === void 0 ? void 0 : _a.click();
+                                                    }
+                                                    e.preventDefault();
                                                 }
-                                                e.preventDefault();
-                                            }
-                                            _c.label = 5;
-                                        case 5: return [2 /*return*/];
-                                    }
+                                                // Go to Event Details
+                                                else if (isCommandBarVisible && e.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
+                                                    if (this.$('#commandBarInput').get(0) === document.activeElement) {
+                                                        this.ActivateTab('');
+                                                        (_b = this.$("#eventDetails").get(0)) === null || _b === void 0 ? void 0 : _b.click();
+                                                    }
+                                                    e.preventDefault();
+                                                }
+                                                _c.label = 5;
+                                            case 5: return [2 /*return*/];
+                                        }
+                                    });
+                                }); });
+                                document.addEventListener('keyup', function (event) {
+                                    var key = event.key.toLowerCase();
+                                    delete keysPressed[key];
                                 });
-                            }); });
-                            document.addEventListener('keyup', function (event) {
-                                var key = event.key.toLowerCase();
-                                delete keysPressed[key];
                             });
                         });
                         return [2 /*return*/];
@@ -1612,16 +1724,12 @@ var SearchBar = /** @class */ (function () {
         var email1Type = CleanUp.EmailType((_r = (_q = data === null || data === void 0 ? void 0 : data.Emails) === null || _q === void 0 ? void 0 : _q.$values[0]) === null || _r === void 0 ? void 0 : _r.EmailType);
         var email2 = (_t = (_s = data === null || data === void 0 ? void 0 : data.Emails) === null || _s === void 0 ? void 0 : _s.$values[1]) === null || _t === void 0 ? void 0 : _t.Address;
         var email2IsPrimary = (_v = (_u = data === null || data === void 0 ? void 0 : data.Emails) === null || _u === void 0 ? void 0 : _u.$values[1]) === null || _v === void 0 ? void 0 : _v.IsPrimary;
-        console.log('email2IsPrimary = ', email2IsPrimary);
         var email2Type = CleanUp.EmailType((_x = (_w = data === null || data === void 0 ? void 0 : data.Emails) === null || _w === void 0 ? void 0 : _w.$values[1]) === null || _x === void 0 ? void 0 : _x.EmailType);
-        console.log('email2Type = ', email2Type);
         var email3 = (_z = (_y = data === null || data === void 0 ? void 0 : data.Emails) === null || _y === void 0 ? void 0 : _y.$values[2]) === null || _z === void 0 ? void 0 : _z.Address;
         var email3IsPrimary = (_1 = (_0 = data === null || data === void 0 ? void 0 : data.Emails) === null || _0 === void 0 ? void 0 : _0.$values[2]) === null || _1 === void 0 ? void 0 : _1.IsPrimary;
         var email3Type = CleanUp.EmailType((_3 = (_2 = data === null || data === void 0 ? void 0 : data.Emails) === null || _2 === void 0 ? void 0 : _2.$values[2]) === null || _3 === void 0 ? void 0 : _3.EmailType);
         var address0 = CleanUp.FullAddress((_6 = (_5 = (_4 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _4 === void 0 ? void 0 : _4.$values[0]) === null || _5 === void 0 ? void 0 : _5.Address) === null || _6 === void 0 ? void 0 : _6.FullAddress);
         var address0Type = CleanUp.AddressPurpose((_8 = (_7 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _7 === void 0 ? void 0 : _7.$values[0]) === null || _8 === void 0 ? void 0 : _8.AddressPurpose);
-        console.log('address0 = ', address0);
-        console.log('address0Type = ', address0Type);
         var address1 = CleanUp.FullAddress((_11 = (_10 = (_9 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _9 === void 0 ? void 0 : _9.$values[1]) === null || _10 === void 0 ? void 0 : _10.Address) === null || _11 === void 0 ? void 0 : _11.FullAddress);
         var address1Type = CleanUp.AddressPurpose((_13 = (_12 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _12 === void 0 ? void 0 : _12.$values[1]) === null || _13 === void 0 ? void 0 : _13.AddressPurpose);
         var address2 = CleanUp.FullAddress((_16 = (_15 = (_14 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _14 === void 0 ? void 0 : _14.$values[2]) === null || _15 === void 0 ? void 0 : _15.Address) === null || _16 === void 0 ? void 0 : _16.FullAddress);
@@ -1780,26 +1888,33 @@ var SearchBar = /** @class */ (function () {
     SearchBar.prototype.RemoveUserDetailsInfo = function () {
         this.$("#UserDetailsTab").empty();
     };
-    SearchBar.prototype.BuildConfig = function () {
-        var _this = this;
+    SearchBar.prototype.BuildConfig = function (configJson) {
         var _a, _b, _c;
+        console.log('BuildConfig');
         var baseUrl = (_b = (_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
         var rvToken = (_c = this.RVToken) !== null && _c !== void 0 ? _c : "";
-        ConfigManager.GetConfigInstance().then(function (data) {
-            _this.ConfigRoutes = data.filter(function (d) { return !d.isTag; });
-            _this.ConfigTags = data.filter(function (d) { return d.isTag; });
-            var view = _this.config.BuildRoutesHTML(_this.ConfigRoutes);
-            _this.$('#commandBarUl').html(view);
-            _this.config.SetEventListeners(rvToken, baseUrl);
-        });
+        this.ConfigRoutes = configJson.filter(function (d) { return !d.isTag; });
+        this.ConfigTags = configJson.filter(function (d) { return d.isTag; });
+        var view = this.config.BuildRoutesHTML(this.ConfigRoutes);
+        this.$('#commandBarUl').html(view);
+        this.config.SetEventListeners(rvToken, baseUrl);
+        console.log('BuildConfig complete');
+    };
+    SearchBar.prototype.GetLoader = function () {
+        return "<div class=\"lookupLoader\" style=\"display: inline; margin-left: 6px;\">\n                    <span class=\"spinner\"></span>\n                </div>";
+    };
+    SearchBar.prototype.GetInputErrorBadge = function () {
+        return "<span class=\"inputErrorBadge\">No Matching Record Found</span>";
+    };
+    SearchBar.prototype.GetLookupErrorBadge = function () {
+        return "<span class=\"lookupErrorBadge\">No Matching Record Found</span>";
     };
     // Use this with '' for showing the spinner so that all tabs are hidden
     SearchBar.prototype.ActivateTab = function (activateTab) {
         var _this = this;
+        console.log('ActivateTab = ', activateTab);
         if (activateTab !== '') {
-            console.log('show tab...');
             var showTab = this.Tabs.filter(function (t) { return t == activateTab; })[0];
-            console.log('showTab = ', showTab);
             this.$("#".concat(showTab)).show();
             this.$('.loaderParent').hide();
         }
@@ -1825,13 +1940,13 @@ var SearchBar = /** @class */ (function () {
         this.$(document).on("keydown", function (event) {
             var _a, _b, _c;
             if (_this.$("#CommandBarSelectTab").is(":visible")) {
-                console.log('listItems.length = ', listItems.length);
-                console.log('this.$(".commandBarListItem").length = ', _this.$(".commandBarListItem").length);
+                // console.log('listItems.length = ', listItems.length);
+                // console.log('this.$(".commandBarListItem").length = ', this.$(".commandBarListItem").length);
                 if (listItems.length != _this.$(".commandBarListItem").length) {
                     listItems = _this.$(".commandBarListItem");
                     index = 0;
                 }
-                console.log('arrow navigation index START = ', index);
+                // console.log('arrow navigation index START = ', index);
                 switch (event.key) {
                     case "ArrowUp":
                         event.preventDefault();
@@ -1851,7 +1966,7 @@ var SearchBar = /** @class */ (function () {
                         (_c = _this.$(listItems[index]).children().get(0)) === null || _c === void 0 ? void 0 : _c.click();
                         break;
                 }
-                console.log('arrow navigation index END = ', index);
+                // console.log('arrow navigation index END = ', index);
             }
         });
     };
@@ -1885,10 +2000,13 @@ var SearchBar = /** @class */ (function () {
     SearchBar.prototype.CaptureInput = function () {
         var _this = this;
         this.$('#commandBarInput').on('input', function (event) {
-            var _a, _b, _c;
-            _this.$(".commandBarListItem:first")[0].scrollIntoView();
-            var baseUrl = (_b = (_a = _this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
-            var rvToken = (_c = _this.RVToken) !== null && _c !== void 0 ? _c : "";
+            var _a, _b, _c, _d;
+            if (_this.$(".commandBarListItem")[0]) {
+                _this.$(".commandBarListItem")[0].scrollIntoView();
+            }
+            (_a = _this.$('#commandBarInputDiv').find('.lookupErrorBadge')) === null || _a === void 0 ? void 0 : _a.remove();
+            var baseUrl = (_c = (_b = _this.ClientContext) === null || _b === void 0 ? void 0 : _b.baseUrl) !== null && _c !== void 0 ? _c : "";
+            var rvToken = (_d = _this.RVToken) !== null && _d !== void 0 ? _d : "";
             var currentActionBarValue = _this.$(event.target).val();
             var isActionBarNumeric = $.isNumeric(currentActionBarValue);
             if (isActionBarNumeric === true) {
@@ -1974,9 +2092,11 @@ var SearchBar = /** @class */ (function () {
         });
     };
     SearchBar.prototype.hideOverlay = function () {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
+            return __generator(this, function (_b) {
                 console.log('HIDE OVERLAY');
+                (_a = this.$('#commandBarInputDiv').find('.lookupErrorBadge')) === null || _a === void 0 ? void 0 : _a.remove();
                 this.$('#commandBarOverlay').hide();
                 // remove handlers
                 this.$('#commandBarExitButton').off("click");
