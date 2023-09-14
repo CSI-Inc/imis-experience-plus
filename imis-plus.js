@@ -1331,77 +1331,61 @@ var ConfigManager = /** @class */ (function () {
         this.assetHelper = assetHelper;
     }
     ConfigManager.prototype.CheckForConfigUpdate = function () {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var lastUpdatedKey, now, lastUpdatedValue, lastUpdatedDate;
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var lastUpdatedKey, now, lastUpdatedValue, lastUpdatedDate, lastestData, result, configData, result;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         console.log('CheckForConfigUpdate');
                         lastUpdatedKey = 'iep__searchbBar__lastUpdated';
                         now = new Date();
                         now.setUTCHours(0, 0, 0, 0);
-                        if (!(lastUpdatedKey in localStorage)) return [3 /*break*/, 4];
+                        if (!(lastUpdatedKey in localStorage)) return [3 /*break*/, 6];
                         console.log('lastUpdatedKey in localStorage');
                         lastUpdatedValue = localStorage.getItem(lastUpdatedKey);
                         lastUpdatedDate = new Date(lastUpdatedValue);
                         lastUpdatedDate.setUTCHours(0, 0, 0, 0);
-                        if (!(lastUpdatedValue != null && lastUpdatedDate < now)) return [3 /*break*/, 2];
+                        if (!(lastUpdatedValue != null && lastUpdatedDate < now)) return [3 /*break*/, 4];
                         console.log('lastUpdatedValue != null && lastUpdatedDate < now');
-                        return [4 /*yield*/, this.apiHelper.GetLatestConfigJson().then(function (data) { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0:
-                                            console.log('CheckForConfigUpdate -> GetLatestConfigJson -> data = ', data);
-                                            if (!(data && data.length > 0)) return [3 /*break*/, 2];
-                                            return [4 /*yield*/, this.SetConfig(data).then(function (result) {
-                                                    var _a;
-                                                    console.log('CheckForConfigUpdate -> UpdateConfig -> result = ', result);
-                                                    if (result) {
-                                                        localStorage.setItem(lastUpdatedKey, (_a = now.toISOString()) === null || _a === void 0 ? void 0 : _a.split('T')[0]);
-                                                    }
-                                                })];
-                                        case 1:
-                                            _a.sent();
-                                            _a.label = 2;
-                                        case 2: return [2 /*return*/];
-                                    }
-                                });
-                            }); })];
+                        return [4 /*yield*/, this.apiHelper.GetLatestConfigJson()];
                     case 1:
-                        _a.sent();
-                        return [3 /*break*/, 3];
+                        lastestData = _c.sent();
+                        console.log('CheckForConfigUpdate -> GetLatestConfigJson -> lastestData = ', lastestData);
+                        if (!(lastestData && lastestData.length > 0)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.SetConfig(lastestData)];
                     case 2:
-                        console.log('......Continue......');
-                        _a.label = 3;
-                    case 3: return [3 /*break*/, 6];
+                        result = _c.sent();
+                        console.log('CheckForConfigUpdate -> UpdateConfig -> result = ', result);
+                        if (result) {
+                            localStorage.setItem(lastUpdatedKey, (_a = now.toISOString()) === null || _a === void 0 ? void 0 : _a.split('T')[0]);
+                        }
+                        _c.label = 3;
+                    case 3: return [3 /*break*/, 5];
                     case 4:
+                        console.log('......Continue......');
+                        _c.label = 5;
+                    case 5: return [3 /*break*/, 9];
+                    case 6:
                         console.log('prime chrome storage');
-                        return [4 /*yield*/, this.GetConfig().then(function (data) { return __awaiter(_this, void 0, void 0, function () {
-                                var result;
-                                var _a;
-                                return __generator(this, function (_b) {
-                                    switch (_b.label) {
-                                        case 0: return [4 /*yield*/, this.SetConfig(data)];
-                                        case 1:
-                                            result = _b.sent();
-                                            if (result) {
-                                                localStorage.setItem(lastUpdatedKey, (_a = now.toISOString()) === null || _a === void 0 ? void 0 : _a.split('T')[0]);
-                                            }
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); })];
-                    case 5:
-                        _a.sent();
-                        _a.label = 6;
-                    case 6: return [2 /*return*/];
+                        return [4 /*yield*/, this.GetConfig()];
+                    case 7:
+                        configData = _c.sent();
+                        return [4 /*yield*/, this.SetConfig(configData)];
+                    case 8:
+                        result = _c.sent();
+                        if (result) {
+                            localStorage.setItem(lastUpdatedKey, (_b = now.toISOString()) === null || _b === void 0 ? void 0 : _b.split('T')[0]);
+                        }
+                        _c.label = 9;
+                    case 9: return [2 /*return*/];
                 }
             });
         });
     };
     ConfigManager.prototype.SetConfig = function (data) {
         return __awaiter(this, void 0, void 0, function () {
+            var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -1409,54 +1393,43 @@ var ConfigManager = /** @class */ (function () {
                         return [4 /*yield*/, chrome.storage.local.set({ 'JsonConfig': data })
                                 .then(function () { return true; })
                                 .catch(function () { return false; })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
                 }
             });
         });
     };
     ConfigManager.prototype.GetConfig = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
+            var data, lastestData, response, localData;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         console.log('GetConfig');
-                        return [4 /*yield*/, chrome.storage.local.get(['JsonConfig'])
-                                .then(function (data) { return __awaiter(_this, void 0, void 0, function () {
-                                var _this = this;
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0:
-                                            console.log('Chrome Data = ', data);
-                                            if (!(data && data.JsonConfig && data.JsonConfig.length > 0)) return [3 /*break*/, 1];
-                                            console.log('found json data in Chrome storage');
-                                            return [2 /*return*/, data.JsonConfig.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); })];
-                                        case 1: return [4 /*yield*/, this.apiHelper.GetLatestConfigJson().then(function (data) { return __awaiter(_this, void 0, void 0, function () {
-                                                return __generator(this, function (_a) {
-                                                    switch (_a.label) {
-                                                        case 0:
-                                                            console.log('GetConfig -> GetLatestConfigJson -> Server Data = ', data);
-                                                            if (!(data && data.length > 0)) return [3 /*break*/, 1];
-                                                            console.log('NO json data in Chrome storage... getting from SERVER...');
-                                                            return [2 /*return*/, data.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); })];
-                                                        case 1:
-                                                            console.log('NO json data in Chrome storage AND server failed... getting from LOCAL...');
-                                                            return [4 /*yield*/, fetch(chrome.runtime.getURL(ConfigManager.ConfigPath))
-                                                                    .then(function (data) { return data.json(); })
-                                                                    .then(function (data) {
-                                                                    return data.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); });
-                                                                })];
-                                                        case 2: 
-                                                        // something went wrong -> get from local
-                                                        return [2 /*return*/, _a.sent()];
-                                                    }
-                                                });
-                                            }); })];
-                                        case 2: return [2 /*return*/, _a.sent()];
-                                    }
-                                });
-                            }); })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                        return [4 /*yield*/, chrome.storage.local.get(['JsonConfig'])];
+                    case 1:
+                        data = _a.sent();
+                        console.log('Chrome Data = ', data);
+                        if (!(data && data.JsonConfig && data.JsonConfig.length > 0)) return [3 /*break*/, 2];
+                        console.log('found json data in Chrome storage');
+                        return [2 /*return*/, data.JsonConfig.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); })];
+                    case 2: return [4 /*yield*/, this.apiHelper.GetLatestConfigJson()];
+                    case 3:
+                        lastestData = _a.sent();
+                        console.log('GetConfig -> GetLatestConfigJson -> Server Data = ', lastestData);
+                        if (!(lastestData && lastestData.length > 0)) return [3 /*break*/, 4];
+                        console.log('NO json data in Chrome storage... getting from SERVER...');
+                        return [2 /*return*/, lastestData.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); })];
+                    case 4:
+                        console.log('NO json data in Chrome storage AND server failed... getting from LOCAL...');
+                        return [4 /*yield*/, fetch(chrome.runtime.getURL(ConfigManager.ConfigPath))];
+                    case 5:
+                        response = _a.sent();
+                        return [4 /*yield*/, response.json()];
+                    case 6:
+                        localData = _a.sent();
+                        return [2 /*return*/, localData.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); })];
                 }
             });
         });
@@ -1464,6 +1437,9 @@ var ConfigManager = /** @class */ (function () {
     ConfigManager.prototype.SetEventListeners = function (rvToken, baseUrl, includeTags) {
         var _this = this;
         if (includeTags === void 0) { includeTags = false; }
+        console.log('SetEventListeners');
+        console.log("$('.commandBarListItem') = ", $('.commandBarListItem'));
+        console.log("$('.commandBarListItem:first') = ", $('.commandBarListItem:first'));
         // Add hover effects
         $('.commandBarListItem')
             .on("mouseenter", function (e) { return $(e.currentTarget).addClass('commandBarHover'); })
@@ -1474,6 +1450,8 @@ var ConfigManager = /** @class */ (function () {
                 // this is to prevent event conflict with "eventCodeLookup" & "usernameLookup" on click listeners
             }
             else {
+                // console.log('anchorId = ', anchorId);
+                // console.log('calling SetEventListeners -> else -> normal search links');
                 if ($(e.currentTarget).find('.lookupLoader').length == 0) {
                     $(e.currentTarget).find('a').append(_this.searchBar.GetLoader());
                 }
@@ -1615,84 +1593,95 @@ var SearchBar = /** @class */ (function () {
                         config = _a.sent();
                         if (!config.enableWorkbar)
                             return [2 /*return*/];
-                        this.$(function () {
-                            console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
-                            _this.RVToken = _this.$("#__RequestVerificationToken").val();
-                            _this.ClientContext = JSON.parse(_this.$('#__ClientContext').val());
-                            // we want to prevent non-users from using the searchbar
-                            if (_this.ClientContext.isAnonymous)
-                                return;
-                            _this.config.CheckForConfigUpdate().then(function () {
-                                console.log('CheckForConfigUpdate complete');
-                                _this.assetHelper.GetAllAssets()
-                                    .then(function () {
-                                    var _a, _b, _c, _d, _e;
-                                    console.log('GetAllAssets complete');
-                                    _this.$('body').prepend((_a = _this.assetHelper.CommandBar) !== null && _a !== void 0 ? _a : "");
-                                    _this.$("#commandBarOverlay #logo-placeholder").replaceWith((_b = _this.assetHelper.CsiLogo) !== null && _b !== void 0 ? _b : "");
-                                    _this.$("#commandBarOverlay .externalIconWhite").replaceWith((_c = _this.assetHelper.ExternalIconWhite) !== null && _c !== void 0 ? _c : "");
-                                    _this.$("#commandBarOverlay .externalIcon").replaceWith((_d = _this.assetHelper.ExternalIcon) !== null && _d !== void 0 ? _d : "");
-                                    _this.$("#commandBarOverlay #commandBarExitButton").html((_e = _this.assetHelper.CloseIcon) !== null && _e !== void 0 ? _e : "");
-                                    _this.BuildOpenSearch();
-                                })
-                                    .then(function () { return _this.config.GetConfig(); })
-                                    .then(function (configJson) { return _this.BuildConfig(configJson); });
-                                var keysPressed = {};
-                                // on key down
-                                _this.$(document).on("keydown", function (e) { return __awaiter(_this, void 0, void 0, function () {
-                                    var isCommandBarVisible;
-                                    var _a, _b;
-                                    return __generator(this, function (_c) {
-                                        switch (_c.label) {
-                                            case 0:
-                                                isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
-                                                // Replace space in e.key with "Spacebar"
-                                                if (e.key === " ") {
-                                                    e.key = Settings.SPACEBAR;
+                        this.$(function () { return __awaiter(_this, void 0, void 0, function () {
+                            var configJson, keysPressed;
+                            var _this = this;
+                            var _a, _b, _c, _d, _e;
+                            return __generator(this, function (_f) {
+                                switch (_f.label) {
+                                    case 0:
+                                        console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
+                                        this.RVToken = this.$("#__RequestVerificationToken").val();
+                                        this.ClientContext = JSON.parse(this.$('#__ClientContext').val());
+                                        // we want to prevent non-users from using the searchbar
+                                        if (this.ClientContext.isAnonymous)
+                                            return [2 /*return*/];
+                                        return [4 /*yield*/, this.config.CheckForConfigUpdate()];
+                                    case 1:
+                                        _f.sent();
+                                        console.log('CheckForConfigUpdate complete');
+                                        return [4 /*yield*/, this.assetHelper.GetAllAssets()];
+                                    case 2:
+                                        _f.sent();
+                                        console.log('GetAllAssets complete');
+                                        this.$('body').prepend((_a = this.assetHelper.CommandBar) !== null && _a !== void 0 ? _a : "");
+                                        this.$("#commandBarOverlay #logo-placeholder").replaceWith((_b = this.assetHelper.CsiLogo) !== null && _b !== void 0 ? _b : "");
+                                        this.$("#commandBarOverlay .externalIconWhite").replaceWith((_c = this.assetHelper.ExternalIconWhite) !== null && _c !== void 0 ? _c : "");
+                                        this.$("#commandBarOverlay .externalIcon").replaceWith((_d = this.assetHelper.ExternalIcon) !== null && _d !== void 0 ? _d : "");
+                                        this.$("#commandBarOverlay #commandBarExitButton").html((_e = this.assetHelper.CloseIcon) !== null && _e !== void 0 ? _e : "");
+                                        this.BuildOpenSearch();
+                                        return [4 /*yield*/, this.config.GetConfig()];
+                                    case 3:
+                                        configJson = _f.sent();
+                                        this.BuildConfig(configJson);
+                                        keysPressed = {};
+                                        // on key down
+                                        this.$(document).on("keydown", function (e) { return __awaiter(_this, void 0, void 0, function () {
+                                            var isCommandBarVisible;
+                                            var _a, _b;
+                                            return __generator(this, function (_c) {
+                                                switch (_c.label) {
+                                                    case 0:
+                                                        isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
+                                                        // Replace space in e.key with "Spacebar"
+                                                        if (e.key === " ") {
+                                                            e.key = Settings.SPACEBAR;
+                                                        }
+                                                        if (!(!isCommandBarVisible
+                                                            && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
+                                                            && e.ctrlKey === config.workbarKbdCtrl
+                                                            && e.altKey === config.workbarKbdAlt
+                                                            && e.shiftKey === config.workbarKbdShift)) return [3 /*break*/, 2];
+                                                        return [4 /*yield*/, this.showOverlay()];
+                                                    case 1:
+                                                        _c.sent();
+                                                        e.preventDefault();
+                                                        return [3 /*break*/, 5];
+                                                    case 2:
+                                                        if (!(isCommandBarVisible && e.key === "Escape")) return [3 /*break*/, 4];
+                                                        return [4 /*yield*/, this.hideOverlay()];
+                                                    case 3:
+                                                        _c.sent();
+                                                        return [3 /*break*/, 5];
+                                                    case 4:
+                                                        if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
+                                                            if (this.$('#commandBarInput').get(0) === document.activeElement) {
+                                                                // this.ActivateTab('');
+                                                                (_a = this.$("#userProfile").get(0)) === null || _a === void 0 ? void 0 : _a.click();
+                                                            }
+                                                            e.preventDefault();
+                                                        }
+                                                        // Go to Event Details
+                                                        else if (isCommandBarVisible && e.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
+                                                            if (this.$('#commandBarInput').get(0) === document.activeElement) {
+                                                                // this.ActivateTab('');
+                                                                (_b = this.$("#eventDetails").get(0)) === null || _b === void 0 ? void 0 : _b.click();
+                                                            }
+                                                            e.preventDefault();
+                                                        }
+                                                        _c.label = 5;
+                                                    case 5: return [2 /*return*/];
                                                 }
-                                                if (!(!isCommandBarVisible
-                                                    && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
-                                                    && e.ctrlKey === config.workbarKbdCtrl
-                                                    && e.altKey === config.workbarKbdAlt
-                                                    && e.shiftKey === config.workbarKbdShift)) return [3 /*break*/, 2];
-                                                return [4 /*yield*/, this.showOverlay()];
-                                            case 1:
-                                                _c.sent();
-                                                e.preventDefault();
-                                                return [3 /*break*/, 5];
-                                            case 2:
-                                                if (!(isCommandBarVisible && e.key === "Escape")) return [3 /*break*/, 4];
-                                                return [4 /*yield*/, this.hideOverlay()];
-                                            case 3:
-                                                _c.sent();
-                                                return [3 /*break*/, 5];
-                                            case 4:
-                                                if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
-                                                    if (this.$('#commandBarInput').get(0) === document.activeElement) {
-                                                        this.ActivateTab('');
-                                                        (_a = this.$("#userProfile").get(0)) === null || _a === void 0 ? void 0 : _a.click();
-                                                    }
-                                                    e.preventDefault();
-                                                }
-                                                // Go to Event Details
-                                                else if (isCommandBarVisible && e.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
-                                                    if (this.$('#commandBarInput').get(0) === document.activeElement) {
-                                                        this.ActivateTab('');
-                                                        (_b = this.$("#eventDetails").get(0)) === null || _b === void 0 ? void 0 : _b.click();
-                                                    }
-                                                    e.preventDefault();
-                                                }
-                                                _c.label = 5;
-                                            case 5: return [2 /*return*/];
-                                        }
-                                    });
-                                }); });
-                                document.addEventListener('keyup', function (event) {
-                                    var key = event.key.toLowerCase();
-                                    delete keysPressed[key];
-                                });
+                                            });
+                                        }); });
+                                        document.addEventListener('keyup', function (event) {
+                                            var key = event.key.toLowerCase();
+                                            delete keysPressed[key];
+                                        });
+                                        return [2 /*return*/];
+                                }
                             });
-                        });
+                        }); });
                         return [2 /*return*/];
                 }
             });
@@ -1797,7 +1786,6 @@ var SearchBar = /** @class */ (function () {
         var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function () {
             var input, url, rvToken, content, eventCategoryId, eventCategoryDescription, _e, staffContactId, contactData, _f, staffContactName, eventHtml, eventActions, changeDetails;
-            var _this = this;
             return __generator(this, function (_g) {
                 switch (_g.label) {
                     case 0:
@@ -1835,8 +1823,6 @@ var SearchBar = /** @class */ (function () {
                         this.$('#userCardProfile').replaceWith(eventHtml);
                         eventActions = this.BuildEventCardActions(input);
                         this.$('#userCardActions').replaceWith(eventActions);
-                        this.$('#eventDetails').on('click', function () { return _this.ActivateTab(''); });
-                        this.$('#eventDashboard').on('click', function () { return _this.ActivateTab(''); });
                         changeDetails = this.BuildEventFooter(CleanUp.Status(event === null || event === void 0 ? void 0 : event.Status));
                         this.$("#userCardChangeDetails").replaceWith(changeDetails);
                         return [2 /*return*/, true];
@@ -1851,7 +1837,6 @@ var SearchBar = /** @class */ (function () {
         if (userId === void 0) { userId = ''; }
         return __awaiter(this, void 0, void 0, function () {
             var input, url, rvToken, data, content, username, profile, userActions, changeDetails;
-            var _this = this;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -1875,8 +1860,6 @@ var SearchBar = /** @class */ (function () {
                         this.$('#userCardProfile').replaceWith(profile);
                         userActions = this.BuildUserCardActions(input);
                         this.$('#userCardActions').replaceWith(userActions);
-                        this.$('#userProfile').on('click', function () { return _this.ActivateTab(''); });
-                        this.$('#userCredentials').on('click', function () { return _this.ActivateTab(''); });
                         changeDetails = this.BuildProfileFooter(username, data);
                         this.$("#userCardChangeDetails").replaceWith(changeDetails);
                         return [2 /*return*/, true];
@@ -1902,6 +1885,9 @@ var SearchBar = /** @class */ (function () {
     };
     SearchBar.prototype.GetLoader = function () {
         return "<div class=\"lookupLoader\" style=\"display: inline; margin-left: 6px;\">\n                    <span class=\"spinner\"></span>\n                </div>";
+    };
+    SearchBar.prototype.GetInputLoader = function () {
+        return "<div class=\"inputLoader\">\n                    <span class=\"spinner\"></span>\n                </div>";
     };
     SearchBar.prototype.GetInputErrorBadge = function () {
         return "<span class=\"inputErrorBadge\">No Matching Record Found</span>";
@@ -1937,16 +1923,13 @@ var SearchBar = /** @class */ (function () {
         var index = 0;
         var listItems = this.$(".commandBarListItem");
         this.$(listItems[index]).addClass("commandBarSelected");
-        this.$(document).on("keydown", function (event) {
+        this.$('#commandBarInput').on("keydown", function (event) {
             var _a, _b, _c;
             if (_this.$("#CommandBarSelectTab").is(":visible")) {
-                // console.log('listItems.length = ', listItems.length);
-                // console.log('this.$(".commandBarListItem").length = ', this.$(".commandBarListItem").length);
                 if (listItems.length != _this.$(".commandBarListItem").length) {
                     listItems = _this.$(".commandBarListItem");
                     index = 0;
                 }
-                // console.log('arrow navigation index START = ', index);
                 switch (event.key) {
                     case "ArrowUp":
                         event.preventDefault();
@@ -1963,22 +1946,29 @@ var SearchBar = /** @class */ (function () {
                         (_b = _this.$(listItems[index]).get(0)) === null || _b === void 0 ? void 0 : _b.scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
                         break;
                     case "Enter":
+                        event.preventDefault();
                         (_c = _this.$(listItems[index]).children().get(0)) === null || _c === void 0 ? void 0 : _c.click();
                         break;
                 }
-                // console.log('arrow navigation index END = ', index);
             }
         });
     };
     SearchBar.prototype.checkUser = function (currentActionBarValue) {
         var _this = this;
+        var inputSpinner = this.$("#commandBarInput").siblings(".inputLoader");
+        // if input is between 1 and 10 numbers, add input spinner
+        if (inputSpinner.length == 0) {
+            this.$("#commandBarInput").after(this.GetInputLoader());
+        }
         this.SetUserDetails().then(function (foundUser) {
             var _a, _b, _c;
             console.log('foundUser = ', foundUser);
+            _this.$('#commandBarInput').siblings(".inputLoader").remove();
             if (foundUser) {
                 _this.ActivateTab(_this.UserDetailsTab);
             }
             else {
+                _this.$("#commandBarInput").after(_this.GetInputErrorBadge());
                 if (_this.$("#CommandBarSelectTab").is(":hidden")) {
                     _this.ActivateTab(_this.CommandBarSelectTab);
                     _this.RemoveUserDetailsInfo();
@@ -1988,11 +1978,6 @@ var SearchBar = /** @class */ (function () {
                     _this.$('#commandBarUl').html(tagsHTML);
                     _this.config.SetEventListeners(rvToken, baseUrl, true);
                     _this.SetArrowEventListeners();
-                    // // add in error badge from jake (this needs to be removed everywhere in activate tab probably)
-                    // if (currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10)
-                    // {
-                    //     this.$("#commandBarInput").siblings(".error").show();
-                    // }
                 }
             }
         });
@@ -2000,20 +1985,22 @@ var SearchBar = /** @class */ (function () {
     SearchBar.prototype.CaptureInput = function () {
         var _this = this;
         this.$('#commandBarInput').on('input', function (event) {
-            var _a, _b, _c, _d;
+            var _a, _b, _c, _d, _e, _f;
             if (_this.$(".commandBarListItem")[0]) {
                 _this.$(".commandBarListItem")[0].scrollIntoView();
             }
-            (_a = _this.$('#commandBarInputDiv').find('.lookupErrorBadge')) === null || _a === void 0 ? void 0 : _a.remove();
-            var baseUrl = (_c = (_b = _this.ClientContext) === null || _b === void 0 ? void 0 : _b.baseUrl) !== null && _c !== void 0 ? _c : "";
-            var rvToken = (_d = _this.RVToken) !== null && _d !== void 0 ? _d : "";
+            (_a = _this.$('#commandBarOverlay').find('.lookupErrorBadge')) === null || _a === void 0 ? void 0 : _a.remove();
+            (_b = _this.$('#commandBarOverlay').find('.inputErrorBadge')) === null || _b === void 0 ? void 0 : _b.remove();
+            var baseUrl = (_d = (_c = _this.ClientContext) === null || _c === void 0 ? void 0 : _c.baseUrl) !== null && _d !== void 0 ? _d : "";
+            var rvToken = (_e = _this.RVToken) !== null && _e !== void 0 ? _e : "";
             var currentActionBarValue = _this.$(event.target).val();
             var isActionBarNumeric = $.isNumeric(currentActionBarValue);
-            if (isActionBarNumeric === true) {
-                _this.ActivateTab('');
+            if (isActionBarNumeric === true && currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10) {
+                // this.ActivateTab('');
                 _this.debouncer.start(function (v) { return _this.checkUser(v); }, 500, currentActionBarValue);
             }
             else {
+                (_f = _this.$("#commandBarInput").siblings(".inputLoader")) === null || _f === void 0 ? void 0 : _f.remove();
                 _this.debouncer.stop();
                 if (_this.$("#CommandBarSelectTab").is(":hidden")) {
                     _this.ActivateTab(_this.CommandBarSelectTab);
@@ -2074,8 +2061,7 @@ var SearchBar = /** @class */ (function () {
                     this.CaptureInput();
                     this.$('#commandBarInput').trigger("focus");
                     this.SetArrowEventListeners();
-                    // TODO: fix extra handlers being made
-                    // @ts-ignore
+                    // // @ts-ignore
                     // console.log($._data(this.$('#commandBarExitButton')[0], 'events'));
                     // // @ts-ignore
                     // console.log($._data(this.$('.commandBarListItem')[0], 'events'));
@@ -2083,24 +2069,23 @@ var SearchBar = /** @class */ (function () {
                     // console.log($._data(this.$('#commandBarInput')[0], 'events'));
                     // // @ts-ignore
                     // console.log($._data(this.$(document)[0], 'events'));
-                    // TODO: 'commandBarExitButton'(CLICK) = BLEEDING
-                    // TODO: '#commandBarInput'(INPUT) = BLEEDING
-                    // TODO: 'document'(KEYDOWN) = BLEEDING
                 }
                 return [2 /*return*/];
             });
         });
     };
     SearchBar.prototype.hideOverlay = function () {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_b) {
+            return __generator(this, function (_c) {
                 console.log('HIDE OVERLAY');
-                (_a = this.$('#commandBarInputDiv').find('.lookupErrorBadge')) === null || _a === void 0 ? void 0 : _a.remove();
+                (_a = this.$('#commandBarOverlay').find('.lookupErrorBadge')) === null || _a === void 0 ? void 0 : _a.remove();
+                (_b = this.$('#commandBarOverlay').find('.inputErrorBadge')) === null || _b === void 0 ? void 0 : _b.remove();
                 this.$('#commandBarOverlay').hide();
                 // remove handlers
                 this.$('#commandBarExitButton').off("click");
                 this.$('#commandBarInput').off('input');
+                this.$('#commandBarInput').off('keydown');
                 // reset whatever view we left off on back to the original
                 this.$('#commandBarInput').val('');
                 // todo: add search results / config clearing

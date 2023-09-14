@@ -685,12 +685,28 @@
     border: 5px solid #23b4e8;
     border-bottom-color: #7c7c7c;
     border-radius: 50%;
-    display: inline-block;
     animation: __csi__iep__search-rotation 1s linear infinite;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+.__csi__iep__search .inputLoader > .spinner
+{
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    top: 18px;
+    left: 150px;
+    background-color: #F4F5F7;
+    vertical-align: middle;
+    opacity: 1;
+    border: 5px solid #23b4e8;
+    border-bottom-color: #7c7c7c;
+    border-radius: 50%;
+    animation: __csi__iep__search-rotation 1s linear infinite;
 }
 
 .__csi__iep__search .commandBarListItem > a .searchCategory

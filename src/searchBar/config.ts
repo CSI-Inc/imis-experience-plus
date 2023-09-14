@@ -19,21 +19,17 @@ class ConfigManager
             if (lastUpdatedValue != null && lastUpdatedDate < now)
             {
                 console.log('lastUpdatedValue != null && lastUpdatedDate < now');
-                await this.apiHelper.GetLatestConfigJson().then(async data =>
+                var lastestData = await this.apiHelper.GetLatestConfigJson();
+                console.log('CheckForConfigUpdate -> GetLatestConfigJson -> lastestData = ', lastestData);
+                if (lastestData && lastestData.length > 0)
                 {
-                    console.log('CheckForConfigUpdate -> GetLatestConfigJson -> data = ', data);
-                    if (data && data.length > 0)
+                    var result = await this.SetConfig(lastestData);
+                    console.log('CheckForConfigUpdate -> UpdateConfig -> result = ', result);
+                    if (result)
                     {
-                        await this.SetConfig(data).then(result =>
-                        {
-                            console.log('CheckForConfigUpdate -> UpdateConfig -> result = ', result);
-                            if (result)
-                            {
-                                localStorage.setItem(lastUpdatedKey, now.toISOString()?.split('T')[0]);
-                            }
-                        });
+                        localStorage.setItem(lastUpdatedKey, now.toISOString()?.split('T')[0]);
                     }
-                });
+                }
             }
             else
             {
@@ -44,65 +40,59 @@ class ConfigManager
         else
         {
             console.log('prime chrome storage');
-            await this.GetConfig().then(async data =>
+            var configData = await this.GetConfig();
+            var result = await this.SetConfig(configData);
+            if (result)
             {
-                var result = await this.SetConfig(data);
-                if (result)
-                {
-                    localStorage.setItem(lastUpdatedKey, now.toISOString()?.split('T')[0]);
-                }
-            });
+                localStorage.setItem(lastUpdatedKey, now.toISOString()?.split('T')[0]);
+            }
         }
     }
 
     public async SetConfig(data: ConfigItem[]): Promise<boolean>
     {
         console.log('UpdateConfig');
-        return await chrome.storage.local.set({ 'JsonConfig': data })
+        var result = await chrome.storage.local.set({ 'JsonConfig': data })
             .then(() => true)
             .catch(() => false);
+        return result;
     }
 
     public async GetConfig(): Promise<ConfigItem[]>
     {
         console.log('GetConfig');
-        return await chrome.storage.local.get(['JsonConfig'])
-            .then(async (data) =>
+        var data = await chrome.storage.local.get(['JsonConfig']);
+        console.log('Chrome Data = ', data);
+        if (data && data.JsonConfig && data.JsonConfig.length > 0)
+        {
+            console.log('found json data in Chrome storage');
+            return (data.JsonConfig as ConfigItem[]).sort((a, b) => a.displayName.localeCompare(b.displayName));
+        }
+        else
+        {
+            var lastestData = await this.apiHelper.GetLatestConfigJson();
+            console.log('GetConfig -> GetLatestConfigJson -> Server Data = ', lastestData);
+            if (lastestData && lastestData.length > 0)
             {
-                console.log('Chrome Data = ', data);
-                if (data && data.JsonConfig && data.JsonConfig.length > 0)
-                {
-                    console.log('found json data in Chrome storage');
-                    return (data.JsonConfig as ConfigItem[]).sort((a, b) => a.displayName.localeCompare(b.displayName));
-                }
-                else
-                {
-                    return await this.apiHelper.GetLatestConfigJson().then(async (data: ConfigItem[] | null) =>
-                    {
-                        console.log('GetConfig -> GetLatestConfigJson -> Server Data = ', data);
-                        if (data && data.length > 0)
-                        {
-                            console.log('NO json data in Chrome storage... getting from SERVER...');
-                            return data.sort((a, b) => a.displayName.localeCompare(b.displayName));
-                        }
-                        else
-                        {
-                            console.log('NO json data in Chrome storage AND server failed... getting from LOCAL...');
-                            // something went wrong -> get from local
-                            return await fetch(chrome.runtime.getURL(ConfigManager.ConfigPath))
-                                .then(data => data.json() as Promise<ConfigItem[]>)
-                                .then(data =>
-                                {
-                                    return data.sort((a, b) => a.displayName.localeCompare(b.displayName));
-                                });
-                        }
-                    });
-                }
-            });
+                console.log('NO json data in Chrome storage... getting from SERVER...');
+                return lastestData.sort((a, b) => a.displayName.localeCompare(b.displayName));
+            }
+            else
+            {
+                console.log('NO json data in Chrome storage AND server failed... getting from LOCAL...');
+                // something went wrong -> get from local
+                var response = await fetch(chrome.runtime.getURL(ConfigManager.ConfigPath));
+                var localData = await response.json();
+                return (localData as ConfigItem[]).sort((a, b) => a.displayName.localeCompare(b.displayName));
+            }
+        }
     }
 
     public SetEventListeners(rvToken: string, baseUrl: string, includeTags = false): void
     {
+        console.log('SetEventListeners');
+        console.log("$('.commandBarListItem') = ", $('.commandBarListItem'));
+        console.log("$('.commandBarListItem:first') = ", $('.commandBarListItem:first'));
         // Add hover effects
         $('.commandBarListItem')
             .on("mouseenter", e => $(e.currentTarget).addClass('commandBarHover'))
@@ -115,7 +105,8 @@ class ConfigManager
                     // this is to prevent event conflict with "eventCodeLookup" & "usernameLookup" on click listeners
                 } else
                 {
-
+                    // console.log('anchorId = ', anchorId);
+                    // console.log('calling SetEventListeners -> else -> normal search links');
                     if ($(e.currentTarget).find('.lookupLoader').length == 0)
                     {
                         $(e.currentTarget).find('a').append(this.searchBar.GetLoader());

@@ -66,7 +66,7 @@ class SearchBar
 
         if (!config.enableWorkbar) return;
 
-        this.$(() =>
+        this.$(async () =>
         {
             console.log(Utils.VERSION_STRING + "Loaded: Search Bar", ...SearchBar.VERSION_STYLES);
 
@@ -76,78 +76,76 @@ class SearchBar
             // we want to prevent non-users from using the searchbar
             if (this.ClientContext.isAnonymous) return;
 
-            this.config.CheckForConfigUpdate().then(() =>
+            await this.config.CheckForConfigUpdate();
+            console.log('CheckForConfigUpdate complete');
+
+            await this.assetHelper.GetAllAssets();
+            console.log('GetAllAssets complete');
+            this.$('body').prepend(this.assetHelper.CommandBar ?? "");
+            this.$("#commandBarOverlay #logo-placeholder").replaceWith(this.assetHelper.CsiLogo ?? "");
+            this.$("#commandBarOverlay .externalIconWhite").replaceWith(this.assetHelper.ExternalIconWhite ?? "");
+            this.$("#commandBarOverlay .externalIcon").replaceWith(this.assetHelper.ExternalIcon ?? "");
+            this.$("#commandBarOverlay #commandBarExitButton").html(this.assetHelper.CloseIcon ?? "");
+            this.BuildOpenSearch();
+            var configJson = await this.config.GetConfig();
+            this.BuildConfig(configJson);
+
+            let keysPressed: { [key: string]: boolean } = {};
+
+            // on key down
+            this.$(document).on("keydown", async e =>
             {
-                console.log('CheckForConfigUpdate complete');
-                this.assetHelper.GetAllAssets()
-                    .then(() =>
-                    {
-                        console.log('GetAllAssets complete');
-                        this.$('body').prepend(this.assetHelper.CommandBar ?? "");
-                        this.$("#commandBarOverlay #logo-placeholder").replaceWith(this.assetHelper.CsiLogo ?? "");
-                        this.$("#commandBarOverlay .externalIconWhite").replaceWith(this.assetHelper.ExternalIconWhite ?? "");
-                        this.$("#commandBarOverlay .externalIcon").replaceWith(this.assetHelper.ExternalIcon ?? "");
-                        this.$("#commandBarOverlay #commandBarExitButton").html(this.assetHelper.CloseIcon ?? "");
-                        this.BuildOpenSearch();
-                    })
-                    .then(() => this.config.GetConfig())
-                    .then(configJson => this.BuildConfig(configJson));
+                var isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
 
-                let keysPressed: { [key: string]: boolean } = {};
-
-                // on key down
-                this.$(document).on("keydown", async e =>
+                // Replace space in e.key with "Spacebar"
+                if (e.key === " ")
                 {
-                    var isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
+                    e.key = Settings.SPACEBAR;
+                }
 
-                    // Replace space in e.key with "Spacebar"
-                    if (e.key === " ")
-                    {
-                        e.key = Settings.SPACEBAR;
-                    }
-
-                    // Open CommandBar
-                    if (!isCommandBarVisible
-                        && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
-                        && e.ctrlKey === config.workbarKbdCtrl
-                        && e.altKey === config.workbarKbdAlt
-                        && e.shiftKey === config.workbarKbdShift)
-                    {
-                        await this.showOverlay();
-                        e.preventDefault();
-                    }
-                    // Close Command Bar
-                    else if (isCommandBarVisible && e.key === "Escape")
-                    {
-                        await this.hideOverlay();
-                    }
-                    // Go to User Profile
-                    else if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
-                    {
-                        if (this.$('#commandBarInput').get(0) === document.activeElement)
-                        {
-                            this.ActivateTab('');
-                            this.$("#userProfile").get(0)?.click();
-                        }
-                        e.preventDefault();
-                    }
-                    // Go to Event Details
-                    else if (isCommandBarVisible && e.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
-                    {
-                        if (this.$('#commandBarInput').get(0) === document.activeElement)
-                        {
-                            this.ActivateTab('');
-                            this.$("#eventDetails").get(0)?.click();
-                        }
-                        e.preventDefault();
-                    }
-                });
-
-                document.addEventListener('keyup', (event) =>
+                // Open CommandBar
+                if (!isCommandBarVisible
+                    && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
+                    && e.ctrlKey === config.workbarKbdCtrl
+                    && e.altKey === config.workbarKbdAlt
+                    && e.shiftKey === config.workbarKbdShift)
                 {
-                    var key = event.key.toLowerCase();
-                    delete keysPressed[key];
-                });
+                    await this.showOverlay();
+                    e.preventDefault();
+                }
+                // Close Command Bar
+                else if (isCommandBarVisible && e.key === "Escape")
+                {
+                    await this.hideOverlay();
+                }
+
+                // TODO: i think the below calls really belong on $('#commandBarInput').on('keydown', ...) instead of document.on('keydown', ...)
+                // Go to User Profile
+                else if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
+                {
+                    if (this.$('#commandBarInput').get(0) === document.activeElement)
+                    {
+                        // this.ActivateTab('');
+                        this.$("#userProfile").get(0)?.click();
+                    }
+                    e.preventDefault();
+                }
+                // Go to Event Details
+                else if (isCommandBarVisible && e.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
+                {
+                    if (this.$('#commandBarInput').get(0) === document.activeElement)
+                    {
+                        // this.ActivateTab('');
+                        this.$("#eventDetails").get(0)?.click();
+                    }
+                    e.preventDefault();
+                }
+            });
+
+            document.addEventListener('keyup', (event) =>
+            {
+                var key = event.key.toLowerCase();
+                delete keysPressed[key];
             });
         });
     }
@@ -487,8 +485,8 @@ class SearchBar
 
             var eventActions = this.BuildEventCardActions(input);
             this.$('#userCardActions').replaceWith(eventActions);
-            this.$('#eventDetails').on('click', () => this.ActivateTab(''));
-            this.$('#eventDashboard').on('click', () => this.ActivateTab(''));
+            // this.$('#eventDetails').on('click', () => this.ActivateTab(''));
+            // this.$('#eventDashboard').on('click', () => this.ActivateTab(''));
 
             // Update view footer
             var changeDetails = this.BuildEventFooter(CleanUp.Status(event?.Status));
@@ -508,6 +506,7 @@ class SearchBar
         var input = userId ? userId : this.$('#commandBarInput').val() as string;
         if (!input) return false;
         console.log('input = ', input);
+
         var url = this.ClientContext?.baseUrl ?? "";
         var rvToken = this.RVToken ?? "";
         var data = await this.apiHelper.GetParty(input, rvToken, url);
@@ -527,8 +526,8 @@ class SearchBar
             // Update view right column
             var userActions = this.BuildUserCardActions(input);
             this.$('#userCardActions').replaceWith(userActions);
-            this.$('#userProfile').on('click', () => this.ActivateTab(''));
-            this.$('#userCredentials').on('click', () => this.ActivateTab(''));
+            // this.$('#userProfile').on('click', () => this.ActivateTab(''));
+            // this.$('#userCredentials').on('click', () => this.ActivateTab(''));
 
             // Update view footer
             var changeDetails = this.BuildProfileFooter(username, data);
@@ -563,6 +562,13 @@ class SearchBar
     public GetLoader(): string
     {
         return `<div class="lookupLoader" style="display: inline; margin-left: 6px;">
+                    <span class="spinner"></span>
+                </div>`;
+    }
+
+    public GetInputLoader(): string
+    {
+        return `<div class="inputLoader">
                     <span class="spinner"></span>
                 </div>`;
     }
@@ -610,18 +616,15 @@ class SearchBar
         var index = 0;
         var listItems = this.$(".commandBarListItem");
         this.$(listItems[index]).addClass("commandBarSelected");
-        this.$(document).on("keydown", event =>
+        this.$('#commandBarInput').on("keydown", event =>
         {
             if (this.$("#CommandBarSelectTab").is(":visible"))
             {
-                // console.log('listItems.length = ', listItems.length);
-                // console.log('this.$(".commandBarListItem").length = ', this.$(".commandBarListItem").length);
                 if (listItems.length != this.$(".commandBarListItem").length)
                 {
                     listItems = this.$(".commandBarListItem");
                     index = 0;
                 }
-                // console.log('arrow navigation index START = ', index);
                 switch (event.key)
                 {
                     case "ArrowUp":
@@ -639,26 +642,33 @@ class SearchBar
                         this.$(listItems[index]).get(0)?.scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
                         break;
                     case "Enter":
+                        event.preventDefault();
                         this.$(listItems[index]).children().get(0)?.click();
                         break;
                 }
-
-                // console.log('arrow navigation index END = ', index);
             }
         });
     }
 
     private checkUser(currentActionBarValue: string): void
     {
+        var inputSpinner = this.$("#commandBarInput").siblings(".inputLoader");
+        // if input is between 1 and 10 numbers, add input spinner
+        if (inputSpinner.length == 0)
+        {
+            this.$("#commandBarInput").after(this.GetInputLoader());
+        }
         this.SetUserDetails().then(foundUser =>
         {
             console.log('foundUser = ', foundUser);
+            this.$('#commandBarInput').siblings(".inputLoader").remove();
             if (foundUser)
             {
                 this.ActivateTab(this.UserDetailsTab);
             }
             else
             {
+                this.$("#commandBarInput").after(this.GetInputErrorBadge());
                 if (this.$("#CommandBarSelectTab").is(":hidden"))
                 {
                     this.ActivateTab(this.CommandBarSelectTab);
@@ -670,12 +680,6 @@ class SearchBar
                     this.$('#commandBarUl').html(tagsHTML);
                     this.config.SetEventListeners(rvToken, baseUrl, true);
                     this.SetArrowEventListeners();
-
-                    // // add in error badge from jake (this needs to be removed everywhere in activate tab probably)
-                    // if (currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10)
-                    // {
-                    //     this.$("#commandBarInput").siblings(".error").show();
-                    // }
                 }
             }
         })
@@ -685,23 +689,24 @@ class SearchBar
     {
         this.$('#commandBarInput').on('input', (event) =>
         {
-
             if (this.$(".commandBarListItem")[0])
             {
                 this.$(".commandBarListItem")[0].scrollIntoView();
             }
-            this.$('#commandBarInputDiv').find('.lookupErrorBadge')?.remove();
+            this.$('#commandBarOverlay').find('.lookupErrorBadge')?.remove();
+            this.$('#commandBarOverlay').find('.inputErrorBadge')?.remove();
             var baseUrl = this.ClientContext?.baseUrl ?? "";
             var rvToken = this.RVToken ?? "";
             var currentActionBarValue = this.$(event.target).val() as string;
             var isActionBarNumeric = $.isNumeric(currentActionBarValue);
-            if (isActionBarNumeric === true)
+            if (isActionBarNumeric === true && currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10)
             {
-                this.ActivateTab('');
+                // this.ActivateTab('');
                 this.debouncer.start(v => this.checkUser(v), 500, currentActionBarValue);
             }
             else
             {
+                this.$("#commandBarInput").siblings(".inputLoader")?.remove();
                 this.debouncer.stop();
                 if (this.$("#CommandBarSelectTab").is(":hidden"))
                 {
@@ -763,8 +768,7 @@ class SearchBar
             this.$('#commandBarInput').trigger("focus");
             this.SetArrowEventListeners();
 
-            // TODO: fix extra handlers being made
-            // @ts-ignore
+            // // @ts-ignore
             // console.log($._data(this.$('#commandBarExitButton')[0], 'events'));
             // // @ts-ignore
             // console.log($._data(this.$('.commandBarListItem')[0], 'events'));
@@ -772,22 +776,20 @@ class SearchBar
             // console.log($._data(this.$('#commandBarInput')[0], 'events'));
             // // @ts-ignore
             // console.log($._data(this.$(document)[0], 'events'));
-
-            // TODO: 'commandBarExitButton'(CLICK) = BLEEDING
-            // TODO: '#commandBarInput'(INPUT) = BLEEDING
-            // TODO: 'document'(KEYDOWN) = BLEEDING
         }
     }
 
     private async hideOverlay(): Promise<void>
     {
         console.log('HIDE OVERLAY');
-        this.$('#commandBarInputDiv').find('.lookupErrorBadge')?.remove();
+        this.$('#commandBarOverlay').find('.lookupErrorBadge')?.remove();
+        this.$('#commandBarOverlay').find('.inputErrorBadge')?.remove();
         this.$('#commandBarOverlay').hide();
 
         // remove handlers
         this.$('#commandBarExitButton').off("click");
         this.$('#commandBarInput').off('input');
+        this.$('#commandBarInput').off('keydown');
 
         // reset whatever view we left off on back to the original
         this.$('#commandBarInput').val('');
