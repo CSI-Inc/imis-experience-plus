@@ -178,6 +178,16 @@ class IqaExtensions
         // FIX THE MARGINS
         this.$('.Section .PanelTitle span').css('margin-left', '15px');
 
+        // Sticky the header and top buttons
+        this.$('#MainPanel > div[id$=ContentPanel] .Section').first().css({
+            position: 'sticky',
+            top: '0',
+            backgroundColor: 'white',
+            borderBottom: '1px solid #DDD',
+            paddingBottom: '1rem',
+            zIndex: '999999'
+        });
+
         // Remove Table Borders
         this.$('table.Grid').get(0)?.style.setProperty('border', '0', 'important');
 

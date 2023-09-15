@@ -370,6 +370,15 @@ var IqaExtensions = /** @class */ (function () {
         // === Global Stuff ===
         // FIX THE MARGINS
         this.$('.Section .PanelTitle span').css('margin-left', '15px');
+        // Sticky the header and top buttons
+        this.$('#MainPanel > div[id$=ContentPanel] .Section').first().css({
+            position: 'sticky',
+            top: '0',
+            backgroundColor: 'white',
+            borderBottom: '1px solid #DDD',
+            paddingBottom: '1rem',
+            zIndex: '999999'
+        });
         // Remove Table Borders
         (_a = this.$('table.Grid').get(0)) === null || _a === void 0 ? void 0 : _a.style.setProperty('border', '0', 'important');
         // Selects a bit wider
