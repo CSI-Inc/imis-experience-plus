@@ -331,11 +331,16 @@
 .__csi__iep__search .inputErrorBadge
 {
     position: absolute;
-    top: 16px;
+    top: 14px;
     left: 150px;
     color: black;
-    background-color: #E08B89;
-    border: 1px solid #BB0000;
+    background-color: #ffbaba;
+    border: 1px solid #DC000C;
+    padding: 2px 4px;
+    font-size: 11px;
+    border-width: 1px;
+    border-style: solid;
+    border-image: initial;
     border-radius: 3px;
 }
 
@@ -345,8 +350,8 @@
     font-weight: 500;
     font-size: 11px;
     color: black;
-    background-color: #E08B89;
-    border: 1px solid #BB0000;
+    background-color: #ffbaba;
+    border: 1px solid #DC000C;
     border-radius: 3px;
     padding: 2px 4px;
     margin-left: 5px;

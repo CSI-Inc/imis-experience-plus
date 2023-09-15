@@ -51,7 +51,17 @@ class ConfigManager
 
     public async SetConfig(data: ConfigItem[]): Promise<boolean>
     {
-        console.log('UpdateConfig');
+        console.log('SetConfig');
+
+        if (this.searchBar.ClientContext?.baseUrl != null && this.searchBar.ClientContext.baseUrl != "/")
+        {
+            data.forEach(item =>
+            {
+                item.destination = this.searchBar.ClientContext?.baseUrl + item.destination;
+            });
+            console.log('new data = ', data);
+        }
+
         var result = await chrome.storage.local.set({ 'JsonConfig': data })
             .then(() => true)
             .catch(() => false);

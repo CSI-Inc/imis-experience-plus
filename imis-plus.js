@@ -1384,17 +1384,26 @@ var ConfigManager = /** @class */ (function () {
         });
     };
     ConfigManager.prototype.SetConfig = function (data) {
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
             var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _this = this;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        console.log('UpdateConfig');
+                        console.log('SetConfig');
+                        if (((_a = this.searchBar.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) != null && this.searchBar.ClientContext.baseUrl != "/") {
+                            data.forEach(function (item) {
+                                var _a;
+                                item.destination = ((_a = _this.searchBar.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) + item.destination;
+                            });
+                            console.log('new data = ', data);
+                        }
                         return [4 /*yield*/, chrome.storage.local.set({ 'JsonConfig': data })
                                 .then(function () { return true; })
                                 .catch(function () { return false; })];
                     case 1:
-                        result = _a.sent();
+                        result = _b.sent();
                         return [2 /*return*/, result];
                 }
             });
@@ -1567,6 +1576,13 @@ var SearchBar = /** @class */ (function () {
         this.ClientContext = null;
         this.WebsiteUrl = null;
         this.debouncer = new Debouncer();
+        this.PlaceholderTextArray = [
+            'Enter an iMIS ID.',
+            'Enter an event code.',
+            'Enter a username.',
+            'Enter a keyword to search.'
+        ];
+        this.CurrentPlaceholderIndex = 0;
         this.settings = new Settings($);
         this.assetHelper = new AssetHelper();
         this.apiHelper = new ApiHelper();
@@ -1579,22 +1595,40 @@ var SearchBar = /** @class */ (function () {
         // Initialize the module
         this.init();
     }
+    SearchBar.prototype.GetNextPlaceholder = function () {
+        var currentItem = this.PlaceholderTextArray[this.CurrentPlaceholderIndex];
+        console.log('currentItem = ', currentItem);
+        this.CurrentPlaceholderIndex = (this.CurrentPlaceholderIndex + 1) % this.PlaceholderTextArray.length;
+        console.log('currentIndex = ', this.CurrentPlaceholderIndex);
+        return currentItem;
+    };
     /**
      * Initializes the various elements of this module..
      */
     SearchBar.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var config;
+            var config, myCombo;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.settings.load()];
+                    case 0:
+                        console.log('***** init ******');
+                        return [4 /*yield*/, this.settings.load()];
                     case 1:
                         config = _a.sent();
                         if (!config.enableWorkbar)
                             return [2 /*return*/];
+                        myCombo = "[".concat(config.workbarShortcut, "]");
+                        if (config.workbarKbdShift)
+                            myCombo = "[Shift] + " + myCombo;
+                        if (config.workbarKbdAlt)
+                            myCombo = "[Alt] + " + myCombo;
+                        if (config.workbarKbdCtrl)
+                            myCombo = "[Control] + " + myCombo;
+                        // console.log('myCombo = ', myCombo);
+                        this.PlaceholderTextArray.push("Open the Work Bar with ".concat(myCombo, "."));
                         this.$(function () { return __awaiter(_this, void 0, void 0, function () {
-                            var configJson, keysPressed;
+                            var configJson;
                             var _this = this;
                             var _a, _b, _c, _d, _e;
                             return __generator(this, function (_f) {
@@ -1603,6 +1637,7 @@ var SearchBar = /** @class */ (function () {
                                         console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
                                         this.RVToken = this.$("#__RequestVerificationToken").val();
                                         this.ClientContext = JSON.parse(this.$('#__ClientContext').val());
+                                        console.log('this.ClientContext = ', this.ClientContext);
                                         // we want to prevent non-users from using the searchbar
                                         if (this.ClientContext.isAnonymous)
                                             return [2 /*return*/];
@@ -1616,6 +1651,8 @@ var SearchBar = /** @class */ (function () {
                                         console.log('GetAllAssets complete');
                                         this.$('body').prepend((_a = this.assetHelper.CommandBar) !== null && _a !== void 0 ? _a : "");
                                         this.$("#commandBarOverlay #logo-placeholder").replaceWith((_b = this.assetHelper.CsiLogo) !== null && _b !== void 0 ? _b : "");
+                                        // // TODO: testing placeholder swapping
+                                        // this.$("#commandBarInput").attr("placeholder", this.PlaceholderTextArray[this.CurrentPlaceholderIndex]);
                                         this.$("#commandBarOverlay .externalIconWhite").replaceWith((_c = this.assetHelper.ExternalIconWhite) !== null && _c !== void 0 ? _c : "");
                                         this.$("#commandBarOverlay .externalIcon").replaceWith((_d = this.assetHelper.ExternalIcon) !== null && _d !== void 0 ? _d : "");
                                         this.$("#commandBarOverlay #commandBarExitButton").html((_e = this.assetHelper.CloseIcon) !== null && _e !== void 0 ? _e : "");
@@ -1624,60 +1661,43 @@ var SearchBar = /** @class */ (function () {
                                     case 3:
                                         configJson = _f.sent();
                                         this.BuildConfig(configJson);
-                                        keysPressed = {};
-                                        // on key down
-                                        this.$(document).on("keydown", function (e) { return __awaiter(_this, void 0, void 0, function () {
+                                        this.$(document).on("keydown", function (event) { return __awaiter(_this, void 0, void 0, function () {
                                             var isCommandBarVisible;
-                                            var _a, _b;
-                                            return __generator(this, function (_c) {
-                                                switch (_c.label) {
+                                            return __generator(this, function (_a) {
+                                                switch (_a.label) {
                                                     case 0:
                                                         isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
                                                         // Replace space in e.key with "Spacebar"
-                                                        if (e.key === " ") {
-                                                            e.key = Settings.SPACEBAR;
+                                                        // TODO: this is for logging to help matthew - remove this when done
+                                                        if (event.key === " ") {
+                                                            event.key = Settings.SPACEBAR;
+                                                            console.log("Key pressed: " + Settings.SPACEBAR);
                                                         }
-                                                        if (!(!isCommandBarVisible
-                                                            && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
-                                                            && e.ctrlKey === config.workbarKbdCtrl
-                                                            && e.altKey === config.workbarKbdAlt
-                                                            && e.shiftKey === config.workbarKbdShift)) return [3 /*break*/, 2];
+                                                        else {
+                                                            console.log("Key pressed: " + event.key);
+                                                        }
+                                                        if (!((!this.$(event.target).is('input') && !this.$(event.target).is('textarea'))
+                                                            && !isCommandBarVisible
+                                                            && event.key.toLowerCase() === config.workbarShortcut.toLowerCase()
+                                                            && event.ctrlKey === config.workbarKbdCtrl
+                                                            && event.altKey === config.workbarKbdAlt
+                                                            && event.shiftKey === config.workbarKbdShift)) return [3 /*break*/, 2];
                                                         return [4 /*yield*/, this.showOverlay()];
                                                     case 1:
-                                                        _c.sent();
-                                                        e.preventDefault();
-                                                        return [3 /*break*/, 5];
+                                                        _a.sent();
+                                                        event.preventDefault();
+                                                        _a.label = 2;
                                                     case 2:
-                                                        if (!(isCommandBarVisible && e.key === "Escape")) return [3 /*break*/, 4];
+                                                        if (!(isCommandBarVisible && event.key === "Escape")) return [3 /*break*/, 4];
                                                         return [4 /*yield*/, this.hideOverlay()];
                                                     case 3:
-                                                        _c.sent();
-                                                        return [3 /*break*/, 5];
-                                                    case 4:
-                                                        if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
-                                                            if (this.$('#commandBarInput').get(0) === document.activeElement) {
-                                                                // this.ActivateTab('');
-                                                                (_a = this.$("#userProfile").get(0)) === null || _a === void 0 ? void 0 : _a.click();
-                                                            }
-                                                            e.preventDefault();
-                                                        }
-                                                        // Go to Event Details
-                                                        else if (isCommandBarVisible && e.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"]) {
-                                                            if (this.$('#commandBarInput').get(0) === document.activeElement) {
-                                                                // this.ActivateTab('');
-                                                                (_b = this.$("#eventDetails").get(0)) === null || _b === void 0 ? void 0 : _b.click();
-                                                            }
-                                                            e.preventDefault();
-                                                        }
-                                                        _c.label = 5;
-                                                    case 5: return [2 /*return*/];
+                                                        _a.sent();
+                                                        event.preventDefault();
+                                                        _a.label = 4;
+                                                    case 4: return [2 /*return*/];
                                                 }
                                             });
                                         }); });
-                                        document.addEventListener('keyup', function (event) {
-                                            var key = event.key.toLowerCase();
-                                            delete keysPressed[key];
-                                        });
                                         return [2 /*return*/];
                                 }
                             });
@@ -1910,10 +1930,13 @@ var SearchBar = /** @class */ (function () {
         var hideTabs = this.Tabs.filter(function (t) { return t !== activateTab; });
         hideTabs.forEach(function (tab) {
             console.log('hide tab...');
+            if (tab == _this.UserDetailsTab) {
+                _this.RemoveUserDetailsInfo();
+            }
             // if (tab == this.CommandBarSelectTab)
             // {
             //     //TODO: this is currently bleeding resources...
-            //     this.$(".commandBarListItem").off('keydown');
+            //     this.$(".commandBarListItem").off('keydown'
             // }
             _this.$("#".concat(tab)).hide();
         });
@@ -1955,13 +1978,15 @@ var SearchBar = /** @class */ (function () {
     };
     SearchBar.prototype.checkUser = function (currentActionBarValue) {
         var _this = this;
+        var _a, _b, _c;
+        var baseUrl = (_b = (_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
+        var rvToken = (_c = this.RVToken) !== null && _c !== void 0 ? _c : "";
         var inputSpinner = this.$("#commandBarInput").siblings(".inputLoader");
         // if input is between 1 and 10 numbers, add input spinner
         if (inputSpinner.length == 0) {
             this.$("#commandBarInput").after(this.GetInputLoader());
         }
         this.SetUserDetails().then(function (foundUser) {
-            var _a, _b, _c;
             console.log('foundUser = ', foundUser);
             _this.$('#commandBarInput').siblings(".inputLoader").remove();
             if (foundUser) {
@@ -1971,9 +1996,6 @@ var SearchBar = /** @class */ (function () {
                 _this.$("#commandBarInput").after(_this.GetInputErrorBadge());
                 if (_this.$("#CommandBarSelectTab").is(":hidden")) {
                     _this.ActivateTab(_this.CommandBarSelectTab);
-                    _this.RemoveUserDetailsInfo();
-                    var baseUrl = (_b = (_a = _this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
-                    var rvToken = (_c = _this.RVToken) !== null && _c !== void 0 ? _c : "";
                     var tagsHTML = _this.config.BuildTagsHTML(_this.ConfigTags, 0, currentActionBarValue);
                     _this.$('#commandBarUl').html(tagsHTML);
                     _this.config.SetEventListeners(rvToken, baseUrl, true);
@@ -1984,15 +2006,16 @@ var SearchBar = /** @class */ (function () {
     };
     SearchBar.prototype.CaptureInput = function () {
         var _this = this;
+        var _a, _b, _c;
+        var baseUrl = (_b = (_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
+        var rvToken = (_c = this.RVToken) !== null && _c !== void 0 ? _c : "";
         this.$('#commandBarInput').on('input', function (event) {
-            var _a, _b, _c, _d, _e, _f;
+            var _a, _b, _c;
             if (_this.$(".commandBarListItem")[0]) {
                 _this.$(".commandBarListItem")[0].scrollIntoView();
             }
             (_a = _this.$('#commandBarOverlay').find('.lookupErrorBadge')) === null || _a === void 0 ? void 0 : _a.remove();
             (_b = _this.$('#commandBarOverlay').find('.inputErrorBadge')) === null || _b === void 0 ? void 0 : _b.remove();
-            var baseUrl = (_d = (_c = _this.ClientContext) === null || _c === void 0 ? void 0 : _c.baseUrl) !== null && _d !== void 0 ? _d : "";
-            var rvToken = (_e = _this.RVToken) !== null && _e !== void 0 ? _e : "";
             var currentActionBarValue = _this.$(event.target).val();
             var isActionBarNumeric = $.isNumeric(currentActionBarValue);
             if (isActionBarNumeric === true && currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10) {
@@ -2000,12 +2023,11 @@ var SearchBar = /** @class */ (function () {
                 _this.debouncer.start(function (v) { return _this.checkUser(v); }, 500, currentActionBarValue);
             }
             else {
-                (_f = _this.$("#commandBarInput").siblings(".inputLoader")) === null || _f === void 0 ? void 0 : _f.remove();
+                (_c = _this.$("#commandBarInput").siblings(".inputLoader")) === null || _c === void 0 ? void 0 : _c.remove();
                 _this.debouncer.stop();
                 if (_this.$("#CommandBarSelectTab").is(":hidden")) {
                     _this.ActivateTab(_this.CommandBarSelectTab);
                     console.log('remove user details view...');
-                    _this.RemoveUserDetailsInfo();
                 }
                 if (currentActionBarValue) {
                     var filteredSearch = function (result) { return result.score < 0.6; };
@@ -2028,25 +2050,31 @@ var SearchBar = /** @class */ (function () {
                     _this.SetArrowEventListeners();
                 }
                 else {
-                    var routesHTML = _this.config.BuildRoutesHTML(_this.ConfigRoutes);
-                    _this.$('#commandBarUl').html(routesHTML);
-                    _this.config.SetEventListeners(rvToken, baseUrl);
-                    _this.SetArrowEventListeners();
+                    _this.BuildDefaultView(rvToken, baseUrl);
                 }
             }
         });
     };
+    SearchBar.prototype.BuildDefaultView = function (rvToken, baseUrl) {
+        var routesHTML = this.config.BuildRoutesHTML(this.ConfigRoutes);
+        this.$('#commandBarUl').html(routesHTML);
+        this.config.SetEventListeners(rvToken, baseUrl);
+        this.SetArrowEventListeners();
+    };
     SearchBar.prototype.showOverlay = function () {
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var routesHTML;
+            var baseUrl, rvToken;
             var _this = this;
-            return __generator(this, function (_a) {
+            return __generator(this, function (_d) {
+                baseUrl = (_b = (_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
+                rvToken = (_c = this.RVToken) !== null && _c !== void 0 ? _c : "";
                 //if already showing
                 if (this.$("#commandBarOverlay").is(":hidden")) {
                     this.ActivateTab(this.CommandBarSelectTab);
-                    this.RemoveUserDetailsInfo();
-                    routesHTML = this.config.BuildRoutesHTML(this.ConfigRoutes);
-                    this.$('#commandBarUl').html(routesHTML);
+                    this.BuildDefaultView(rvToken, baseUrl);
+                    // TODO: TESTING INPUT PLACEHODLER SWAPPING
+                    this.$("#commandBarInput").attr("placeholder", this.GetNextPlaceholder());
                     this.$('#commandBarOverlay').show();
                     this.$('#commandBarExitButton').on("click", function () { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
@@ -2060,7 +2088,6 @@ var SearchBar = /** @class */ (function () {
                     }); });
                     this.CaptureInput();
                     this.$('#commandBarInput').trigger("focus");
-                    this.SetArrowEventListeners();
                     // // @ts-ignore
                     // console.log($._data(this.$('#commandBarExitButton')[0], 'events'));
                     // // @ts-ignore
@@ -2079,17 +2106,17 @@ var SearchBar = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_c) {
                 console.log('HIDE OVERLAY');
+                // remove error badges
                 (_a = this.$('#commandBarOverlay').find('.lookupErrorBadge')) === null || _a === void 0 ? void 0 : _a.remove();
                 (_b = this.$('#commandBarOverlay').find('.inputErrorBadge')) === null || _b === void 0 ? void 0 : _b.remove();
+                // remove user input
+                this.$('#commandBarInput').val('');
+                // hide search bar
                 this.$('#commandBarOverlay').hide();
                 // remove handlers
                 this.$('#commandBarExitButton').off("click");
                 this.$('#commandBarInput').off('input');
                 this.$('#commandBarInput').off('keydown');
-                // reset whatever view we left off on back to the original
-                this.$('#commandBarInput').val('');
-                // todo: add search results / config clearing
-                this.RemoveUserDetailsInfo();
                 return [2 /*return*/];
             });
         });

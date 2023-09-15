@@ -24,7 +24,7 @@ class SearchBar
     // TESTING
     private RVToken: string | null = null;
     private DocumentationUrl: string = "https://help.imis.com/enterprise/search.htm";
-    private ClientContext: ClientContext | null = null;
+    public ClientContext: ClientContext | null = null;
     private WebsiteUrl: string | null = null;
 
     private settings: Settings;
@@ -57,14 +57,41 @@ class SearchBar
         this.init();
     }
 
+    public PlaceholderTextArray: Array<string> = [
+        'Enter an iMIS ID.',
+        'Enter an event code.',
+        'Enter a username.',
+        'Enter a keyword to search.'
+    ];
+    public CurrentPlaceholderIndex: number = 0;
+    private GetNextPlaceholder(): string
+    {
+        const currentItem = this.PlaceholderTextArray[this.CurrentPlaceholderIndex];
+        console.log('currentItem = ', currentItem);
+        this.CurrentPlaceholderIndex = (this.CurrentPlaceholderIndex + 1) % this.PlaceholderTextArray.length;
+        console.log('currentIndex = ', this.CurrentPlaceholderIndex);
+        return currentItem;
+    }
+
     /**
      * Initializes the various elements of this module..
      */
     async init(): Promise<void>
     {
+        console.log('***** init ******');
         var config = await this.settings.load();
 
         if (!config.enableWorkbar) return;
+
+
+        // TODO: testing
+        // console.log('config.workbarShortcut = ', config.workbarShortcut);
+        var myCombo = `[${config.workbarShortcut}]`;
+        if (config.workbarKbdShift) myCombo = "[Shift] + " + myCombo;
+        if (config.workbarKbdAlt) myCombo = "[Alt] + " + myCombo;
+        if (config.workbarKbdCtrl) myCombo = "[Control] + " + myCombo;
+        // console.log('myCombo = ', myCombo);
+        this.PlaceholderTextArray.push(`Open the Work Bar with ${myCombo}.`);
 
         this.$(async () =>
         {
@@ -72,6 +99,7 @@ class SearchBar
 
             this.RVToken = this.$("#__RequestVerificationToken").val() as string;
             this.ClientContext = JSON.parse(this.$('#__ClientContext').val() as string) as ClientContext;
+            console.log('this.ClientContext = ', this.ClientContext);
 
             // we want to prevent non-users from using the searchbar
             if (this.ClientContext.isAnonymous) return;
@@ -83,6 +111,11 @@ class SearchBar
             console.log('GetAllAssets complete');
             this.$('body').prepend(this.assetHelper.CommandBar ?? "");
             this.$("#commandBarOverlay #logo-placeholder").replaceWith(this.assetHelper.CsiLogo ?? "");
+
+            // // TODO: testing placeholder swapping
+            // this.$("#commandBarInput").attr("placeholder", this.PlaceholderTextArray[this.CurrentPlaceholderIndex]);
+
+
             this.$("#commandBarOverlay .externalIconWhite").replaceWith(this.assetHelper.ExternalIconWhite ?? "");
             this.$("#commandBarOverlay .externalIcon").replaceWith(this.assetHelper.ExternalIcon ?? "");
             this.$("#commandBarOverlay #commandBarExitButton").html(this.assetHelper.CloseIcon ?? "");
@@ -90,62 +123,61 @@ class SearchBar
             var configJson = await this.config.GetConfig();
             this.BuildConfig(configJson);
 
-            let keysPressed: { [key: string]: boolean } = {};
-
-            // on key down
-            this.$(document).on("keydown", async e =>
+            this.$(document).on("keydown", async event =>
             {
                 var isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
 
                 // Replace space in e.key with "Spacebar"
-                if (e.key === " ")
+                // TODO: this is for logging to help matthew - remove this when done
+                if (event.key === " ")
                 {
-                    e.key = Settings.SPACEBAR;
+                    event.key = Settings.SPACEBAR;
+                    console.log("Key pressed: " + Settings.SPACEBAR);
+                } else
+                {
+
+                    console.log("Key pressed: " + event.key);
                 }
 
                 // Open CommandBar
-                if (!isCommandBarVisible
-                    && e.key.toLowerCase() === config.workbarShortcut.toLowerCase()
-                    && e.ctrlKey === config.workbarKbdCtrl
-                    && e.altKey === config.workbarKbdAlt
-                    && e.shiftKey === config.workbarKbdShift)
+                if ((!this.$(event.target).is('input') && !this.$(event.target).is('textarea'))
+                    && !isCommandBarVisible
+                    && event.key.toLowerCase() === config.workbarShortcut.toLowerCase()
+                    && event.ctrlKey === config.workbarKbdCtrl
+                    && event.altKey === config.workbarKbdAlt
+                    && event.shiftKey === config.workbarKbdShift)
                 {
                     await this.showOverlay();
-                    e.preventDefault();
+                    event.preventDefault();
                 }
+
                 // Close Command Bar
-                else if (isCommandBarVisible && e.key === "Escape")
+                if (isCommandBarVisible && event.key === "Escape")
                 {
                     await this.hideOverlay();
+                    event.preventDefault();
                 }
-
-                // TODO: i think the below calls really belong on $('#commandBarInput').on('keydown', ...) instead of document.on('keydown', ...)
-                // Go to User Profile
-                else if (isCommandBarVisible && e.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
-                {
-                    if (this.$('#commandBarInput').get(0) === document.activeElement)
-                    {
-                        // this.ActivateTab('');
-                        this.$("#userProfile").get(0)?.click();
-                    }
-                    e.preventDefault();
-                }
-                // Go to Event Details
-                else if (isCommandBarVisible && e.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !keysPressed["Shift"] && !keysPressed["Control"] && !keysPressed["Cmd"])
-                {
-                    if (this.$('#commandBarInput').get(0) === document.activeElement)
-                    {
-                        // this.ActivateTab('');
-                        this.$("#eventDetails").get(0)?.click();
-                    }
-                    e.preventDefault();
-                }
-            });
-
-            document.addEventListener('keyup', (event) =>
-            {
-                var key = event.key.toLowerCase();
-                delete keysPressed[key];
+                // // TODO: i think the below calls really belong on $('#commandBarInput').on('keydown', ...) instead of document.on('keydown', ...)
+                // // Go to User Profile
+                // else if (isCommandBarVisible && event.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !event.shiftKey && !event.ctrlKey && !event.altKey)
+                // {
+                //     if (this.$('#commandBarInput').get(0) === document.activeElement)
+                //     {
+                //         // this.ActivateTab('');
+                //         this.$("#userProfile").get(0)?.click();
+                //     }
+                //     event.preventDefault();
+                // }
+                // // Go to Event Details
+                // else if (isCommandBarVisible && event.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !event.shiftKey && !event.ctrlKey && !event.altKey)
+                // {
+                //     if (this.$('#commandBarInput').get(0) === document.activeElement)
+                //     {
+                //         // this.ActivateTab('');
+                //         this.$("#eventDetails").get(0)?.click();
+                //     }
+                //     event.preventDefault();
+                // }
             });
         });
     }
@@ -602,10 +634,14 @@ class SearchBar
         hideTabs.forEach(tab =>
         {
             console.log('hide tab...');
+            if (tab == this.UserDetailsTab)
+            {
+                this.RemoveUserDetailsInfo();
+            }
             // if (tab == this.CommandBarSelectTab)
             // {
             //     //TODO: this is currently bleeding resources...
-            //     this.$(".commandBarListItem").off('keydown');
+            //     this.$(".commandBarListItem").off('keydown'
             // }
             this.$(`#${tab}`).hide();
         });
@@ -652,6 +688,8 @@ class SearchBar
 
     private checkUser(currentActionBarValue: string): void
     {
+        var baseUrl = this.ClientContext?.baseUrl ?? "";
+        var rvToken = this.RVToken ?? "";
         var inputSpinner = this.$("#commandBarInput").siblings(".inputLoader");
         // if input is between 1 and 10 numbers, add input spinner
         if (inputSpinner.length == 0)
@@ -672,10 +710,6 @@ class SearchBar
                 if (this.$("#CommandBarSelectTab").is(":hidden"))
                 {
                     this.ActivateTab(this.CommandBarSelectTab);
-                    this.RemoveUserDetailsInfo();
-
-                    var baseUrl = this.ClientContext?.baseUrl ?? "";
-                    var rvToken = this.RVToken ?? "";
                     var tagsHTML = this.config.BuildTagsHTML(this.ConfigTags, 0, currentActionBarValue);
                     this.$('#commandBarUl').html(tagsHTML);
                     this.config.SetEventListeners(rvToken, baseUrl, true);
@@ -687,6 +721,8 @@ class SearchBar
 
     private CaptureInput(): void
     {
+        var baseUrl = this.ClientContext?.baseUrl ?? "";
+        var rvToken = this.RVToken ?? "";
         this.$('#commandBarInput').on('input', (event) =>
         {
             if (this.$(".commandBarListItem")[0])
@@ -695,8 +731,6 @@ class SearchBar
             }
             this.$('#commandBarOverlay').find('.lookupErrorBadge')?.remove();
             this.$('#commandBarOverlay').find('.inputErrorBadge')?.remove();
-            var baseUrl = this.ClientContext?.baseUrl ?? "";
-            var rvToken = this.RVToken ?? "";
             var currentActionBarValue = this.$(event.target).val() as string;
             var isActionBarNumeric = $.isNumeric(currentActionBarValue);
             if (isActionBarNumeric === true && currentActionBarValue.length >= 1 && currentActionBarValue.length <= 10)
@@ -712,7 +746,6 @@ class SearchBar
                 {
                     this.ActivateTab(this.CommandBarSelectTab);
                     console.log('remove user details view...');
-                    this.RemoveUserDetailsInfo();
                 }
 
                 if (currentActionBarValue)
@@ -738,26 +771,33 @@ class SearchBar
                 }
                 else
                 {
-                    var routesHTML = this.config.BuildRoutesHTML(this.ConfigRoutes);
-                    this.$('#commandBarUl').html(routesHTML);
-                    this.config.SetEventListeners(rvToken, baseUrl);
-                    this.SetArrowEventListeners();
+                    this.BuildDefaultView(rvToken, baseUrl);
                 }
             }
         });
     }
 
+    private BuildDefaultView(rvToken: string, baseUrl: string): void
+    {
+        var routesHTML = this.config.BuildRoutesHTML(this.ConfigRoutes);
+        this.$('#commandBarUl').html(routesHTML);
+        this.config.SetEventListeners(rvToken, baseUrl);
+        this.SetArrowEventListeners();
+    }
+
     private async showOverlay(): Promise<void>
     {
+        var baseUrl = this.ClientContext?.baseUrl ?? "";
+        var rvToken = this.RVToken ?? "";
         //if already showing
         if (this.$("#commandBarOverlay").is(":hidden"))
         {
             this.ActivateTab(this.CommandBarSelectTab);
-            this.RemoveUserDetailsInfo();
-            // this.$("#commandBarInput").siblings(".error").hide();
 
-            var routesHTML = this.config.BuildRoutesHTML(this.ConfigRoutes);
-            this.$('#commandBarUl').html(routesHTML);
+            this.BuildDefaultView(rvToken, baseUrl);
+
+            // TODO: TESTING INPUT PLACEHODLER SWAPPING
+            this.$("#commandBarInput").attr("placeholder", this.GetNextPlaceholder());
 
             this.$('#commandBarOverlay').show();
             this.$('#commandBarExitButton').on("click", async () =>
@@ -766,7 +806,6 @@ class SearchBar
             });
             this.CaptureInput();
             this.$('#commandBarInput').trigger("focus");
-            this.SetArrowEventListeners();
 
             // // @ts-ignore
             // console.log($._data(this.$('#commandBarExitButton')[0], 'events'));
@@ -782,20 +821,21 @@ class SearchBar
     private async hideOverlay(): Promise<void>
     {
         console.log('HIDE OVERLAY');
+
+        // remove error badges
         this.$('#commandBarOverlay').find('.lookupErrorBadge')?.remove();
         this.$('#commandBarOverlay').find('.inputErrorBadge')?.remove();
+
+        // remove user input
+        this.$('#commandBarInput').val('');
+
+        // hide search bar
         this.$('#commandBarOverlay').hide();
 
         // remove handlers
         this.$('#commandBarExitButton').off("click");
         this.$('#commandBarInput').off('input');
         this.$('#commandBarInput').off('keydown');
-
-        // reset whatever view we left off on back to the original
-        this.$('#commandBarInput').val('');
-
-        // todo: add search results / config clearing
-        this.RemoveUserDetailsInfo();
     }
 }
 

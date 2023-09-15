@@ -896,11 +896,11 @@
     "isShortcut": true
   },
   {
-    "category": "Keyword Search",
-    "displayName": "",
+    "category": "Resource",
+    "displayName": "iMIS Glossary",
     "altName": "",
-    "isTag": true,
-    "destination": "/Search?SearchTerms=",
+    "isTag": false,
+    "destination": "https://help.imis.com/enterprise/features/glossary.htm",
     "isShortcut": false
   },
   {
@@ -920,19 +920,19 @@
     "isShortcut": false
   },
   {
-    "category": "Documentation Lookup",
+    "category": "Keyword Search",
+    "displayName": "",
+    "altName": "",
+    "isTag": true,
+    "destination": "/Search?SearchTerms=",
+    "isShortcut": false
+  },
+  {
+    "category": "Documentation Search",
     "displayName": "",
     "altName": "",
     "isTag": true,
     "destination": "https://help.imis.com/enterprise/index.htm?q=",
-    "isShortcut": false
-  },
-  {
-    "category": "Resource",
-    "displayName": "iMIS Glossary",
-    "altName": "",
-    "isTag": false,
-    "destination": "https://help.imis.com/enterprise/features/glossary.htm",
     "isShortcut": false
   }
 ]
