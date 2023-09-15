@@ -236,6 +236,17 @@ var Debouncer = /** @class */ (function () {
 }());
 /// <reference path="settings/settings.ts" />
 /// <reference path="utils.ts" />
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var IqaExtensions = /** @class */ (function () {
     function IqaExtensions($) {
         this.$ = $;
@@ -496,6 +507,15 @@ var IqaExtensions = /** @class */ (function () {
         dt.find('tr.GridHeader td:nth-child(3)').css('width', '110px');
         dt.find('tr.GridHeader td:nth-child(6)').css('width', '82px');
         dt.find('tr:first-child td').css('border', '0').css('border-bottom', '1px solid #ddd');
+        // Sticky Table Headers
+        var commonStickyStyles = {
+            position: 'sticky',
+            top: '56px',
+            borderBottom: '1px solid #DDD'
+        };
+        dt.find('table.Grid tr:nth-child(2) td:first-child').css(__assign({ zIndex: '9990' }, commonStickyStyles));
+        dt.find('table.Grid tr:nth-child(2) td:nth-child(2)').css(__assign({ zIndex: '9992' }, commonStickyStyles));
+        dt.find('table.Grid .SectionTitle:contains("Available")').closest('td').css(__assign({ zIndex: '9991' }, commonStickyStyles));
         // Text Updates
         dt.find('tr:first-child td label:contains("Only display unique results")').text("Only display unique results (SELECT DISTINCT)");
         // Inputs max width

@@ -344,6 +344,25 @@ class IqaExtensions
         dt.find('tr.GridHeader td:nth-child(6)').css('width', '82px')
         dt.find('tr:first-child td').css('border', '0').css('border-bottom', '1px solid #ddd');
 
+        // Sticky Table Headers
+        var commonStickyStyles = {
+            position: 'sticky',
+            top: '56px',
+            borderBottom: '1px solid #DDD'
+        };
+        dt.find('table.Grid tr:nth-child(2) td:first-child').css({
+            zIndex: '9990',
+            ...commonStickyStyles
+        });
+        dt.find('table.Grid tr:nth-child(2) td:nth-child(2)').css({
+            zIndex: '9992',
+            ...commonStickyStyles
+        });
+        dt.find('table.Grid .SectionTitle:contains("Available")').closest('td').css({
+            zIndex: '9991',
+            ...commonStickyStyles
+        });
+        
         // Text Updates
         dt.find('tr:first-child td label:contains("Only display unique results")').text("Only display unique results (SELECT DISTINCT)");
 
