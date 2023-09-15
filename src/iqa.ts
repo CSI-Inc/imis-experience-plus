@@ -328,6 +328,7 @@ class IqaExtensions
         dt.find('table.Grid').css('width', '1400px');
         dt.find('table.Grid').css('max-width', '100%');
         dt.find('tr.GridHeader td:first-child').css('width', '75px')
+        dt.find('tr.GridHeader td:nth-child(2)').css('width', 'width: 35%')
         dt.find('tr.GridHeader td:last-child').css('width', '50px')
         dt.find('tr.GridHeader td:nth-child(3)').css('width', '110px')
         dt.find('tr.GridHeader td:nth-child(6)').css('width', '82px')
