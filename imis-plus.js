@@ -54,7 +54,6 @@ var Settings = /** @class */ (function () {
                         return [4 /*yield*/, this.load()];
                     case 1:
                         config = _a.sent();
-                        // Restore settings to the page
                         $('#enable-iqa').prop('checked', config.enableIqa);
                         $('#enable-rise').prop('checked', config.enableRise);
                         $('#enable-workbar').prop('checked', config.enableWorkbar);
@@ -65,8 +64,8 @@ var Settings = /** @class */ (function () {
                         $('#enable-workbar').on('change', function () {
                             _this.updateDependentControlState();
                         });
+                        this.updateDependentControlState();
                         this.origConfig = config;
-                        // when any input changes or has key down, close the menu
                         $('input').on('change keydown', function () {
                             if (_this.origConfig.enableIqa !== $('#enable-iqa').prop('checked')
                                 || _this.origConfig.enableRise !== $('#enable-rise').prop('checked')
@@ -75,16 +74,13 @@ var Settings = /** @class */ (function () {
                                 || _this.origConfig.workbarKbdCtrl !== $('#kbd-ctrl').prop('checked')
                                 || _this.origConfig.workbarKbdAlt !== $('#kbd-alt').prop('checked')
                                 || _this.origConfig.workbarKbdShift !== $('#kbd-shift').prop('checked')) {
-                                // animate the reload notice with slide down for 100ms
                                 $('#reload-notice').slideDown(100);
                             }
                             else {
                                 $('#reload-notice').slideUp(100);
                             }
                         });
-                        // When the user clicks on the #reload-notice div, reload the current tab from this chrome extension
                         $('#reload-notice').on('click', function () {
-                            // Change the span text inside the #reload-notice div to "Reloading..."
                             $('#reload-notice span').text('Reloading...').css('opacity', '0.5');
                             chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                                 chrome.tabs.reload(tabs[0].id)
@@ -542,10 +538,14 @@ var IqaExtensions = /** @class */ (function () {
             dt.find('table.Grid tr:first-child select').val() === 'Defaults';
         // Find custom rows
         dt.find('input[type=checkbox]').filter(':checked').parents('tr').each(function (_, el) {
+            var _a;
+            // Get the contents of the cell - possibly custom SQL
+            var expr = (_a = _this.$(el).find('td:nth-child(2)').text()) === null || _a === void 0 ? void 0 : _a.toString().toUpperCase();
             if (isImis2017 && ($(el).find('td:nth-child(3) select option').length === 1
                 && _this.$(el).find('td:nth-child(8) input').is(':disabled'))
                 || !isImis2017 && ($(el).find('td:nth-child(3) select option').length === 1
-                    && _this.$(el).find('td:nth-child(6) input').length === 0)) {
+                    && _this.$(el).find('td:nth-child(6) input').length === 0)
+                || /CASE\s+?WHEN/gim.test(expr) || (expr.indexOf('(') > -1 && expr.indexOf(')') > -1)) {
                 _this.$(el).find('td')
                     .css('background-color', '#effaff')
                     .css('vertical-align', 'middle');

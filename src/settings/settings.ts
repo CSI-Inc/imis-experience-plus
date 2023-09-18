@@ -18,7 +18,6 @@ class Settings
 
             var config = await this.load();
 
-            // Restore settings to the page
             $('#enable-iqa').prop('checked', config.enableIqa);
             $('#enable-rise').prop('checked', config.enableRise);
             $('#enable-workbar').prop('checked', config.enableWorkbar);
@@ -31,10 +30,9 @@ class Settings
             {
                 this.updateDependentControlState();
             });
+            this.updateDependentControlState();
 
             this.origConfig = config;
-
-            // when any input changes or has key down, close the menu
             
             $('input').on('change keydown', () =>
             {
@@ -46,7 +44,6 @@ class Settings
                 || this.origConfig.workbarKbdAlt !== $('#kbd-alt').prop('checked')
                 || this.origConfig.workbarKbdShift !== $('#kbd-shift').prop('checked'))
                 {
-                    // animate the reload notice with slide down for 100ms
                     $('#reload-notice').slideDown(100);
                 }
                 else
@@ -55,10 +52,8 @@ class Settings
                 }
             });
 
-            // When the user clicks on the #reload-notice div, reload the current tab from this chrome extension
             $('#reload-notice').on('click', () =>
             {
-                // Change the span text inside the #reload-notice div to "Reloading..."
                 $('#reload-notice span').text('Reloading...').css('opacity', '0.5');
 
                 chrome.tabs.query({ active: true, currentWindow: true }, (tabs: any) =>

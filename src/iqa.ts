@@ -398,12 +398,16 @@ class IqaExtensions
         // Find custom rows
         dt.find('input[type=checkbox]').filter(':checked').parents('tr').each((_, el) =>
         {
+            // Get the contents of the cell - possibly custom SQL
+            let expr = this.$(el).find('td:nth-child(2)').text()?.toString().toUpperCase();
+
             if (isImis2017 && (
                 $(el).find('td:nth-child(3) select option').length === 1
                 && this.$(el).find('td:nth-child(8) input').is(':disabled'))
                 || !isImis2017 && (
                     $(el).find('td:nth-child(3) select option').length === 1
                     && this.$(el).find('td:nth-child(6) input').length === 0)
+                || /CASE\s+?WHEN/gim.test(expr) || (expr.indexOf('(') > -1 && expr.indexOf(')') > -1)
             )
             {
                 this.$(el).find('td')
@@ -418,7 +422,6 @@ class IqaExtensions
                 }
             }
         });
-
 
         if (advMode)
         {
