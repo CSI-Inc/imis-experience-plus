@@ -41,6 +41,15 @@ var Settings = /** @class */ (function () {
         var _this = this;
         this.$ = $;
         this.origConfig = {};
+        this.defaultConfig = {
+            enableIqa: true,
+            enableRise: true,
+            enableWorkbar: true,
+            workbarShortcut: Settings.SPACEBAR,
+            workbarKbdCtrl: true,
+            workbarKbdAlt: false,
+            workbarKbdShift: false
+        };
         // Contains interactive logic for the popout menu speceifically. Will early exit for other pages.
         this.$(function () { return __awaiter(_this, void 0, void 0, function () {
             var config;
@@ -145,17 +154,10 @@ var Settings = /** @class */ (function () {
     };
     Settings.prototype.load = function (something) {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve) {
-                        chrome.storage.sync.get({
-                            enableIqa: true,
-                            enableRise: false,
-                            enableWorkbar: true,
-                            workbarShortcut: Settings.SPACEBAR,
-                            workbarKbdCtrl: true,
-                            workbarKbdAlt: false,
-                            workbarKbdShift: false
-                        }, function (settings) {
+                        chrome.storage.sync.get(_this.defaultConfig, function (settings) {
                             resolve({
                                 enableIqa: settings.enableIqa,
                                 enableRise: settings.enableRise,

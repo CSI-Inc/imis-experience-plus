@@ -6,6 +6,16 @@ class Settings
 
     private origConfig: SettingsModel = <SettingsModel>{};
 
+    private defaultConfig: SettingsModel = <SettingsModel>{
+        enableIqa: true,
+        enableRise: true,
+        enableWorkbar: true,
+        workbarShortcut: Settings.SPACEBAR,
+        workbarKbdCtrl: true,
+        workbarKbdAlt: false,
+        workbarKbdShift: false
+    };
+
     constructor(private $: JQueryStatic)
     {
         // Contains interactive logic for the popout menu speceifically. Will early exit for other pages.
@@ -137,15 +147,7 @@ class Settings
     {
         return new Promise<SettingsModel>((resolve) =>
         {
-            chrome.storage.sync.get(<SettingsModel>{
-                enableIqa: true,
-                enableRise: false,
-                enableWorkbar: true,
-                workbarShortcut: Settings.SPACEBAR,
-                workbarKbdCtrl: true,
-                workbarKbdAlt: false,
-                workbarKbdShift: false
-            }, (settings) =>
+            chrome.storage.sync.get(this.defaultConfig, settings =>
             {
                 resolve(<SettingsModel>{
                     enableIqa: settings.enableIqa,
