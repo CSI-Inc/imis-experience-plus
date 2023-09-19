@@ -67,9 +67,7 @@ class SearchBar
     private GetNextPlaceholder(): string
     {
         const currentItem = this.PlaceholderTextArray[this.CurrentPlaceholderIndex];
-        console.log('currentItem = ', currentItem);
         this.CurrentPlaceholderIndex = (this.CurrentPlaceholderIndex + 1) % this.PlaceholderTextArray.length;
-        console.log('currentIndex = ', this.CurrentPlaceholderIndex);
         return currentItem;
     }
 
@@ -78,7 +76,7 @@ class SearchBar
      */
     async init(): Promise<void>
     {
-        console.log('***** init ******');
+        // console.log('***** init ******');
         var config = await this.settings.load();
 
         if (!config.enableWorkbar) return;
@@ -95,33 +93,29 @@ class SearchBar
 
         this.$(async () =>
         {
+            console.log('************* init **************');
             console.log(Utils.VERSION_STRING + "Loaded: Search Bar", ...SearchBar.VERSION_STYLES);
 
             this.RVToken = this.$("#__RequestVerificationToken").val() as string;
             this.ClientContext = JSON.parse(this.$('#__ClientContext').val() as string) as ClientContext;
-            console.log('this.ClientContext = ', this.ClientContext);
+            // console.log('this.ClientContext = ', this.ClientContext);
 
             // we want to prevent non-users from using the searchbar
             if (this.ClientContext.isAnonymous) return;
 
             await this.config.CheckForConfigUpdate();
-            console.log('CheckForConfigUpdate complete');
 
             await this.assetHelper.GetAllAssets();
-            console.log('GetAllAssets complete');
             this.$('body').prepend(this.assetHelper.CommandBar ?? "");
             this.$("#commandBarOverlay #logo-placeholder").replaceWith(this.assetHelper.CsiLogo ?? "");
-
-            // // TODO: testing placeholder swapping
-            // this.$("#commandBarInput").attr("placeholder", this.PlaceholderTextArray[this.CurrentPlaceholderIndex]);
-
-
             this.$("#commandBarOverlay .externalIconWhite").replaceWith(this.assetHelper.ExternalIconWhite ?? "");
             this.$("#commandBarOverlay .externalIcon").replaceWith(this.assetHelper.ExternalIcon ?? "");
             this.$("#commandBarOverlay #commandBarExitButton").html(this.assetHelper.CloseIcon ?? "");
             this.BuildOpenSearch();
             var configJson = await this.config.GetConfig();
             this.BuildConfig(configJson);
+            // this.SetActionCardHotkeyListeners();
+            // this.SetArrowEventListeners();
 
             this.$(document).on("keydown", async event =>
             {
@@ -135,7 +129,6 @@ class SearchBar
                     console.log("Key pressed: " + Settings.SPACEBAR);
                 } else
                 {
-
                     console.log("Key pressed: " + event.key);
                 }
 
@@ -157,28 +150,37 @@ class SearchBar
                     await this.hideOverlay();
                     event.preventDefault();
                 }
-                // // TODO: i think the below calls really belong on $('#commandBarInput').on('keydown', ...) instead of document.on('keydown', ...)
-                // // Go to User Profile
-                // else if (isCommandBarVisible && event.key === "Enter" && this.$("#UserDetailsTab").is(":visible") && !event.shiftKey && !event.ctrlKey && !event.altKey)
-                // {
-                //     if (this.$('#commandBarInput').get(0) === document.activeElement)
-                //     {
-                //         // this.ActivateTab('');
-                //         this.$("#userProfile").get(0)?.click();
-                //     }
-                //     event.preventDefault();
-                // }
-                // // Go to Event Details
-                // else if (isCommandBarVisible && event.key === "Enter" && this.$("#EventDetailsTab").is(":visible") && !event.shiftKey && !event.ctrlKey && !event.altKey)
-                // {
-                //     if (this.$('#commandBarInput').get(0) === document.activeElement)
-                //     {
-                //         // this.ActivateTab('');
-                //         this.$("#eventDetails").get(0)?.click();
-                //     }
-                //     event.preventDefault();
-                // }
             });
+        });
+    }
+
+    private SetActionCardHotkeyListeners(): void
+    {
+        this.$('#commandBarInput').off('keydown.TabCardActions');
+        this.$('#commandBarInput').on('keydown.TabCardActions', event =>
+        {
+            // prevent users from getting into a wonky state since we dont have tabstops or accessibility built in
+            if (event.key === "Tab")
+            {
+                event.preventDefault();
+            }
+
+            if (this.$("#commandBarOverlay").is(":visible") && event.key === "Enter" && this.$('#commandBarInput').get(0) === document.activeElement && !event.shiftKey && !event.ctrlKey && !event.altKey)
+            {
+                console.log('Enter pressed in commandBarInput and commandBarOverlay is visible');
+                if (this.$("#UserDetailsTab").is(":visible"))
+                {
+                    console.log('UserDetailsTab is visible');
+                    this.$("#userProfile").get(0)?.click();
+                    event.preventDefault();
+                }
+                else if (this.$("#EventDetailsTab").is(":visible"))
+                {
+                    console.log('EventDetailsTab is visible');
+                    this.$("#eventDashboard").get(0)?.click();
+                    event.preventDefault();
+                }
+            }
         });
     }
 
@@ -208,13 +210,13 @@ class SearchBar
         return `
                 <div id="userCardActions" class="userDetails">
                     <div class="userCardActionArea">
-                        ${this.assetHelper.CalendarLinesPenIcon}
-                        <a id="eventDetails" href="${eventDetailsUrl}" class="userActionCard">Event Details</a>
+                        ${this.assetHelper.ChartLineIcon}
+                        <a id="eventDashboard" href="${eventDashboardUrl}" class="userActionCard">Event Dashboard</a>
                         ${this.assetHelper.EnterButton2}
                     </div>
                     <div class="userCardActionArea">
-                        ${this.assetHelper.ChartLineIcon}
-                        <a id="eventDashboard" href="${eventDashboardUrl}" class="userActionCard">Event Dashboard</a>
+                        ${this.assetHelper.CalendarLinesPenIcon}
+                        <a id="eventDetails" href="${eventDetailsUrl}" class="userActionCard">Event Details</a>
                     </div>
                 </div>
             `;
@@ -392,6 +394,7 @@ class SearchBar
         var result = view?.replace(`<svg class="menu-icon"></svg>`, this.assetHelper.MenuIcon ?? "");
         this.$('#masterTopBarAuxiliary > .navbar-left').css('display', 'flex');
         this.$('#masterTopBarAuxiliary > .navbar-left').append(this.$.parseHTML(result ?? ""));
+        // this.$('.menu-icon-container').off('mouseenter mouseleave click');
         this.$('.menu-icon-container')
             .on('mouseenter', e =>
             {
@@ -465,7 +468,9 @@ class SearchBar
                         <div style="padding:2px 0;">
                             ${this.assetHelper.LinkSolidIcon}
                             <span class="textBadge">Virtual Meeting URL</span>
-                            <span style="display:inline-block; vertical-align: middle;">${virtualMeetingUrl}</span>
+                            <span style="display:inline-block; vertical-align: middle;">
+                                <a href="${virtualMeetingUrl}" class="userActionCard">${virtualMeetingUrl}</a>
+                            </span>
                         </div>`: ''}
                     </div>
                     <br />
@@ -498,7 +503,7 @@ class SearchBar
         var input = this.$('#commandBarInput').val() as string;
         var url = this.ClientContext?.baseUrl ?? "";
         var rvToken = this.RVToken ?? "";
-        console.log('event = ', event);
+        // console.log('event = ', event);
         if (event)
         {
             // Set up view
@@ -512,13 +517,13 @@ class SearchBar
             var contactData = staffContactId ? await this.apiHelper.GetParty(staffContactId, rvToken, url) as any : null;
             var staffContactName = contactData?.Name;
 
+            // Update view left column
             var eventHtml = this.BuildEvent(event, staffContactName, eventCategoryDescription)
             this.$('#userCardProfile').replaceWith(eventHtml);
 
+            // Update view right column
             var eventActions = this.BuildEventCardActions(input);
             this.$('#userCardActions').replaceWith(eventActions);
-            // this.$('#eventDetails').on('click', () => this.ActivateTab(''));
-            // this.$('#eventDashboard').on('click', () => this.ActivateTab(''));
 
             // Update view footer
             var changeDetails = this.BuildEventFooter(CleanUp.Status(event?.Status));
@@ -537,12 +542,12 @@ class SearchBar
     {
         var input = userId ? userId : this.$('#commandBarInput').val() as string;
         if (!input) return false;
-        console.log('input = ', input);
+        // console.log('input = ', input);
 
         var url = this.ClientContext?.baseUrl ?? "";
         var rvToken = this.RVToken ?? "";
         var data = await this.apiHelper.GetParty(input, rvToken, url);
-        console.log('GetParty = ', data);
+        // console.log('GetParty = ', data);
         if (data)
         {
             // Set up view
@@ -558,8 +563,6 @@ class SearchBar
             // Update view right column
             var userActions = this.BuildUserCardActions(input);
             this.$('#userCardActions').replaceWith(userActions);
-            // this.$('#userProfile').on('click', () => this.ActivateTab(''));
-            // this.$('#userCredentials').on('click', () => this.ActivateTab(''));
 
             // Update view footer
             var changeDetails = this.BuildProfileFooter(username, data);
@@ -580,7 +583,6 @@ class SearchBar
 
     private BuildConfig(configJson: ConfigItem[]): void
     {
-        console.log('BuildConfig');
         var baseUrl = this.ClientContext?.baseUrl ?? "";
         var rvToken = this.RVToken ?? "";
         this.ConfigRoutes = configJson.filter(d => !d.isTag);
@@ -588,7 +590,6 @@ class SearchBar
         var view = this.config.BuildRoutesHTML(this.ConfigRoutes);
         this.$('#commandBarUl').html(view);
         this.config.SetEventListeners(rvToken, baseUrl);
-        console.log('BuildConfig complete');
     }
 
     public GetLoader(): string
@@ -618,7 +619,6 @@ class SearchBar
     // Use this with '' for showing the spinner so that all tabs are hidden
     public ActivateTab(activateTab: string): void
     {
-        console.log('ActivateTab = ', activateTab);
         if (activateTab !== '')
         {
             var showTab = this.Tabs.filter(t => t == activateTab)[0];
@@ -633,37 +633,30 @@ class SearchBar
         var hideTabs = this.Tabs.filter(t => t !== activateTab);
         hideTabs.forEach(tab =>
         {
-            console.log('hide tab...');
             if (tab == this.UserDetailsTab)
             {
                 this.RemoveUserDetailsInfo();
             }
-            // if (tab == this.CommandBarSelectTab)
-            // {
-            //     //TODO: this is currently bleeding resources...
-            //     this.$(".commandBarListItem").off('keydown'
-            // }
             this.$(`#${tab}`).hide();
         });
     }
 
     private SetArrowEventListeners(): void
     {
+        // console.log('SetArrowEventListeners');
+        this.$('#commandBarInput').off("keydown.ArrowEvents");
         var index = 0;
         var listItems = this.$(".commandBarListItem");
         this.$(listItems[index]).addClass("commandBarSelected");
-        this.$('#commandBarInput').on("keydown", event =>
+        this.$('#commandBarInput').on("keydown.ArrowEvents", event =>
         {
+            // console.log('index before = ', index);
             if (this.$("#CommandBarSelectTab").is(":visible"))
             {
-                if (listItems.length != this.$(".commandBarListItem").length)
-                {
-                    listItems = this.$(".commandBarListItem");
-                    index = 0;
-                }
                 switch (event.key)
                 {
                     case "ArrowUp":
+                        // console.log('index up = ', index);
                         event.preventDefault();
                         this.$(listItems[index]).removeClass("commandBarSelected");
                         index = index > 0 ? --index : 0;
@@ -671,6 +664,7 @@ class SearchBar
                         this.$(listItems[index]).get(0)?.scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
                         break;
                     case "ArrowDown":
+                        // console.log('index down = ', index);
                         event.preventDefault();
                         this.$(listItems[index]).removeClass("commandBarSelected");
                         index = index < listItems.length - 1 ? ++index : listItems.length - 1;
@@ -682,6 +676,7 @@ class SearchBar
                         this.$(listItems[index]).children().get(0)?.click();
                         break;
                 }
+                // console.log('index after = ', index);
             }
         });
     }
@@ -698,7 +693,7 @@ class SearchBar
         }
         this.SetUserDetails().then(foundUser =>
         {
-            console.log('foundUser = ', foundUser);
+            // console.log('foundUser = ', foundUser);
             this.$('#commandBarInput').siblings(".inputLoader").remove();
             if (foundUser)
             {
@@ -721,10 +716,11 @@ class SearchBar
 
     private CaptureInput(): void
     {
-        var baseUrl = this.ClientContext?.baseUrl ?? "";
-        var rvToken = this.RVToken ?? "";
-        this.$('#commandBarInput').on('input', (event) =>
+        this.$('#commandBarInput').off('input.CaptureInput');
+        this.$('#commandBarInput').on('input.CaptureInput', event =>
         {
+            var baseUrl = this.ClientContext?.baseUrl ?? "";
+            var rvToken = this.RVToken ?? "";
             if (this.$(".commandBarListItem")[0])
             {
                 this.$(".commandBarListItem")[0].scrollIntoView();
@@ -768,6 +764,7 @@ class SearchBar
                     this.$('#commandBarUl').html(routesHTML.concat(tagsHTML));
                     this.config.SetEventListeners(rvToken, baseUrl, true);
                     this.SetArrowEventListeners();
+                    this.SetActionCardHotkeyListeners();
                 }
                 else
                 {
@@ -783,6 +780,7 @@ class SearchBar
         this.$('#commandBarUl').html(routesHTML);
         this.config.SetEventListeners(rvToken, baseUrl);
         this.SetArrowEventListeners();
+        this.SetActionCardHotkeyListeners();
     }
 
     private async showOverlay(): Promise<void>
@@ -796,31 +794,34 @@ class SearchBar
 
             this.BuildDefaultView(rvToken, baseUrl);
 
-            // TODO: TESTING INPUT PLACEHODLER SWAPPING
             this.$("#commandBarInput").attr("placeholder", this.GetNextPlaceholder());
 
-            this.$('#commandBarOverlay').show();
-            this.$('#commandBarExitButton').on("click", async () =>
+            // set up event listeners
+            this.SetArrowEventListeners();
+            this.SetActionCardHotkeyListeners();
+            this.$('#commandBarExitButton').off("click.CloseSearchBar");
+            this.$('#commandBarExitButton').on("click.CloseSearchBar", async () =>
             {
                 await this.hideOverlay();
             });
             this.CaptureInput();
+            this.$('#commandBarOverlay').show();
             this.$('#commandBarInput').trigger("focus");
 
             // // @ts-ignore
-            // console.log($._data(this.$('#commandBarExitButton')[0], 'events'));
+            // console.log('#commandBarExitButton handlers: ', $._data(this.$('#commandBarExitButton')[0], 'events'));
             // // @ts-ignore
-            // console.log($._data(this.$('.commandBarListItem')[0], 'events'));
+            // console.log('.commandBarListItem handlers: ', $._data(this.$('.commandBarListItem')[0], 'events'));
             // // @ts-ignore
-            // console.log($._data(this.$('#commandBarInput')[0], 'events'));
+            // console.log('#commandBarInput handlers: ', $._data(this.$('#commandBarInput')[0], 'events'));
             // // @ts-ignore
-            // console.log($._data(this.$(document)[0], 'events'));
+            // console.log('Document handlers: ', $._data(document, 'events'));
         }
     }
 
     private async hideOverlay(): Promise<void>
     {
-        console.log('HIDE OVERLAY');
+        // console.log('HIDE OVERLAY');
 
         // remove error badges
         this.$('#commandBarOverlay').find('.lookupErrorBadge')?.remove();
@@ -833,9 +834,10 @@ class SearchBar
         this.$('#commandBarOverlay').hide();
 
         // remove handlers
-        this.$('#commandBarExitButton').off("click");
-        this.$('#commandBarInput').off('input');
-        this.$('#commandBarInput').off('keydown');
+        this.$('#commandBarExitButton').off("click.CloseSearchBar");
+        this.$('#commandBarInput').off('input.CaptureInput');
+        this.$('#commandBarInput').off('keydown.ArrowEvents');
+        this.$('#commandBarInput').off('keydown.TabCardActions');
     }
 }
 

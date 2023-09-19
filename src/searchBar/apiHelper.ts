@@ -20,7 +20,7 @@ class ApiHelper
         }
         else
         {
-            console.log('GetParty results = ', results);
+            // console.log('GetParty results = ', results);
             return results.Items.$values[0];
         }
     }
@@ -43,7 +43,7 @@ class ApiHelper
         }
         else
         {
-            console.log('GetEvent results = ', results);
+            // console.log('GetEvent results = ', results);
             return results.Items.$values[0];
         }
     }
@@ -66,7 +66,7 @@ class ApiHelper
         }
         else
         {
-            console.log('GetEventCategory results = ', results);
+            // console.log('GetEventCategory results = ', results);
             return results.Items.$values[0].Description;
         }
     }
@@ -89,7 +89,7 @@ class ApiHelper
         }
         else
         {
-            console.log('GetUserName results = ', results);
+            // console.log('GetUserName results = ', results);
             return results.Items.$values[0].UserName;
         }
     }
@@ -112,24 +112,24 @@ class ApiHelper
         }
         else
         {
-            console.log('FindUserIdByName results = ', results);
+            // console.log('FindUserIdByName results = ', results);
             return results.Items.$values[0].UserId;
         }
     }
 
     public async GetLatestConfigJson(): Promise<ConfigItem[] | null>
     {
-        console.log('GetLatestConfigJson');
-        return await fetch('https://cdn.cloud.csiinc.com/iep/config.json', { cache: 'no-cache', method: 'GET' })
-            .then(response => response.json())
-            .then(data =>
-            {
-                return data as ConfigItem[];
-            })
-            .catch(error =>
-            {
-                console.error(error);
-                return null;
-            });
+        // console.log('GetLatestConfigJson');
+        var response = await fetch('https://cdn.cloud.csiinc.com/iep/config.json', { cache: 'no-cache', method: 'GET' });
+        var results = await response.json();
+        if (results.Count > 0)
+        {
+            // console.log('GetUserName results = ', results);
+            return results.Items.$values[0].UserName;
+        }
+        else
+        {
+            return null;
+        }
     }
 }

@@ -5,8 +5,7 @@
     "manifest_version": 3,
     "description": "A browser extension to improve the user experience within the iMIS Staff Site. Made with ❤️ by the iMIS community and CSI.",
     "host_permissions": [
-        "https://*/*",
-        "https://privatebin.net/*"
+        "https://*/*"
     ],
     "permissions": [
         "storage"
@@ -51,7 +50,7 @@
         }
     ],
     "content_security_policy": {
-        "extension_pages": "script-src 'self'; object-src 'self'; https://privatebin.net/*",
+        "extension_pages": "script-src 'self'; object-src 'self';",
         "sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';"
     }
 }

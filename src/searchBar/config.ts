@@ -6,25 +6,25 @@ class ConfigManager
 
     public async CheckForConfigUpdate(): Promise<void>
     {
-        console.log('CheckForConfigUpdate');
+        // console.log('CheckForConfigUpdate');
         var lastUpdatedKey = 'iep__searchbBar__lastUpdated';
         var now = new Date();
         now.setUTCHours(0, 0, 0, 0);
         if (lastUpdatedKey in localStorage)
         {
-            console.log('lastUpdatedKey in localStorage');
+            // console.log('lastUpdatedKey in localStorage');
             var lastUpdatedValue = localStorage.getItem(lastUpdatedKey) as string;
             var lastUpdatedDate = new Date(lastUpdatedValue);
             lastUpdatedDate.setUTCHours(0, 0, 0, 0);
             if (lastUpdatedValue != null && lastUpdatedDate < now)
             {
-                console.log('lastUpdatedValue != null && lastUpdatedDate < now');
+                // console.log('lastUpdatedValue != null && lastUpdatedDate < now');
                 var lastestData = await this.apiHelper.GetLatestConfigJson();
-                console.log('CheckForConfigUpdate -> GetLatestConfigJson -> lastestData = ', lastestData);
-                if (lastestData && lastestData.length > 0)
+                // console.log('CheckForConfigUpdate -> GetLatestConfigJson -> lastestData = ', lastestData);
+                if (lastestData && lastestData.length > 0 && lastestData[0].displayName != "Error")
                 {
                     var result = await this.SetConfig(lastestData);
-                    console.log('CheckForConfigUpdate -> UpdateConfig -> result = ', result);
+                    // console.log('CheckForConfigUpdate -> UpdateConfig -> result = ', result);
                     if (result)
                     {
                         localStorage.setItem(lastUpdatedKey, now.toISOString()?.split('T')[0]);
@@ -33,13 +33,13 @@ class ConfigManager
             }
             else
             {
-                console.log('......Continue......');
+                // console.log('......Continue......');
             }
         }
         // first time running updater, fetch config from server and set lastUpdated to today
         else
         {
-            console.log('prime chrome storage');
+            // console.log('prime chrome storage');
             var configData = await this.GetConfig();
             var result = await this.SetConfig(configData);
             if (result)
@@ -51,17 +51,7 @@ class ConfigManager
 
     public async SetConfig(data: ConfigItem[]): Promise<boolean>
     {
-        console.log('SetConfig');
-
-        if (this.searchBar.ClientContext?.baseUrl != null && this.searchBar.ClientContext.baseUrl != "/")
-        {
-            data.forEach(item =>
-            {
-                item.destination = this.searchBar.ClientContext?.baseUrl + item.destination;
-            });
-            console.log('new data = ', data);
-        }
-
+        // console.log('SetConfig');
         var result = await chrome.storage.local.set({ 'JsonConfig': data })
             .then(() => true)
             .catch(() => false);
@@ -70,40 +60,53 @@ class ConfigManager
 
     public async GetConfig(): Promise<ConfigItem[]>
     {
-        console.log('GetConfig');
+        // console.log('GetConfig');
+        var result: ConfigItem[] = [];
+
         var data = await chrome.storage.local.get(['JsonConfig']);
-        console.log('Chrome Data = ', data);
+        // console.log('Chrome Data = ', data);
+
         if (data && data.JsonConfig && data.JsonConfig.length > 0)
         {
-            console.log('found json data in Chrome storage');
-            return (data.JsonConfig as ConfigItem[]).sort((a, b) => a.displayName.localeCompare(b.displayName));
+            // console.log('found json data in Chrome storage');
+            result = data.JsonConfig as ConfigItem[];
         }
         else
         {
             var lastestData = await this.apiHelper.GetLatestConfigJson();
-            console.log('GetConfig -> GetLatestConfigJson -> Server Data = ', lastestData);
+            // console.log('GetConfig -> GetLatestConfigJson -> Server Data = ', lastestData);
             if (lastestData && lastestData.length > 0)
             {
-                console.log('NO json data in Chrome storage... getting from SERVER...');
-                return lastestData.sort((a, b) => a.displayName.localeCompare(b.displayName));
+                // console.log('NO json data in Chrome storage... getting from SERVER...');
+                result = lastestData;
             }
             else
             {
-                console.log('NO json data in Chrome storage AND server failed... getting from LOCAL...');
+                // console.log('NO json data in Chrome storage AND server failed... getting from LOCAL...');
                 // something went wrong -> get from local
                 var response = await fetch(chrome.runtime.getURL(ConfigManager.ConfigPath));
-                var localData = await response.json();
-                return (localData as ConfigItem[]).sort((a, b) => a.displayName.localeCompare(b.displayName));
+                result = await response.json() as ConfigItem[];;
             }
         }
+
+        if (this.searchBar.ClientContext?.baseUrl != null && this.searchBar.ClientContext.baseUrl != "/")
+        {
+            result.forEach(item =>
+            {
+                if (item.destination.length > 0 && !this.isValidUrl(item.destination))
+                {
+                    var base = this.searchBar.ClientContext?.baseUrl.slice(0, -1);
+                    item.destination = base + item.destination;
+                }
+            });
+        }
+        // console.log('DATA FROM GETCONFIG = ', result.sort((a, b) => a.displayName.localeCompare(b.displayName)));
+        return result.sort((a, b) => a.displayName.localeCompare(b.displayName));
     }
 
     public SetEventListeners(rvToken: string, baseUrl: string, includeTags = false): void
     {
-        console.log('SetEventListeners');
-        console.log("$('.commandBarListItem') = ", $('.commandBarListItem'));
-        console.log("$('.commandBarListItem:first') = ", $('.commandBarListItem:first'));
-        // Add hover effects
+        // $('.commandBarListItem').off("mouseenter mouseleave click");
         $('.commandBarListItem')
             .on("mouseenter", e => $(e.currentTarget).addClass('commandBarHover'))
             .on("mouseleave", e => $(e.currentTarget).removeClass('commandBarHover'))
@@ -115,8 +118,6 @@ class ConfigManager
                     // this is to prevent event conflict with "eventCodeLookup" & "usernameLookup" on click listeners
                 } else
                 {
-                    // console.log('anchorId = ', anchorId);
-                    // console.log('calling SetEventListeners -> else -> normal search links');
                     if ($(e.currentTarget).find('.lookupLoader').length == 0)
                     {
                         $(e.currentTarget).find('a').append(this.searchBar.GetLoader());
@@ -127,15 +128,15 @@ class ConfigManager
         if (includeTags)
         {
             var input = $('#commandBarInput').val() as string;
+            // $('#eventCodeLookup').off("click");
             $('#eventCodeLookup').on("click", async () =>
             {
                 $('#eventCodeLookup').append(this.searchBar.GetLoader());
                 var event = await this.apiHelper.GetEvent(input, rvToken, baseUrl);
-                console.log('event = ', event);
                 if (event == null)
                 {
                     $('#eventCodeLookup .lookupLoader').remove();
-                    if ($('#eventCodeLookup').find('.lookupErrorBadge').length == 0)
+                    if ($('#eventCodeLookup .lookupErrorBadge').length === 0)
                     {
                         $('#eventCodeLookup').append(this.searchBar.GetLookupErrorBadge());
                     }
@@ -147,15 +148,15 @@ class ConfigManager
                     this.searchBar.ActivateTab(this.searchBar.EventDetailsTab);
                 }
             });
+            // $('#usernameLookup').off("click");
             $('#usernameLookup').on("click", async () =>
             {
                 $('#usernameLookup').append(this.searchBar.GetLoader());
                 var imisId = await this.apiHelper.FindUserIdByName(input, rvToken, baseUrl);
-                console.log('imisId = ', imisId);
                 if (imisId == null)
                 {
                     $('#usernameLookup .lookupLoader').remove();
-                    if ($('#usernameLookup').find('.lookupErrorBadge').length == 0)
+                    if ($('#usernameLookup .lookupErrorBadge').length === 0)
                     {
                         $('#usernameLookup').append(this.searchBar.GetLookupErrorBadge());
                     }
