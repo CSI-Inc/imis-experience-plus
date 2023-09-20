@@ -97,51 +97,51 @@ class ConfigManager
                 if (anchorId != "usernameLookup" && anchorId != "eventCodeLookup" 
                     && $(e.currentTarget).find('.lookupLoader').length == 0)
                 {
-                    $(e.currentTarget).find('a').append(this.searchBar.GetLoader());
+                    $(e.currentTarget).find('a').append(this.searchBar.getLoader());
                 }
             });
 
         if (includeTags)
         {
             var input = $('#commandBarInput').val() as string;
-            
+
             $('#eventCodeLookup').on("click", async () =>
             {
-                $('#eventCodeLookup').append(this.searchBar.GetLoader());
+                $('#eventCodeLookup').append(this.searchBar.getLoader());
                 var event = await this.apiHelper.getEvent(input, rvToken, baseUrl);
                 if (event == null)
                 {
                     $('#eventCodeLookup .lookupLoader').remove();
                     if ($('#eventCodeLookup .lookupErrorBadge').length === 0)
                     {
-                        $('#eventCodeLookup').append(this.searchBar.GetLookupErrorBadge());
+                        $('#eventCodeLookup').append(this.searchBar.getLookupErrorBadge());
                     }
                     return;
                 }
                 else
                 {
-                    await this.searchBar.SetEventDetails(event);
-                    this.searchBar.ActivateTab(this.searchBar.EventDetailsTab);
+                    await this.searchBar.setEventDetails(event);
+                    this.searchBar.activateTab(this.searchBar.EventDetailsTab);
                 }
             });
 
             $('#usernameLookup').on("click", async () =>
             {
-                $('#usernameLookup').append(this.searchBar.GetLoader());
+                $('#usernameLookup').append(this.searchBar.getLoader());
                 var imisId = await this.apiHelper.findUserIdByName(input, rvToken, baseUrl);
                 if (imisId == null)
                 {
                     $('#usernameLookup .lookupLoader').remove();
                     if ($('#usernameLookup .lookupErrorBadge').length === 0)
                     {
-                        $('#usernameLookup').append(this.searchBar.GetLookupErrorBadge());
+                        $('#usernameLookup').append(this.searchBar.getLookupErrorBadge());
                     }
                     return;
                 }
                 else
                 {
-                    await this.searchBar.SetUserDetails(imisId);
-                    this.searchBar.ActivateTab(this.searchBar.UserDetailsTab);
+                    await this.searchBar.setUserDetails(imisId);
+                    this.searchBar.activateTab(this.searchBar.UserDetailsTab);
                 }
             });
         }
