@@ -207,7 +207,7 @@ var Utils = /** @class */ (function () {
     };
     /** Change this to true to enable console output for debugging */
     Utils.ENABLE_CONSOLE_OUTPUT = false;
-    Utils.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.3 %c ";
+    Utils.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.0 %c ";
     return Utils;
 }());
 var Debouncer = /** @class */ (function () {
