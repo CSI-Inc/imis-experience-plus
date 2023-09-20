@@ -2,7 +2,19 @@
 
 A browser extension to improve the iMIS Staff Site experience.
 
-Latest Version: 1.2.1 (Published on 2022-10-19)
+Latest Version: 1.3.0 (Published on 2023-09-20)
+
+## Features
+
+* Enhanced IQA Editor Experience
+* Enhanced RiSE Content Editor Experience
+* A "Work Bar" - global search, lookup, and navigation tool
+
+## Usage
+
+Enable or disable any of the features in the extension by clicking on the extension's icon and configuring desired settings:
+
+![Extension menu screenshot](https://github.com/CSI-Inc/imis-experience-plus/blob/master/assets/ext-menu.png?raw=true)
 
 ## Installing
 
@@ -19,8 +31,8 @@ Make changes to the .ts file, save, make sure there are no TSC errors, press the
 
 ## Contributing
 
-Have an idea for a feature to include in the extension? Fixed a bug and want to publish it?
+Have an idea for a feature to include in the extension? Fixed a bug and want to publish it? Feel free to contribute and send us a PR!
 
-Submit a pull request, or file a new idea on the "Issues" tab!
+You can also [Report a Bug](https://github.com/CSI-Inc/imis-experience-plus/issues/new?assignees=&labels=bug&projects=&template=report-a-bug.md&title=) or [Suggest a Feature](https://github.com/CSI-Inc/imis-experience-plus/issues/new?assignees=&labels=enhancement&projects=&template=suggest-a-feature.md&title=)!
 
 We'll take care of versioning and packaging.
