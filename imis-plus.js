@@ -1746,7 +1746,7 @@ var SearchBar = /** @class */ (function () {
                                         this.$("#commandBarOverlay .externalIcon").replaceWith((_d = this.assetHelper.ExternalIcon) !== null && _d !== void 0 ? _d : "");
                                         this.$("#commandBarOverlay #commandBarExitButton").html((_e = this.assetHelper.CloseIcon) !== null && _e !== void 0 ? _e : "");
                                         this.BuildOpenSearch();
-                                        return [4 /*yield*/, this.config.GetConfig()];
+                                        return [4 /*yield*/, this.config.getChromeConfig()];
                                     case 3:
                                         configJson = _f.sent();
                                         this.BuildConfig(configJson);

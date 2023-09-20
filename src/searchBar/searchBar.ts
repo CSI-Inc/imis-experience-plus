@@ -112,7 +112,7 @@ class SearchBar
             this.$("#commandBarOverlay .externalIcon").replaceWith(this.assetHelper.ExternalIcon ?? "");
             this.$("#commandBarOverlay #commandBarExitButton").html(this.assetHelper.CloseIcon ?? "");
             this.BuildOpenSearch();
-            var configJson = await this.config.GetConfig();
+            var configJson = await this.config.getChromeConfig();
             this.BuildConfig(configJson);
             // this.SetActionCardHotkeyListeners();
             // this.SetArrowEventListeners();
