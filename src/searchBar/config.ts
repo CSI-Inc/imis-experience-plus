@@ -1,97 +1,86 @@
 class ConfigManager
 {
     public static readonly ConfigPath: string = "assets/search-bar-config.json";
+    public static readonly Chrome_LastUpdatedKey: string = "iep__searchbBar__lastUpdated";
+    public static readonly Chrome_ConfigKey: string = "iep__searchbBar__config";
 
     constructor(private searchBar: SearchBar, private apiHelper: ApiHelper, private assetHelper: AssetHelper) { }
 
     public async CheckForConfigUpdate(): Promise<void>
     {
-        // console.log('CheckForConfigUpdate');
-        var lastUpdatedKey = 'iep__searchbBar__lastUpdated';
+        console.log('CheckForConfigUpdate');
         var now = new Date();
         now.setUTCHours(0, 0, 0, 0);
-        if (lastUpdatedKey in localStorage)
+        var lastUpdated = (await chrome.storage.local.get([ConfigManager.Chrome_LastUpdatedKey])).iep__searchbBar__lastUpdated;
+        console.log('lastUpdated = ', lastUpdated);
+        if (lastUpdated !== undefined)
         {
-            // console.log('lastUpdatedKey in localStorage');
-            var lastUpdatedValue = localStorage.getItem(lastUpdatedKey) as string;
-            var lastUpdatedDate = new Date(lastUpdatedValue);
+            console.log('lastUpdatedKey in chrome.storage.local');
+            var lastUpdatedDate = new Date(lastUpdated);
             lastUpdatedDate.setUTCHours(0, 0, 0, 0);
-            if (lastUpdatedValue != null && lastUpdatedDate < now)
+            if (lastUpdatedDate < now)
             {
-                // console.log('lastUpdatedValue != null && lastUpdatedDate < now');
-                var lastestData = await this.apiHelper.GetLatestConfigJson();
-                // console.log('CheckForConfigUpdate -> GetLatestConfigJson -> lastestData = ', lastestData);
-                if (lastestData && lastestData.length > 0 && lastestData[0].displayName != "Error")
+                console.log('lastUpdatedDate < now');
+                var config = await this.apiHelper.GetLatestConfigJson();
+                if (config && config.length > 0)
                 {
-                    var result = await this.SetConfig(lastestData);
-                    // console.log('CheckForConfigUpdate -> UpdateConfig -> result = ', result);
-                    if (result)
-                    {
-                        localStorage.setItem(lastUpdatedKey, now.toISOString()?.split('T')[0]);
-                    }
+                    console.log('CheckForConfigUpdate -> GetLatestConfigJson -> config = ', config);
+                    await this.SetConfig(config, now);
+                    await chrome.storage.local.set({ [ConfigManager.Chrome_LastUpdatedKey]: now.toISOString()?.split('T')[0] });
                 }
             }
             else
             {
-                // console.log('......Continue......');
+                console.log('......Continue......');
             }
         }
         // first time running updater, fetch config from server and set lastUpdated to today
         else
         {
-            // console.log('prime chrome storage');
-            var configData = await this.GetConfig();
-            var result = await this.SetConfig(configData);
-            if (result)
-            {
-                localStorage.setItem(lastUpdatedKey, now.toISOString()?.split('T')[0]);
-            }
+            console.log('lastUpdatedKey NOT in chrome.storage.local');
+            console.log('prime chrome storage');
+            var configData = await this.GetInitialConfig();
+            await this.SetConfig(configData, now);
         }
     }
 
-    public async SetConfig(data: ConfigItem[]): Promise<boolean>
+    public async SetConfig(data: ConfigItem[], now: Date): Promise<void>
     {
-        // console.log('SetConfig');
-        var result = await chrome.storage.local.set({ 'JsonConfig': data })
-            .then(() => true)
-            .catch(() => false);
-        return result;
+        console.log('SetConfig');
+        await chrome.storage.local.set({ [ConfigManager.Chrome_ConfigKey]: data });
+        await chrome.storage.local.set({ [ConfigManager.Chrome_LastUpdatedKey]: now.toISOString()?.split('T')[0] });
     }
 
-    public async GetConfig(): Promise<ConfigItem[]>
+    public async GetInitialConfig(): Promise<ConfigItem[]>
     {
-        // console.log('GetConfig');
+        console.log('GetInitialConfig');
         var result: ConfigItem[] = [];
-
-        var data = await chrome.storage.local.get(['JsonConfig']);
-        // console.log('Chrome Data = ', data);
-
-        if (data && data.JsonConfig && data.JsonConfig.length > 0)
+        var lastestData = await this.apiHelper.GetLatestConfigJson();
+        if (lastestData && lastestData.length > 0)
         {
-            // console.log('found json data in Chrome storage');
-            result = data.JsonConfig as ConfigItem[];
+            result = lastestData;
+            console.log('GetInitialConfig -> GetLatestConfigJson -> Server Data = ', result);
         }
         else
         {
-            var lastestData = await this.apiHelper.GetLatestConfigJson();
-            // console.log('GetConfig -> GetLatestConfigJson -> Server Data = ', lastestData);
-            if (lastestData && lastestData.length > 0)
-            {
-                // console.log('NO json data in Chrome storage... getting from SERVER...');
-                result = lastestData;
-            }
-            else
-            {
-                // console.log('NO json data in Chrome storage AND server failed... getting from LOCAL...');
-                // something went wrong -> get from local
-                var response = await fetch(chrome.runtime.getURL(ConfigManager.ConfigPath));
-                result = await response.json() as ConfigItem[];;
-            }
+            // something went wrong -> get from local
+            console.log('getting initial config json from server and SERVER FAILED... getting from LOCAL...');
+            var response = await fetch(chrome.runtime.getURL(ConfigManager.ConfigPath));
+            result = await response.json() as ConfigItem[];
+            console.log('GetInitialConfig -> GetLatestConfigJson -> Local Data = ', result);
         }
+        return result.sort((a, b) => a.displayName.localeCompare(b.displayName));
+    }
 
+    public async GetChromeConfig(): Promise<ConfigItem[]>
+    {
+        console.log('GetChromeConfig');
+        var data = (await chrome.storage.local.get([ConfigManager.Chrome_ConfigKey])).iep__searchbBar__config as ConfigItem[];
+        console.log('Chrome Data data = ', data);
+        // Append baseUrls for iMIS links that have client specific urls
         if (this.searchBar.ClientContext?.baseUrl != null && this.searchBar.ClientContext.baseUrl != "/")
         {
-            result.forEach(item =>
+            data.forEach(item =>
             {
                 if (item.destination.length > 0 && !this.isValidUrl(item.destination))
                 {
@@ -100,8 +89,7 @@ class ConfigManager
                 }
             });
         }
-        // console.log('DATA FROM GETCONFIG = ', result.sort((a, b) => a.displayName.localeCompare(b.displayName)));
-        return result.sort((a, b) => a.displayName.localeCompare(b.displayName));
+        return data.sort((a, b) => a.displayName.localeCompare(b.displayName));
     }
 
     public SetEventListeners(rvToken: string, baseUrl: string, includeTags = false): void
@@ -193,6 +181,7 @@ class ConfigManager
         var result = '';
         data.forEach((item, i) =>
         {
+            var displayNameWithBadge = this.AddVersionBadge(item.displayName);
             var category = item.category.length > -1 ? `<span class="searchCategory">${item.category}</span>` : '';
             var externalLinkBadge = this.isValidUrl(item.destination) ? this.assetHelper.ExternalIcon?.replace("margin-left: 6px;", "margin-left: 3px;") : '';
             var shortcut = item.isShortcut ? `<span class="searchDestination">~${item.destination}</span>` : '';
@@ -200,7 +189,7 @@ class ConfigManager
                 <li data-index="${i}" class="commandBarListItem" name="commandBar" id="commandBar${i}">
                     <a href="${item.destination}" style="color: #222; text-decoration: none;">
                         ${category}
-                        <span class="searchDisplayName">${item.displayName}</span>
+                        ${displayNameWithBadge}
                         ${externalLinkBadge}
                         ${shortcut}
                     </a>
@@ -208,6 +197,24 @@ class ConfigManager
             `);
         });
         return result;
+    }
+
+    private AddVersionBadge(input: string): string
+    {
+        var displayName = `<span class="searchDisplayName">${input}</span>`;
+        var oldVersion = "(2017)";
+        var newVersion = "(EMS)";
+        if (input.includes(oldVersion))
+        {
+            displayName = displayName.replace(oldVersion, '');
+            return displayName + this.assetHelper.VersionBadge2017 as string;
+        }
+        else if (input.includes(newVersion))
+        {
+            displayName = displayName.replace(newVersion, '');
+            return displayName + this.assetHelper.VersionBadgeEMS as string;
+        }
+        return displayName;
     }
 
     public BuildTagsHTML(data: ConfigItem[], seed: number, userInput: string): string

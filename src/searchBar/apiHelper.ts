@@ -119,17 +119,19 @@ class ApiHelper
 
     public async GetLatestConfigJson(): Promise<ConfigItem[] | null>
     {
-        // console.log('GetLatestConfigJson');
+        console.log('GetLatestConfigJson');
         var response = await fetch('https://cdn.cloud.csiinc.com/iep/config.json', { cache: 'no-cache', method: 'GET' });
-        var results = await response.json();
-        if (results.Count > 0)
+        // console.log('response = ', response);
+        if (response.ok)
         {
-            // console.log('GetUserName results = ', results);
-            return results.Items.$values[0].UserName;
+            var results = await response.json();
+            // console.log('results = ', results);
+            if (results.length > 0)
+            {
+                // console.log('GetLatestConfigJson results = ', results);
+                return results as ConfigItem[];
+            }
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 }

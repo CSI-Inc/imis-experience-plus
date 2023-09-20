@@ -1069,20 +1069,22 @@ var ApiHelper = /** @class */ (function () {
             var response, results;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, fetch('https://cdn.cloud.csiinc.com/iep/config.json', { cache: 'no-cache', method: 'GET' })];
+                    case 0:
+                        console.log('GetLatestConfigJson');
+                        return [4 /*yield*/, fetch('https://cdn.cloud.csiinc.com/iep/config.json', { cache: 'no-cache', method: 'GET' })];
                     case 1:
                         response = _a.sent();
+                        if (!response.ok) return [3 /*break*/, 3];
                         return [4 /*yield*/, response.json()];
                     case 2:
                         results = _a.sent();
-                        if (results.Count > 0) {
-                            // console.log('GetUserName results = ', results);
-                            return [2 /*return*/, results.Items.$values[0].UserName];
+                        // console.log('results = ', results);
+                        if (results.length > 0) {
+                            // console.log('GetLatestConfigJson results = ', results);
+                            return [2 /*return*/, results];
                         }
-                        else {
-                            return [2 /*return*/, null];
-                        }
-                        return [2 /*return*/];
+                        _a.label = 3;
+                    case 3: return [2 /*return*/, null];
                 }
             });
         });
@@ -1126,6 +1128,8 @@ var AssetHelper = /** @class */ (function () {
         this.PlusButtonPath = "assets/components/buttons/plus.html";
         this.PrimaryButtonPath = "assets/components/buttons/primary.html";
         this.ShiftButtonPath = "assets/components/buttons/shift.html";
+        this.VersionBadgeEMSPath = "assets/components/buttons/VersionBadge_ems.html";
+        this.VersionBadge2017Path = "assets/components/buttons/VersionBadge_2017.html";
         //#endregion
         //#region Assets
         // Views
@@ -1162,6 +1166,8 @@ var AssetHelper = /** @class */ (function () {
         this.PlusButton = null;
         this.PrimaryButton = null;
         this.ShiftButton = null;
+        this.VersionBadgeEMS = null;
+        this.VersionBadge2017 = null;
     }
     //#endregion
     AssetHelper.prototype.GetResource = function (path) {
@@ -1179,134 +1185,142 @@ var AssetHelper = /** @class */ (function () {
     };
     AssetHelper.prototype.GetAllAssets = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6;
-            return __generator(this, function (_7) {
-                switch (_7.label) {
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8;
+            return __generator(this, function (_9) {
+                switch (_9.label) {
                     case 0:
                         _a = this;
                         return [4 /*yield*/, this.GetResource(this.CommandBarPath)];
                     case 1:
-                        _a.CommandBar = _7.sent();
+                        _a.CommandBar = _9.sent();
                         _b = this;
                         return [4 /*yield*/, this.GetResource(this.EventDetailsViewPath)];
                     case 2:
-                        _b.EventDetailsView = _7.sent();
+                        _b.EventDetailsView = _9.sent();
                         _c = this;
                         return [4 /*yield*/, this.GetResource(this.OpenSearchViewPath)];
                     case 3:
-                        _c.OpenSearchView = _7.sent();
+                        _c.OpenSearchView = _9.sent();
                         _d = this;
                         return [4 /*yield*/, this.GetResource(this.UserDetailsViewPath)];
                     case 4:
-                        _d.UserDetailsView = _7.sent();
+                        _d.UserDetailsView = _9.sent();
                         _e = this;
                         return [4 /*yield*/, this.GetResource(this.BrowsersIconPath)];
                     case 5:
-                        _e.BrowsersIcon = _7.sent();
+                        _e.BrowsersIcon = _9.sent();
                         _f = this;
                         return [4 /*yield*/, this.GetResource(this.BuildingIconPath)];
                     case 6:
-                        _f.BuildingIcon = _7.sent();
+                        _f.BuildingIcon = _9.sent();
                         _g = this;
                         return [4 /*yield*/, this.GetResource(this.CakeIconPath)];
                     case 7:
-                        _g.CakeIcon = _7.sent();
+                        _g.CakeIcon = _9.sent();
                         _h = this;
                         return [4 /*yield*/, this.GetResource(this.CalendarIconPath)];
                     case 8:
-                        _h.CalendarIcon = _7.sent();
+                        _h.CalendarIcon = _9.sent();
                         _j = this;
                         return [4 /*yield*/, this.GetResource(this.CalendarLinesPenIconPath)];
                     case 9:
-                        _j.CalendarLinesPenIcon = _7.sent();
+                        _j.CalendarLinesPenIcon = _9.sent();
                         _k = this;
                         return [4 /*yield*/, this.GetResource(this.ChartLineIconPath)];
                     case 10:
-                        _k.ChartLineIcon = _7.sent();
+                        _k.ChartLineIcon = _9.sent();
                         _l = this;
                         return [4 /*yield*/, this.GetResource(this.CloseIconPath)];
                     case 11:
-                        _l.CloseIcon = _7.sent();
+                        _l.CloseIcon = _9.sent();
                         _m = this;
                         return [4 /*yield*/, this.GetResource(this.CsiLogoPath)];
                     case 12:
-                        _m.CsiLogo = _7.sent();
+                        _m.CsiLogo = _9.sent();
                         _o = this;
                         return [4 /*yield*/, this.GetResource(this.DescriptionIconPath)];
                     case 13:
-                        _o.DescriptionIcon = _7.sent();
+                        _o.DescriptionIcon = _9.sent();
                         _p = this;
                         return [4 /*yield*/, this.GetResource(this.EmailIconPath)];
                     case 14:
-                        _p.EmailIcon = _7.sent();
+                        _p.EmailIcon = _9.sent();
                         _q = this;
                         return [4 /*yield*/, this.GetResource(this.ExternalIconBluePath)];
                     case 15:
-                        _q.ExternalIconBlue = _7.sent();
+                        _q.ExternalIconBlue = _9.sent();
                         _r = this;
                         return [4 /*yield*/, this.GetResource(this.ExternalIconPath)];
                     case 16:
-                        _r.ExternalIcon = _7.sent();
+                        _r.ExternalIcon = _9.sent();
                         _s = this;
                         return [4 /*yield*/, this.GetResource(this.ExternalIconWhitePath)];
                     case 17:
-                        _s.ExternalIconWhite = _7.sent();
+                        _s.ExternalIconWhite = _9.sent();
                         _t = this;
                         return [4 /*yield*/, this.GetResource(this.IdCardBluePath)];
                     case 18:
-                        _t.IdCardBlue = _7.sent();
+                        _t.IdCardBlue = _9.sent();
                         _u = this;
                         return [4 /*yield*/, this.GetResource(this.LinkSolidIconPath)];
                     case 19:
-                        _u.LinkSolidIcon = _7.sent();
+                        _u.LinkSolidIcon = _9.sent();
                         _v = this;
                         return [4 /*yield*/, this.GetResource(this.LockIconPath)];
                     case 20:
-                        _v.LockIcon = _7.sent();
+                        _v.LockIcon = _9.sent();
                         _w = this;
                         return [4 /*yield*/, this.GetResource(this.MailboxIconPath)];
                     case 21:
-                        _w.MailboxIcon = _7.sent();
+                        _w.MailboxIcon = _9.sent();
                         _x = this;
                         return [4 /*yield*/, this.GetResource(this.MenuIconPath)];
                     case 22:
-                        _x.MenuIcon = _7.sent();
+                        _x.MenuIcon = _9.sent();
                         _y = this;
                         return [4 /*yield*/, this.GetResource(this.PhoneIconPath)];
                     case 23:
-                        _y.PhoneIcon = _7.sent();
+                        _y.PhoneIcon = _9.sent();
                         _z = this;
                         return [4 /*yield*/, this.GetResource(this.UserTagIconPath)];
                     case 24:
-                        _z.UserTagIcon = _7.sent();
+                        _z.UserTagIcon = _9.sent();
                         _0 = this;
                         return [4 /*yield*/, this.GetResource(this.ControlButtonPath)];
                     case 25:
-                        _0.ControlButton = _7.sent();
+                        _0.ControlButton = _9.sent();
                         _1 = this;
                         return [4 /*yield*/, this.GetResource(this.ControlButton2Path)];
                     case 26:
-                        _1.ControlButton2 = _7.sent();
+                        _1.ControlButton2 = _9.sent();
                         _2 = this;
                         return [4 /*yield*/, this.GetResource(this.EnterButtonPath)];
                     case 27:
-                        _2.EnterButton = _7.sent();
+                        _2.EnterButton = _9.sent();
                         _3 = this;
                         return [4 /*yield*/, this.GetResource(this.EnterButton2Path)];
                     case 28:
-                        _3.EnterButton2 = _7.sent();
+                        _3.EnterButton2 = _9.sent();
                         _4 = this;
                         return [4 /*yield*/, this.GetResource(this.PlusButtonPath)];
                     case 29:
-                        _4.PlusButton = _7.sent();
+                        _4.PlusButton = _9.sent();
                         _5 = this;
                         return [4 /*yield*/, this.GetResource(this.PrimaryButtonPath)];
                     case 30:
-                        _5.PrimaryButton = _7.sent();
+                        _5.PrimaryButton = _9.sent();
                         _6 = this;
                         return [4 /*yield*/, this.GetResource(this.ShiftButtonPath)];
                     case 31:
-                        _6.ShiftButton = _7.sent();
+                        _6.ShiftButton = _9.sent();
+                        _7 = this;
+                        return [4 /*yield*/, this.GetResource(this.VersionBadgeEMSPath)];
+                    case 32:
+                        _7.VersionBadgeEMS = _9.sent();
+                        _8 = this;
+                        return [4 /*yield*/, this.GetResource(this.VersionBadge2017Path)];
+                    case 33:
+                        _8.VersionBadge2017 = _9.sent();
                         return [2 /*return*/];
                 }
             });
@@ -1366,98 +1380,124 @@ var ConfigManager = /** @class */ (function () {
         this.assetHelper = assetHelper;
     }
     ConfigManager.prototype.CheckForConfigUpdate = function () {
-        var _a, _b;
+        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var lastUpdatedKey, now, lastUpdatedValue, lastUpdatedDate, lastestData, result, configData, result;
+            var now, lastUpdated, lastUpdatedDate, config, configData;
+            var _b;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        lastUpdatedKey = 'iep__searchbBar__lastUpdated';
+                        console.log('CheckForConfigUpdate');
                         now = new Date();
                         now.setUTCHours(0, 0, 0, 0);
-                        if (!(lastUpdatedKey in localStorage)) return [3 /*break*/, 5];
-                        lastUpdatedValue = localStorage.getItem(lastUpdatedKey);
-                        lastUpdatedDate = new Date(lastUpdatedValue);
+                        return [4 /*yield*/, chrome.storage.local.get([ConfigManager.Chrome_LastUpdatedKey])];
+                    case 1:
+                        lastUpdated = (_c.sent()).iep__searchbBar__lastUpdated;
+                        console.log('lastUpdated = ', lastUpdated);
+                        if (!(lastUpdated !== undefined)) return [3 /*break*/, 8];
+                        console.log('lastUpdatedKey in chrome.storage.local');
+                        lastUpdatedDate = new Date(lastUpdated);
                         lastUpdatedDate.setUTCHours(0, 0, 0, 0);
-                        if (!(lastUpdatedValue != null && lastUpdatedDate < now)) return [3 /*break*/, 4];
+                        if (!(lastUpdatedDate < now)) return [3 /*break*/, 6];
+                        console.log('lastUpdatedDate < now');
                         return [4 /*yield*/, this.apiHelper.GetLatestConfigJson()];
-                    case 1:
-                        lastestData = _c.sent();
-                        if (!(lastestData && lastestData.length > 0 && lastestData[0].displayName != "Error")) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.SetConfig(lastestData)];
                     case 2:
-                        result = _c.sent();
-                        // console.log('CheckForConfigUpdate -> UpdateConfig -> result = ', result);
-                        if (result) {
-                            localStorage.setItem(lastUpdatedKey, (_a = now.toISOString()) === null || _a === void 0 ? void 0 : _a.split('T')[0]);
-                        }
-                        _c.label = 3;
-                    case 3: return [3 /*break*/, 4];
-                    case 4: return [3 /*break*/, 8];
-                    case 5: return [4 /*yield*/, this.GetConfig()];
+                        config = _c.sent();
+                        if (!(config && config.length > 0)) return [3 /*break*/, 5];
+                        console.log('CheckForConfigUpdate -> GetLatestConfigJson -> config = ', config);
+                        return [4 /*yield*/, this.SetConfig(config, now)];
+                    case 3:
+                        _c.sent();
+                        return [4 /*yield*/, chrome.storage.local.set((_b = {}, _b[ConfigManager.Chrome_LastUpdatedKey] = (_a = now.toISOString()) === null || _a === void 0 ? void 0 : _a.split('T')[0], _b))];
+                    case 4:
+                        _c.sent();
+                        _c.label = 5;
+                    case 5: return [3 /*break*/, 7];
                     case 6:
+                        console.log('......Continue......');
+                        _c.label = 7;
+                    case 7: return [3 /*break*/, 11];
+                    case 8:
+                        console.log('lastUpdatedKey NOT in chrome.storage.local');
+                        console.log('prime chrome storage');
+                        return [4 /*yield*/, this.GetInitialConfig()];
+                    case 9:
                         configData = _c.sent();
-                        return [4 /*yield*/, this.SetConfig(configData)];
-                    case 7:
-                        result = _c.sent();
-                        if (result) {
-                            localStorage.setItem(lastUpdatedKey, (_b = now.toISOString()) === null || _b === void 0 ? void 0 : _b.split('T')[0]);
-                        }
-                        _c.label = 8;
-                    case 8: return [2 /*return*/];
+                        return [4 /*yield*/, this.SetConfig(configData, now)];
+                    case 10:
+                        _c.sent();
+                        _c.label = 11;
+                    case 11: return [2 /*return*/];
                 }
             });
         });
     };
-    ConfigManager.prototype.SetConfig = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, chrome.storage.local.set({ 'JsonConfig': data })
-                            .then(function () { return true; })
-                            .catch(function () { return false; })];
-                    case 1:
-                        result = _a.sent();
-                        return [2 /*return*/, result];
-                }
-            });
-        });
-    };
-    ConfigManager.prototype.GetConfig = function () {
+    ConfigManager.prototype.SetConfig = function (data, now) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
-            var result, data, lastestData, response;
+            var _b, _c;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0:
+                        console.log('SetConfig');
+                        return [4 /*yield*/, chrome.storage.local.set((_b = {}, _b[ConfigManager.Chrome_ConfigKey] = data, _b))];
+                    case 1:
+                        _d.sent();
+                        return [4 /*yield*/, chrome.storage.local.set((_c = {}, _c[ConfigManager.Chrome_LastUpdatedKey] = (_a = now.toISOString()) === null || _a === void 0 ? void 0 : _a.split('T')[0], _c))];
+                    case 2:
+                        _d.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ConfigManager.prototype.GetInitialConfig = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, lastestData, response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        console.log('GetInitialConfig');
+                        result = [];
+                        return [4 /*yield*/, this.apiHelper.GetLatestConfigJson()];
+                    case 1:
+                        lastestData = _a.sent();
+                        if (!(lastestData && lastestData.length > 0)) return [3 /*break*/, 2];
+                        result = lastestData;
+                        console.log('GetInitialConfig -> GetLatestConfigJson -> Server Data = ', result);
+                        return [3 /*break*/, 5];
+                    case 2:
+                        // something went wrong -> get from local
+                        console.log('getting initial config json from server and SERVER FAILED... getting from LOCAL...');
+                        return [4 /*yield*/, fetch(chrome.runtime.getURL(ConfigManager.ConfigPath))];
+                    case 3:
+                        response = _a.sent();
+                        return [4 /*yield*/, response.json()];
+                    case 4:
+                        result = (_a.sent());
+                        console.log('GetInitialConfig -> GetLatestConfigJson -> Local Data = ', result);
+                        _a.label = 5;
+                    case 5: return [2 /*return*/, result.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); })];
+                }
+            });
+        });
+    };
+    ConfigManager.prototype.GetChromeConfig = function () {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        result = [];
-                        return [4 /*yield*/, chrome.storage.local.get(['JsonConfig'])];
+                        console.log('GetChromeConfig');
+                        return [4 /*yield*/, chrome.storage.local.get([ConfigManager.Chrome_ConfigKey])];
                     case 1:
-                        data = _b.sent();
-                        if (!(data && data.JsonConfig && data.JsonConfig.length > 0)) return [3 /*break*/, 2];
-                        // console.log('found json data in Chrome storage');
-                        result = data.JsonConfig;
-                        return [3 /*break*/, 7];
-                    case 2: return [4 /*yield*/, this.apiHelper.GetLatestConfigJson()];
-                    case 3:
-                        lastestData = _b.sent();
-                        if (!(lastestData && lastestData.length > 0)) return [3 /*break*/, 4];
-                        // console.log('NO json data in Chrome storage... getting from SERVER...');
-                        result = lastestData;
-                        return [3 /*break*/, 7];
-                    case 4: return [4 /*yield*/, fetch(chrome.runtime.getURL(ConfigManager.ConfigPath))];
-                    case 5:
-                        response = _b.sent();
-                        return [4 /*yield*/, response.json()];
-                    case 6:
-                        result = (_b.sent());
-                        ;
-                        _b.label = 7;
-                    case 7:
+                        data = (_b.sent()).iep__searchbBar__config;
+                        console.log('Chrome Data data = ', data);
+                        // Append baseUrls for iMIS links that have client specific urls
                         if (((_a = this.searchBar.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) != null && this.searchBar.ClientContext.baseUrl != "/") {
-                            result.forEach(function (item) {
+                            data.forEach(function (item) {
                                 var _a;
                                 if (item.destination.length > 0 && !_this.isValidUrl(item.destination)) {
                                     var base = (_a = _this.searchBar.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl.slice(0, -1);
@@ -1465,8 +1505,7 @@ var ConfigManager = /** @class */ (function () {
                                 }
                             });
                         }
-                        // console.log('DATA FROM GETCONFIG = ', result.sort((a, b) => a.displayName.localeCompare(b.displayName)));
-                        return [2 /*return*/, result.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); })];
+                        return [2 /*return*/, data.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); })];
                 }
             });
         });
@@ -1559,12 +1598,27 @@ var ConfigManager = /** @class */ (function () {
         var result = '';
         data.forEach(function (item, i) {
             var _a;
+            var displayNameWithBadge = _this.AddVersionBadge(item.displayName);
             var category = item.category.length > -1 ? "<span class=\"searchCategory\">".concat(item.category, "</span>") : '';
             var externalLinkBadge = _this.isValidUrl(item.destination) ? (_a = _this.assetHelper.ExternalIcon) === null || _a === void 0 ? void 0 : _a.replace("margin-left: 6px;", "margin-left: 3px;") : '';
             var shortcut = item.isShortcut ? "<span class=\"searchDestination\">~".concat(item.destination, "</span>") : '';
-            result = result.concat("\n                <li data-index=\"".concat(i, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(i, "\">\n                    <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none;\">\n                        ").concat(category, "\n                        <span class=\"searchDisplayName\">").concat(item.displayName, "</span>\n                        ").concat(externalLinkBadge, "\n                        ").concat(shortcut, "\n                    </a>\n                </li>\n            "));
+            result = result.concat("\n                <li data-index=\"".concat(i, "\" class=\"commandBarListItem\" name=\"commandBar\" id=\"commandBar").concat(i, "\">\n                    <a href=\"").concat(item.destination, "\" style=\"color: #222; text-decoration: none;\">\n                        ").concat(category, "\n                        ").concat(displayNameWithBadge, "\n                        ").concat(externalLinkBadge, "\n                        ").concat(shortcut, "\n                    </a>\n                </li>\n            "));
         });
         return result;
+    };
+    ConfigManager.prototype.AddVersionBadge = function (input) {
+        var displayName = "<span class=\"searchDisplayName\">".concat(input, "</span>");
+        var oldVersion = "(2017)";
+        var newVersion = "(EMS)";
+        if (input.includes(oldVersion)) {
+            displayName = displayName.replace(oldVersion, '');
+            return displayName + this.assetHelper.VersionBadge2017;
+        }
+        else if (input.includes(newVersion)) {
+            displayName = displayName.replace(newVersion, '');
+            return displayName + this.assetHelper.VersionBadgeEMS;
+        }
+        return displayName;
     };
     ConfigManager.prototype.BuildTagsHTML = function (data, seed, userInput) {
         var _this = this;
@@ -1581,6 +1635,8 @@ var ConfigManager = /** @class */ (function () {
         return result;
     };
     ConfigManager.ConfigPath = "assets/search-bar-config.json";
+    ConfigManager.Chrome_LastUpdatedKey = "iep__searchbBar__lastUpdated";
+    ConfigManager.Chrome_ConfigKey = "iep__searchbBar__config";
     return ConfigManager;
 }());
 /// <reference path="../settings/settings.ts" />
@@ -1673,7 +1729,7 @@ var SearchBar = /** @class */ (function () {
                                         this.$("#commandBarOverlay .externalIcon").replaceWith((_d = this.assetHelper.ExternalIcon) !== null && _d !== void 0 ? _d : "");
                                         this.$("#commandBarOverlay #commandBarExitButton").html((_e = this.assetHelper.CloseIcon) !== null && _e !== void 0 ? _e : "");
                                         this.BuildOpenSearch();
-                                        return [4 /*yield*/, this.config.GetConfig()];
+                                        return [4 /*yield*/, this.config.GetChromeConfig()];
                                     case 3:
                                         configJson = _f.sent();
                                         this.BuildConfig(configJson);
@@ -1685,14 +1741,10 @@ var SearchBar = /** @class */ (function () {
                                                 switch (_a.label) {
                                                     case 0:
                                                         isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
-                                                        // Replace space in e.key with "Spacebar"
-                                                        // TODO: this is for logging to help matthew - remove this when done
+                                                        // Replace space in e.key with "Spacebar" for consistency
                                                         if (event.key === " ") {
                                                             event.key = Settings.SPACEBAR;
-                                                            console.log("Key pressed: " + Settings.SPACEBAR);
-                                                        }
-                                                        else {
-                                                            console.log("Key pressed: " + event.key);
+                                                            // console.log("Key pressed: " + Settings.SPACEBAR);
                                                         }
                                                         if (!((!this.$(event.target).is('input') && !this.$(event.target).is('textarea'))
                                                             && !isCommandBarVisible
@@ -1838,8 +1890,7 @@ var SearchBar = /** @class */ (function () {
         var startDate = CleanUp.Date(event === null || event === void 0 ? void 0 : event.StartDateTime);
         var endDate = CleanUp.Date(event === null || event === void 0 ? void 0 : event.EndDateTime);
         var description = ((_a = event === null || event === void 0 ? void 0 : event.Description) !== null && _a !== void 0 ? _a : "").trim().replace(/(<([^>]+)>)/gi, "");
-        // TODO: remove - this is for testing
-        var virtualMeetingUrl = (event === null || event === void 0 ? void 0 : event.VirtualMeetingUrl) ? event === null || event === void 0 ? void 0 : event.VirtualMeetingUrl : "https://www.google.com";
+        var virtualMeetingUrl = event === null || event === void 0 ? void 0 : event.VirtualMeetingUrl;
         return "\n            <div id=\"userCardProfile\" class=\"userDetails\">\n                <h3 id=\"destinationUsersName\" style=\"color: #005e7d; margin: 2px\">".concat(name, "</h3>\n                <div id=\"details\" style=\"font-size: 90%;\">\n                    <div id=\"userDetailsTop\" style=\"margin: 0px 0px 5px 1px;\">\n                        <span id=\"destinationUsersId\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersIdLabel\">ID </span>").concat(id, "\n                        </span>\n                        <span id=\"destinationUsersMemberType\" class=\"userDetails userSpecificDetail\">\n                            <span class=\"Label workBarLabel destinationUsersTypeLabel\">Category </span>").concat(eventCategoryDescription !== null && eventCategoryDescription !== void 0 ? eventCategoryDescription : "", "\n                        </span>\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(startDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.CalendarIcon, "\n                            <span class=\"textBadge\">Start Date</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(startDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(endDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.CalendarIcon, "\n                            <span class=\"textBadge\">End Date</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(endDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(staffContactName ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.UserTagIcon, "\n                            <span class=\"textBadge\">Staff Contact</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(staffContactName, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(virtualMeetingUrl ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.LinkSolidIcon, "\n                            <span class=\"textBadge\">Virtual Meeting URL</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">\n                                <a href=\"").concat(virtualMeetingUrl, "\" class=\"userActionCard\">").concat(virtualMeetingUrl, "</a>\n                            </span>\n                        </div>") : '', "\n                    </div>\n                    <br />\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(description ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.DescriptionIcon, "\n                            <span class=\"textBadge\">Description</span>\n                            <span style=\"display:inline-block; vertical-align: middle; padding-top:4px;\">").concat(description, "</span>\n                        </div>") : '', "\n                    </div>\n                </div>\n            </div>\n        ");
     };
     SearchBar.prototype.BuildEventFooter = function (status) {

@@ -38,6 +38,8 @@ class AssetHelper
     public PlusButtonPath: string = "assets/components/buttons/plus.html";
     public PrimaryButtonPath: string = "assets/components/buttons/primary.html";
     public ShiftButtonPath: string = "assets/components/buttons/shift.html";
+    public VersionBadgeEMSPath: string = "assets/components/buttons/VersionBadge_ems.html";
+    public VersionBadge2017Path: string = "assets/components/buttons/VersionBadge_2017.html";
 
     //#endregion
 
@@ -79,6 +81,8 @@ class AssetHelper
     public PlusButton: string | null = null;
     public PrimaryButton: string | null = null;
     public ShiftButton: string | null = null;
+    public VersionBadgeEMS: string | null = null;
+    public VersionBadge2017: string | null = null;
 
     //#endregion
 
@@ -123,5 +127,7 @@ class AssetHelper
         this.PlusButton = await this.GetResource(this.PlusButtonPath);
         this.PrimaryButton = await this.GetResource(this.PrimaryButtonPath);
         this.ShiftButton = await this.GetResource(this.ShiftButtonPath);
+        this.VersionBadgeEMS = await this.GetResource(this.VersionBadgeEMSPath);
+        this.VersionBadge2017 = await this.GetResource(this.VersionBadge2017Path);
     }
 }

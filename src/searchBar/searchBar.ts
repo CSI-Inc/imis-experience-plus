@@ -81,8 +81,6 @@ class SearchBar
 
         if (!config.enableWorkbar) return;
 
-
-        // TODO: testing
         // console.log('config.workbarShortcut = ', config.workbarShortcut);
         var myCombo = `[${config.workbarShortcut}]`;
         if (config.workbarKbdShift) myCombo = "[Shift] + " + myCombo;
@@ -112,7 +110,7 @@ class SearchBar
             this.$("#commandBarOverlay .externalIcon").replaceWith(this.assetHelper.ExternalIcon ?? "");
             this.$("#commandBarOverlay #commandBarExitButton").html(this.assetHelper.CloseIcon ?? "");
             this.BuildOpenSearch();
-            var configJson = await this.config.GetConfig();
+            var configJson = await this.config.GetChromeConfig();
             this.BuildConfig(configJson);
             // this.SetActionCardHotkeyListeners();
             // this.SetArrowEventListeners();
@@ -121,16 +119,16 @@ class SearchBar
             {
                 var isCommandBarVisible = this.$("#commandBarOverlay").is(":visible");
 
-                // Replace space in e.key with "Spacebar"
-                // TODO: this is for logging to help matthew - remove this when done
+                // Replace space in e.key with "Spacebar" for consistency
                 if (event.key === " ")
                 {
                     event.key = Settings.SPACEBAR;
-                    console.log("Key pressed: " + Settings.SPACEBAR);
-                } else
-                {
-                    console.log("Key pressed: " + event.key);
+                    // console.log("Key pressed: " + Settings.SPACEBAR);
                 }
+                // else
+                // {
+                //     console.log("Key pressed: " + event.key);
+                // }
 
                 // Open CommandBar
                 if ((!this.$(event.target).is('input') && !this.$(event.target).is('textarea'))
@@ -425,8 +423,7 @@ class SearchBar
         var startDate = CleanUp.Date(event?.StartDateTime);
         var endDate = CleanUp.Date(event?.EndDateTime);
         var description = (event?.Description ?? "").trim().replace(/(<([^>]+)>)/gi, "");
-        // TODO: remove - this is for testing
-        var virtualMeetingUrl = event?.VirtualMeetingUrl ? event?.VirtualMeetingUrl : "https://www.google.com";
+        var virtualMeetingUrl = event?.VirtualMeetingUrl
         return `
             <div id="userCardProfile" class="userDetails">
                 <h3 id="destinationUsersName" style="color: #005e7d; margin: 2px">${name}</h3>
