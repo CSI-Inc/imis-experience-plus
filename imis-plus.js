@@ -1658,8 +1658,8 @@ var Sanitizer = /** @class */ (function () {
 }());
 /// <reference path="../settings/settings.ts" />
 /// <reference path="../utils.ts" />
-var SearchBar = /** @class */ (function () {
-    function SearchBar($) {
+var WorkBar = /** @class */ (function () {
+    function WorkBar($) {
         this.$ = $;
         this.UserDetailsTab = "UserDetailsTab";
         this.EventDetailsTab = "EventDetailsTab";
@@ -1693,7 +1693,7 @@ var SearchBar = /** @class */ (function () {
     /**
      * Initializes the various elements of this module..
      */
-    SearchBar.prototype.init = function () {
+    WorkBar.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
             var config, myCombo;
             var _this = this;
@@ -1720,7 +1720,7 @@ var SearchBar = /** @class */ (function () {
                                 switch (_f.label) {
                                     case 0:
                                         Utils.log('************* init **************');
-                                        Utils.log.apply(Utils, __spreadArray([Utils.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
+                                        Utils.log.apply(Utils, __spreadArray([Utils.VERSION_STRING + "Loaded: Search Bar"], WorkBar.VERSION_STYLES, false));
                                         this.RVToken = this.$("#__RequestVerificationToken").val();
                                         this.ClientContext = JSON.parse(this.$('#__ClientContext').val());
                                         if (this.ClientContext.isAnonymous)
@@ -1782,7 +1782,7 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    SearchBar.prototype.setActionCardHotkeyListeners = function () {
+    WorkBar.prototype.setActionCardHotkeyListeners = function () {
         var _this = this;
         this.$('#commandBarInput').off('keydown.TabCardActions');
         this.$('#commandBarInput').on('keydown.TabCardActions', function (event) {
@@ -1805,19 +1805,19 @@ var SearchBar = /** @class */ (function () {
             }
         });
     };
-    SearchBar.prototype.buildUserCardActions = function (userId) {
+    WorkBar.prototype.buildUserCardActions = function (userId) {
         var _a, _b;
         var profileUrl = "".concat((_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.websiteRoot, "Party.aspx?ID=").concat(userId);
         var credentialsUrl = "".concat((_b = this.ClientContext) === null || _b === void 0 ? void 0 : _b.websiteRoot, "AsiCommon/Controls/Contact/User/UserEdit.aspx?ID=").concat(userId);
         return "\n                <div id=\"userCardActions\" class=\"userDetails\">\n                    <div class=\"userCardActionArea\">\n                        ".concat(this.assetHelper.IdCardBlue, "\n                        <a id=\"userProfile\" href=\"").concat(profileUrl, "\" class=\"userActionCard\">Profile</a>\n                        ").concat(this.assetHelper.EnterButton2, "\n                    </div>\n                    <div class=\"userCardActionArea\">\n                        ").concat(this.assetHelper.LockIcon, "\n                        <a id=\"userCredentials\" href=\"").concat(credentialsUrl, "\" class=\"userActionCard\">User Credentials</a>\n                    </div>\n                </div>\n            ");
     };
-    SearchBar.prototype.buildEventCardActions = function (eventKey) {
+    WorkBar.prototype.buildEventCardActions = function (eventKey) {
         var _a, _b;
         var eventDetailsUrl = "".concat((_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.websiteRoot, "EventDetail?EventKey=").concat(eventKey);
         var eventDashboardUrl = "".concat((_b = this.ClientContext) === null || _b === void 0 ? void 0 : _b.websiteRoot, "EventDashboard?EventKey=").concat(eventKey);
         return "\n                <div id=\"userCardActions\" class=\"userDetails\">\n                    <div class=\"userCardActionArea\">\n                        ".concat(this.assetHelper.ChartLineIcon, "\n                        <a id=\"eventDashboard\" href=\"").concat(eventDashboardUrl, "\" class=\"userActionCard\">Event Dashboard</a>\n                        ").concat(this.assetHelper.EnterButton2, "\n                    </div>\n                    <div class=\"userCardActionArea\">\n                        ").concat(this.assetHelper.CalendarLinesPenIcon, "\n                        <a id=\"eventDetails\" href=\"").concat(eventDetailsUrl, "\" class=\"userActionCard\">Event Details</a>\n                    </div>\n                </div>\n            ");
     };
-    SearchBar.prototype.buildProfile = function (data) {
+    WorkBar.prototype.buildProfile = function (data) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22;
         var status = (_a = data === null || data === void 0 ? void 0 : data.Status) === null || _a === void 0 ? void 0 : _a.Description;
         var memberType = (_b = data === null || data === void 0 ? void 0 : data.AdditionalAttributes) === null || _b === void 0 ? void 0 : _b.$values[0].Value;
@@ -1846,7 +1846,7 @@ var SearchBar = /** @class */ (function () {
         var userTitle = (_21 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _21 === void 0 ? void 0 : _21.Title;
         return "\n            <div id=\"userCardProfile\" class=\"userDetails\">\n                <h3 id=\"destinationUsersName\" style=\"color: #005e7d; margin: 2px\">".concat(data === null || data === void 0 ? void 0 : data.Name, "</h3>\n                <div id=\"details\" style=\"font-size: 90%;\">\n                    <div id=\"userDetailsTop\" style=\"margin: 0px 0px 5px 1px;\">\n                        <span id=\"destinationUsersId\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersIdLabel\">ID </span>").concat(data === null || data === void 0 ? void 0 : data.Id, "\n                        </span>\n                        <span id=\"destinationUsersStatus\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersStatusLabel\">Status </span>").concat(status, "\n                        </span>\n                        <span id=\"destinationUsersMemberType\" class=\"userDetails userSpecificDetail\">\n                            <span class=\"Label workBarLabel destinationUsersTypeLabel\">Type </span>").concat(memberType, "\n                        </span>\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(birthDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.CakeIcon, "\n                            <span class=\"textBadge\">Date of Birth</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(birthDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber0\">\n                        ").concat(phone0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone0Type, "</span>\n                            <a href=\"tel:").concat(phone0, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone0, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersPhoneNumber1\">\n                        ").concat(phone1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.PhoneIcon, "\n                            <span class=\"textBadge\">").concat(phone1Type, "</span>\n                            <a href=\"tel:").concat(phone1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(phone1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail1\">\n                        ").concat(email1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.EmailIcon, "\n                            ").concat(email1IsPrimary ? "".concat(this.assetHelper.PrimaryButton) : "<span class=\"textBadge\">".concat(email1Type, "</span>"), "\n                            <a href=\"mailto:").concat(email1, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email1, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail2\">\n                        ").concat(email2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.EmailIcon, "\n                            ").concat(email2IsPrimary ? "".concat(this.assetHelper.PrimaryButton) : "<span class=\"textBadge\">".concat(email2Type, "</span>"), "\n                            <a href=\"mailto:").concat(email2, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email2, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersEmail3\">\n                        ").concat(email3 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.EmailIcon, "\n                            ").concat(email3IsPrimary ? "".concat(this.assetHelper.PrimaryButton) : "<span class=\"textBadge\">".concat(email3Type, "</span>"), "\n                            <a href=\"mailto:").concat(email3, "\" style=\"display:inline-block; vertical-align: middle;\">").concat(email3, "</a>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress0\">\n                        ").concat(address0 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address0Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address0, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress1\">\n                        ").concat(address1 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address1Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address1, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersAddress2\">\n                        ").concat(address2 ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.MailboxIcon, "\n                            <span class=\"textBadge\">").concat(address2Type, "</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(address2, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersCompanyName\">\n                        ").concat(companyName ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.BuildingIcon, "\n                            ").concat(companyId ? "\n                                <a href=\"".concat((_22 = this.ClientContext) === null || _22 === void 0 ? void 0 : _22.websiteRoot, "Party.aspx?ID=").concat(companyId, "\">\n                                    <span style=\"vertical-align: middle;\">").concat(companyName, "</span>\n                                    <span class=\"userDetailsBadge\">ID ").concat(companyId, "</span>\n                                </a>\n                                ") : "\n                                <span style=\"vertical-align: middle;\">".concat(companyName, "</span>\n                                <span class=\"userDetailsBadge\">Company ID Not Correctly Linked</span>"), "\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersTitle\">\n                        ").concat(userTitle ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.UserTagIcon, "\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(userTitle, "</span>\n                        </div>") : '', "\n                    </div>\n                </div>\n            </div>\n        ");
     };
-    SearchBar.prototype.buildProfileFooter = function (username, data) {
+    WorkBar.prototype.buildProfileFooter = function (username, data) {
         var _a, _b, _c, _d;
         var createdOn = Sanitizer.date((_a = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _a === void 0 ? void 0 : _a.CreatedOn);
         var createdBy = (_b = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _b === void 0 ? void 0 : _b.CreatedBy;
@@ -1854,7 +1854,7 @@ var SearchBar = /** @class */ (function () {
         var updatedBy = (_d = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _d === void 0 ? void 0 : _d.UpdatedBy;
         return "\n            <div class=\"userDetails\" id=\"userCardChangeDetails\">\n                <span id=\"destinationUsersCreatedOn\">\n                    <span class=\"Label workBarLabel\">Created </span>".concat(createdOn, "\n                </span>\n                <span id=\"destinationUsersCreatedBy\">by ").concat(createdBy, "</span>\n                <span id=\"destinationUsersUpdatedOn\">\n                    <span class=\"Label workBarLabel\">Last Updated </span>").concat(updatedOn, "\n                </span>\n                <span id=\"destinationUsersUpdatedBy\">by ").concat(updatedBy, "</span>\n                <span id=\"destinationUsersUsername\">\n                    ").concat(username ? "\n                        <span class=\"Label workBarLabel workBarUsernameLabel\">Username </span>".concat(username, "\n                    ") : '', "\n                </span>\n            </div>\n        ");
     };
-    SearchBar.prototype.buildOpenSearch = function () {
+    WorkBar.prototype.buildOpenSearch = function () {
         var _this = this;
         var _a;
         var view = this.assetHelper.OpenSearchView;
@@ -1885,7 +1885,7 @@ var SearchBar = /** @class */ (function () {
             });
         }); });
     };
-    SearchBar.prototype.buildEvent = function (event, staffContactName, eventCategoryDescription) {
+    WorkBar.prototype.buildEvent = function (event, staffContactName, eventCategoryDescription) {
         var _a;
         var name = event === null || event === void 0 ? void 0 : event.Name;
         var id = event === null || event === void 0 ? void 0 : event.EventId;
@@ -1896,10 +1896,10 @@ var SearchBar = /** @class */ (function () {
         var virtualMeetingUrl = event === null || event === void 0 ? void 0 : event.VirtualMeetingUrl;
         return "\n            <div id=\"userCardProfile\" class=\"userDetails\">\n                <h3 id=\"destinationUsersName\" style=\"color: #005e7d; margin: 2px\">".concat(name, "</h3>\n                <div id=\"details\" style=\"font-size: 90%;\">\n                    <div id=\"userDetailsTop\" style=\"margin: 0px 0px 5px 1px;\">\n                        <span id=\"destinationUsersId\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersIdLabel\">ID </span>").concat(id, "\n                        </span>\n                        <span id=\"destinationUsersMemberType\" class=\"userDetails userSpecificDetail\">\n                            <span class=\"Label workBarLabel destinationUsersTypeLabel\">Category </span>").concat(eventCategoryDescription !== null && eventCategoryDescription !== void 0 ? eventCategoryDescription : "", "\n                        </span>\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(startDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.CalendarIcon, "\n                            <span class=\"textBadge\">Start Date</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(startDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(endDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.CalendarIcon, "\n                            <span class=\"textBadge\">End Date</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(endDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(staffContactName ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.UserTagIcon, "\n                            <span class=\"textBadge\">Staff Contact</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(staffContactName, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(virtualMeetingUrl ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.LinkSolidIcon, "\n                            <span class=\"textBadge\">Virtual Meeting URL</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">\n                                <a href=\"").concat(virtualMeetingUrl, "\" class=\"userActionCard\">").concat(virtualMeetingUrl, "</a>\n                            </span>\n                        </div>") : '', "\n                    </div>\n                    <br />\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(description ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.DescriptionIcon, "\n                            <span class=\"textBadge\">Description</span>\n                            <span style=\"display:inline-block; vertical-align: middle; padding-top:4px;\">").concat(description, "</span>\n                        </div>") : '', "\n                    </div>\n                </div>\n            </div>\n        ");
     };
-    SearchBar.prototype.buildEventFooter = function (status) {
+    WorkBar.prototype.buildEventFooter = function (status) {
         return "\n            <div class=\"userDetails\" id=\"userCardChangeDetails\">\n                <span id=\"destinationUsersCreatedOn\">\n                    <span class=\"Label workBarLabel\">Status </span>".concat(status, "\n                </span>\n            </div>\n        ");
     };
-    SearchBar.prototype.setEventDetails = function (event) {
+    WorkBar.prototype.setEventDetails = function (event) {
         var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function () {
             var input, url, rvToken, content, eventCategoryId, eventCategoryDescription, _e, staffContactId, contactData, _f, staffContactName, eventHtml, eventActions, changeDetails;
@@ -1947,7 +1947,7 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    SearchBar.prototype.setUserDetails = function (userId) {
+    WorkBar.prototype.setUserDetails = function (userId) {
         var _a, _b, _c, _d;
         if (userId === void 0) { userId = ''; }
         return __awaiter(this, void 0, void 0, function () {
@@ -1981,10 +1981,10 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    SearchBar.prototype.removeUserDetailsInfo = function () {
+    WorkBar.prototype.removeUserDetailsInfo = function () {
         this.$("#UserDetailsTab").empty();
     };
-    SearchBar.prototype.buildConfig = function (configJson) {
+    WorkBar.prototype.buildConfig = function (configJson) {
         var _a, _b, _c;
         var baseUrl = (_b = (_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
         var rvToken = (_c = this.RVToken) !== null && _c !== void 0 ? _c : "";
@@ -1994,19 +1994,19 @@ var SearchBar = /** @class */ (function () {
         this.$('#commandBarUl').html(view);
         this.config.setEventListeners(rvToken, baseUrl);
     };
-    SearchBar.prototype.getLoader = function () {
+    WorkBar.prototype.getLoader = function () {
         return "<div class=\"lookupLoader\" style=\"display: inline; margin-left: 6px;\">\n                    <span class=\"spinner\"></span>\n                </div>";
     };
-    SearchBar.prototype.getInputLoader = function () {
+    WorkBar.prototype.getInputLoader = function () {
         return "<div class=\"inputLoader\">\n                    <span class=\"spinner\"></span>\n                </div>";
     };
-    SearchBar.prototype.getInputErrorBadge = function () {
+    WorkBar.prototype.getInputErrorBadge = function () {
         return "<span class=\"inputErrorBadge\">No Matching Record Found</span>";
     };
-    SearchBar.prototype.getLookupErrorBadge = function () {
+    WorkBar.prototype.getLookupErrorBadge = function () {
         return "<span class=\"lookupErrorBadge\">No Matching Record Found</span>";
     };
-    SearchBar.prototype.activateTab = function (activateTab) {
+    WorkBar.prototype.activateTab = function (activateTab) {
         var _this = this;
         if (activateTab !== '') {
             var showTab = this.Tabs.filter(function (t) { return t == activateTab; })[0];
@@ -2024,7 +2024,7 @@ var SearchBar = /** @class */ (function () {
             _this.$("#".concat(tab)).hide();
         });
     };
-    SearchBar.prototype.setArrowEventListeners = function () {
+    WorkBar.prototype.setArrowEventListeners = function () {
         var _this = this;
         this.$('#commandBarInput').off("keydown.ArrowEvents");
         var index = 0;
@@ -2056,7 +2056,7 @@ var SearchBar = /** @class */ (function () {
             }
         });
     };
-    SearchBar.prototype.checkUser = function (currentActionBarValue) {
+    WorkBar.prototype.checkUser = function (currentActionBarValue) {
         var _this = this;
         var _a, _b, _c;
         var baseUrl = (_b = (_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
@@ -2082,7 +2082,7 @@ var SearchBar = /** @class */ (function () {
             }
         });
     };
-    SearchBar.prototype.captureInput = function () {
+    WorkBar.prototype.captureInput = function () {
         var _this = this;
         this.$('#commandBarInput').off('input.CaptureInput');
         this.$('#commandBarInput').on('input.CaptureInput', function (event) {
@@ -2133,19 +2133,19 @@ var SearchBar = /** @class */ (function () {
             }
         });
     };
-    SearchBar.prototype.getNextPlaceholder = function () {
+    WorkBar.prototype.getNextPlaceholder = function () {
         var currentItem = this.PlaceholderTextArray[this.CurrentPlaceholderIndex];
         this.CurrentPlaceholderIndex = (this.CurrentPlaceholderIndex + 1) % this.PlaceholderTextArray.length;
         return currentItem;
     };
-    SearchBar.prototype.buildDefaultView = function (rvToken, baseUrl) {
+    WorkBar.prototype.buildDefaultView = function (rvToken, baseUrl) {
         var routesHTML = this.config.buildRoutesHtml(this.ConfigRoutes);
         this.$('#commandBarUl').html(routesHTML);
         this.config.setEventListeners(rvToken, baseUrl);
         this.setArrowEventListeners();
         this.setActionCardHotkeyListeners();
     };
-    SearchBar.prototype.showOverlay = function () {
+    WorkBar.prototype.showOverlay = function () {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
             var baseUrl, rvToken;
@@ -2179,7 +2179,7 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    SearchBar.prototype.hideOverlay = function () {
+    WorkBar.prototype.hideOverlay = function () {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_c) {
@@ -2199,12 +2199,12 @@ var SearchBar = /** @class */ (function () {
             });
         });
     };
-    SearchBar.VERSION_STYLES = [
+    WorkBar.VERSION_STYLES = [
         "background-color: #e6b222; color: white;",
         "background-color: #374ea2; color: white;",
         "background-color: #00a4e0; color: white;",
         "background-color: inherit; color: inherit;", // Message
     ];
-    return SearchBar;
+    return WorkBar;
 }());
-new SearchBar(jQuery);
+new WorkBar(jQuery);

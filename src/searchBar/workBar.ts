@@ -1,7 +1,7 @@
 /// <reference path="../settings/settings.ts" />
 /// <reference path="../utils.ts" />
 
-class SearchBar
+class WorkBar
 {
     private static readonly VERSION_STYLES = [
         "background-color: #e6b222; color: white;", // CSI
@@ -83,7 +83,7 @@ class SearchBar
         this.$(async () =>
         {
             Utils.log('************* init **************');
-            Utils.log(Utils.VERSION_STRING + "Loaded: Search Bar", ...SearchBar.VERSION_STYLES);
+            Utils.log(Utils.VERSION_STRING + "Loaded: Search Bar", ...WorkBar.VERSION_STYLES);
 
             this.RVToken = this.$("#__RequestVerificationToken").val() as string;
             this.ClientContext = JSON.parse(this.$('#__ClientContext').val() as string) as ClientContext;
@@ -803,4 +803,4 @@ class SearchBar
     }
 }
 
-new SearchBar(jQuery);
+new WorkBar(jQuery);

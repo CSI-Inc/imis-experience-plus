@@ -1,6 +1,6 @@
 interface ConfigItem
 {
-    searchBar: SearchBar;
+    searchBar: WorkBar;
     category: string;
     displayName: string;
     altName: string;

@@ -4,7 +4,7 @@ class ConfigManager
     public static readonly Chrome_LastUpdatedKey: string = "iep__searchbBar__lastUpdated";
     public static readonly Chrome_ConfigKey: string = "iep__searchbBar__config";
 
-    constructor(private searchBar: SearchBar, private apiHelper: ApiHelper, private assetHelper: AssetHelper) { }
+    constructor(private searchBar: WorkBar, private apiHelper: ApiHelper, private assetHelper: AssetHelper) { }
 
     public async checkForConfigUpdate(): Promise<void>
     {
