@@ -2,7 +2,7 @@ class ApiHelper
 {
     constructor() { }
 
-    public async GetParty(input: string, rvToken: string, baseUrl: string): Promise<object | null>
+    public async getParty(input: string, rvToken: string, baseUrl: string): Promise<object | null>
     {
         const options: RequestInit = {
             method: 'GET',
@@ -20,12 +20,12 @@ class ApiHelper
         }
         else
         {
-            // console.log('GetParty results = ', results);
+            // Utils.log('GetParty results = ', results);
             return results.Items.$values[0];
         }
     }
 
-    public async GetEvent(input: string, rvToken: string, baseUrl: string): Promise<object | null>
+    public async getEvent(input: string, rvToken: string, baseUrl: string): Promise<object | null>
     {
         const options: RequestInit = {
             method: 'GET',
@@ -43,12 +43,12 @@ class ApiHelper
         }
         else
         {
-            // console.log('GetEvent results = ', results);
+            // Utils.log('GetEvent results = ', results);
             return results.Items.$values[0];
         }
     }
 
-    public async GetEventCategory(input: string, rvToken: string, baseUrl: string): Promise<string | null>
+    public async getEventCategory(input: string, rvToken: string, baseUrl: string): Promise<string | null>
     {
         const options: RequestInit = {
             method: 'GET',
@@ -66,12 +66,12 @@ class ApiHelper
         }
         else
         {
-            // console.log('GetEventCategory results = ', results);
+            // Utils.log('GetEventCategory results = ', results);
             return results.Items.$values[0].Description;
         }
     }
 
-    public async GetUserName(input: string, rvToken: string, baseUrl: string): Promise<string | null>
+    public async getUserName(input: string, rvToken: string, baseUrl: string): Promise<string | null>
     {
         const options: RequestInit = {
             method: 'GET',
@@ -89,12 +89,12 @@ class ApiHelper
         }
         else
         {
-            // console.log('GetUserName results = ', results);
+            // Utils.log('GetUserName results = ', results);
             return results.Items.$values[0].UserName;
         }
     }
 
-    public async FindUserIdByName(input: string, rvToken: string, baseUrl: string): Promise<string | null>
+    public async findUserIdByName(input: string, rvToken: string, baseUrl: string): Promise<string | null>
     {
         const options: RequestInit = {
             method: 'GET',
@@ -112,14 +112,14 @@ class ApiHelper
         }
         else
         {
-            // console.log('FindUserIdByName results = ', results);
+            // Utils.log('FindUserIdByName results = ', results);
             return results.Items.$values[0].UserId;
         }
     }
 
-    public async GetLatestConfigJson(): Promise<ConfigItem[] | null>
+    public async getLatestConfigJson(): Promise<ConfigItem[] | null>
     {
-        console.log('GetLatestConfigJson');
+        Utils.log('GetLatestConfigJson');
         var response = await fetch('https://cdn.cloud.csiinc.com/iep/config.json', { cache: 'no-cache', method: 'GET' });
         // console.log('response = ', response);
         if (response.ok)
@@ -131,7 +131,10 @@ class ApiHelper
                 // console.log('GetLatestConfigJson results = ', results);
                 return results as ConfigItem[];
             }
+            // Utils.log('GetUserName results = ', results);
+            return results.Items.$values[0].UserName;
         }
+
         return null;
     }
 }

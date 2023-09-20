@@ -196,6 +196,17 @@ var Utils = /** @class */ (function () {
             && ((_a = $('body').get(0)) === null || _a === void 0 ? void 0 : _a.id) === 'MainBody'
             && ((_b = $('form').get(0)) === null || _b === void 0 ? void 0 : _b.id) === 'aspnetForm';
     };
+    /** Logs to the console if console output is enabled */
+    Utils.log = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        if (this.ENABLE_CONSOLE_OUTPUT)
+            Utils.log.apply(Utils, args);
+    };
+    /** Change this to true to enable console output for debugging */
+    Utils.ENABLE_CONSOLE_OUTPUT = false;
     Utils.VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.3 %c ";
     return Utils;
 }());
@@ -208,7 +219,7 @@ var Debouncer = /** @class */ (function () {
         for (var _i = 2; _i < arguments.length; _i++) {
             args[_i - 2] = arguments[_i];
         }
-        console.log('Started debounce operation');
+        Utils.log('Started debounce operation');
         this.stop();
         this.id = window.setTimeout.apply(window, __spreadArray([callback, delay], args, false));
     };
@@ -223,11 +234,11 @@ var Debouncer = /** @class */ (function () {
     /** Stops the current debounce operation */
     Debouncer.prototype.stop = function () {
         if (this.id) {
-            console.log('Stopped debounce operation');
+            Utils.log('Stopped debounce operation');
             window.clearTimeout(this.id);
         }
         else {
-            console.log('No debounce operation to stop');
+            Utils.log('No debounce operation to stop');
         }
     };
     return Debouncer;
@@ -288,7 +299,7 @@ var IqaExtensions = /** @class */ (function () {
      */
     IqaExtensions.prototype.initIqaBrowserExtensions = function () {
         var _this = this;
-        console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: IQA Module"], IqaExtensions.VERSION_STYLES, false));
+        Utils.log.apply(Utils, __spreadArray([Utils.VERSION_STRING + "Loaded: IQA Module"], IqaExtensions.VERSION_STYLES, false));
         // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
         var qf = this.$('div[id*=ObjectQuickFindPanel');
@@ -352,7 +363,7 @@ var IqaExtensions = /** @class */ (function () {
     IqaExtensions.prototype.initIqaExtensions = function () {
         var _this = this;
         var _a, _b, _c;
-        console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: IQA Extensions"], IqaExtensions.VERSION_STYLES, false));
+        Utils.log.apply(Utils, __spreadArray([Utils.VERSION_STRING + "Loaded: IQA Extensions"], IqaExtensions.VERSION_STYLES, false));
         var isImis2017 = this.$('.SubTabStrip .rtsLevel.rtsLevel1 .rtsTxt:contains("Template")').length === 0;
         // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
@@ -432,7 +443,14 @@ var IqaExtensions = /** @class */ (function () {
         if (isImis2017) {
             this.$('div[id*="SourcesPanel_Body"] table.Grid tr.GridHeader td:last-child').css('width', '120px');
         }
+        else {
+            this.$('div[id*="SourcesPanel_Body"] table.Grid tr.GridHeader td:last-child').css('width', '35px').css('min-width', '25px');
+        }
         this.$('div[id*="SourcesPanel_Body"] table.Grid tr:first-child td:nth-last-child(2)').css('min-width', '150px');
+        // Copy the border style inside tr.GridHeader from the third column to the last column
+        this.$('div[id*="SourcesPanel_Body"] table.Grid tr.GridHeader td:nth-child(3)').each(function (_, e) {
+            _this.$(e).nextAll('td').css('border', _this.$(e).css('border'));
+        });
         // Text Boxes inside Table Cells
         this.$('div[id*="SourcesPanel_Body"] table.Grid td > input[type=text]').css('width', '100%');
         // Text updates
@@ -458,13 +476,27 @@ var IqaExtensions = /** @class */ (function () {
             .css('background-color', 'transparent')
             .find('span')
             .changeElementType('h3');
+        // Query for all table rows after the queryOptsRow
+        queryOptsRow.nextAll('tr').find('td').css('border-width', '0');
+        // Consistent bolding
+        queryOptsRow.nextAll('tr').find('td.PanelTablePrompt span').css('font-weight', '600');
         ft.find('table.Grid tr.GridHeader td:last-child').css('min-width', '140px');
         ft.find('table.Grid tr.GridHeader td:nth-last-child(2)').css('min-width', '180px');
         ft.find('table.Grid tr.GridHeader td:contains("Function")').parent('tr').find('td:nth-last-child(2)').text('Prompt Label');
-        ft.find('table.Grid tr.GridRow td:nth-child(7) input').css('width', '100%');
-        ft.find('table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', '100%');
-        ft.find('table.Grid tr.GridRow td:nth-child(5) input').css('width', '100%');
-        ft.find('table.Grid tr.GridAlternateRow td:nth-child(5) input').css('width', '100%');
+        // Value column - excludes any combo pickers
+        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=text], table.Grid tr.GridAlternateRow td:nth-child(5) input[type=text]').each(function (_, e) {
+            if (_this.$(e).parents('span.rcbInner').length === 0) {
+                _this.$(e).css('width', 'calc(100% - 130px)');
+            }
+        });
+        // Special case for date pickers and other image buttons
+        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=image]').prev('input[type=text]').css('width', 'calc(100% - 193px)');
+        ft.find('table.Grid tr.GridAlternateRow td:nth-child(5) input[type=image]').prev('input[type=text]').css('width', 'calc(100% - 193px)');
+        // Find any .RadComboBox items inside the 5th column and set a negative margin
+        ft.find('table.Grid tr.GridRow td:nth-child(5) .RadComboBox, table.Grid tr.GridAlternateRow td:nth-child(5) .RadComboBox').css('margin-top', '-4px');
+        // Prompt Label column
+        ft.find('table.Grid tr.GridRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
+        ft.find('table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
         if (isImis2017) {
             ft.find('td.PanelTablePrompt').parent().find('td').filter(':empty').remove();
             ft.find('td.PanelTablePrompt').parent().find('td').css('border', '0').css('background-color', 'transparent');
@@ -771,7 +803,7 @@ var RiseExtensions = /** @class */ (function () {
      */
     RiseExtensions.prototype.initRiseEditorExtensions = function () {
         var _this = this;
-        console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: RiSE Module"], RiseExtensions.VERSION_STYLES, false));
+        Utils.log.apply(Utils, __spreadArray([Utils.VERSION_STRING + "Loaded: RiSE Module"], RiseExtensions.VERSION_STYLES, false));
         // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
         // Add a class to the body for scoping CSS rules
@@ -904,7 +936,7 @@ new RiseExtensions(jQuery);
 var ApiHelper = /** @class */ (function () {
     function ApiHelper() {
     }
-    ApiHelper.prototype.GetParty = function (input, rvToken, baseUrl) {
+    ApiHelper.prototype.getParty = function (input, rvToken, baseUrl) {
         return __awaiter(this, void 0, void 0, function () {
             var options, response, results;
             return __generator(this, function (_a) {
@@ -928,7 +960,7 @@ var ApiHelper = /** @class */ (function () {
                             return [2 /*return*/, null];
                         }
                         else {
-                            // console.log('GetParty results = ', results);
+                            // Utils.log('GetParty results = ', results);
                             return [2 /*return*/, results.Items.$values[0]];
                         }
                         return [2 /*return*/];
@@ -936,7 +968,7 @@ var ApiHelper = /** @class */ (function () {
             });
         });
     };
-    ApiHelper.prototype.GetEvent = function (input, rvToken, baseUrl) {
+    ApiHelper.prototype.getEvent = function (input, rvToken, baseUrl) {
         return __awaiter(this, void 0, void 0, function () {
             var options, response, results;
             return __generator(this, function (_a) {
@@ -960,7 +992,7 @@ var ApiHelper = /** @class */ (function () {
                             return [2 /*return*/, null];
                         }
                         else {
-                            // console.log('GetEvent results = ', results);
+                            // Utils.log('GetEvent results = ', results);
                             return [2 /*return*/, results.Items.$values[0]];
                         }
                         return [2 /*return*/];
@@ -968,7 +1000,7 @@ var ApiHelper = /** @class */ (function () {
             });
         });
     };
-    ApiHelper.prototype.GetEventCategory = function (input, rvToken, baseUrl) {
+    ApiHelper.prototype.getEventCategory = function (input, rvToken, baseUrl) {
         return __awaiter(this, void 0, void 0, function () {
             var options, response, results;
             return __generator(this, function (_a) {
@@ -992,7 +1024,7 @@ var ApiHelper = /** @class */ (function () {
                             return [2 /*return*/, null];
                         }
                         else {
-                            // console.log('GetEventCategory results = ', results);
+                            // Utils.log('GetEventCategory results = ', results);
                             return [2 /*return*/, results.Items.$values[0].Description];
                         }
                         return [2 /*return*/];
@@ -1000,7 +1032,7 @@ var ApiHelper = /** @class */ (function () {
             });
         });
     };
-    ApiHelper.prototype.GetUserName = function (input, rvToken, baseUrl) {
+    ApiHelper.prototype.getUserName = function (input, rvToken, baseUrl) {
         return __awaiter(this, void 0, void 0, function () {
             var options, response, results;
             return __generator(this, function (_a) {
@@ -1024,7 +1056,7 @@ var ApiHelper = /** @class */ (function () {
                             return [2 /*return*/, null];
                         }
                         else {
-                            // console.log('GetUserName results = ', results);
+                            // Utils.log('GetUserName results = ', results);
                             return [2 /*return*/, results.Items.$values[0].UserName];
                         }
                         return [2 /*return*/];
@@ -1032,7 +1064,7 @@ var ApiHelper = /** @class */ (function () {
             });
         });
     };
-    ApiHelper.prototype.FindUserIdByName = function (input, rvToken, baseUrl) {
+    ApiHelper.prototype.findUserIdByName = function (input, rvToken, baseUrl) {
         return __awaiter(this, void 0, void 0, function () {
             var options, response, results;
             return __generator(this, function (_a) {
@@ -1056,7 +1088,7 @@ var ApiHelper = /** @class */ (function () {
                             return [2 /*return*/, null];
                         }
                         else {
-                            // console.log('FindUserIdByName results = ', results);
+                            // Utils.log('FindUserIdByName results = ', results);
                             return [2 /*return*/, results.Items.$values[0].UserId];
                         }
                         return [2 /*return*/];
@@ -1064,13 +1096,13 @@ var ApiHelper = /** @class */ (function () {
             });
         });
     };
-    ApiHelper.prototype.GetLatestConfigJson = function () {
+    ApiHelper.prototype.getLatestConfigJson = function () {
         return __awaiter(this, void 0, void 0, function () {
             var response, results;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('GetLatestConfigJson');
+                        Utils.log('GetLatestConfigJson');
                         return [4 /*yield*/, fetch('https://cdn.cloud.csiinc.com/iep/config.json', { cache: 'no-cache', method: 'GET' })];
                     case 1:
                         response = _a.sent();
@@ -1083,7 +1115,8 @@ var ApiHelper = /** @class */ (function () {
                             // console.log('GetLatestConfigJson results = ', results);
                             return [2 /*return*/, results];
                         }
-                        _a.label = 3;
+                        // Utils.log('GetUserName results = ', results);
+                        return [2 /*return*/, results.Items.$values[0].UserName];
                     case 3: return [2 /*return*/, null];
                 }
             });
@@ -1328,58 +1361,13 @@ var AssetHelper = /** @class */ (function () {
     };
     return AssetHelper;
 }());
-var CleanUp = /** @class */ (function () {
-    function CleanUp() {
-    }
-    // ex: pass in jsonData?.Emails?.$values[position].EmailType
-    CleanUp.EmailType = function (data) {
-        var _a, _b, _c;
-        // return data?.replace('_', '')?.replace('Email', '')?.replace('Address', '')?.trim() ?? 'Other';
-        var email = (_c = (_b = (_a = data === null || data === void 0 ? void 0 : data.replace('_', '')) === null || _a === void 0 ? void 0 : _a.replace('Email', '')) === null || _b === void 0 ? void 0 : _b.replace('Address', '')) === null || _c === void 0 ? void 0 : _c.trim();
-        return email ? email : 'Other';
-    };
-    // ex: pass in jsonData?.UpdateInformation?.UpdatedOn
-    CleanUp.Date = function (data) {
-        var _a, _b, _c;
-        return !data ? '' : (_c = (_b = (_a = new Date(data)) === null || _a === void 0 ? void 0 : _a.toISOString()) === null || _b === void 0 ? void 0 : _b.split('T')[0]) !== null && _c !== void 0 ? _c : '';
-    };
-    // ex: pass in jsonData?.Phones?.$values[2]?.PhoneType
-    CleanUp.Phone = function (data) {
-        var _a, _b;
-        var phone = (_b = (_a = data === null || data === void 0 ? void 0 : data.replace('_', '')) === null || _a === void 0 ? void 0 : _a.replace('Phone', '')) === null || _b === void 0 ? void 0 : _b.trim();
-        return phone ? phone : 'Other';
-    };
-    // ex: jsonData?.Addresses?.$values[0]?.Address?.FullAddress
-    CleanUp.FullAddress = function (data) {
-        var _a, _b, _c;
-        return (_c = (_b = (_a = data === null || data === void 0 ? void 0 : data.replace('UNITED STATES', 'United States')) === null || _a === void 0 ? void 0 : _a.replace('CANADA', 'Canada')) === null || _b === void 0 ? void 0 : _b.replace('AUSTRALIA', 'Australia')) === null || _c === void 0 ? void 0 : _c.trim();
-    };
-    // ex: jsonData?.Addresses?.$values[0]?.AddressPurpose
-    CleanUp.AddressPurpose = function (data) {
-        var _a, _b;
-        var purpose = (_b = (_a = data === null || data === void 0 ? void 0 : data.replace('Permanent Address', 'Permanent')) === null || _a === void 0 ? void 0 : _a.replace('Address', '')) === null || _b === void 0 ? void 0 : _b.trim();
-        return purpose ? purpose : 'Other';
-    };
-    /** Converts an event status code to a human-readable string. */
-    CleanUp.Status = function (statusCode) {
-        switch (statusCode) {
-            case 'A': return 'Active';
-            case 'P': return 'Pending';
-            case 'F': return 'Frozen';
-            case 'C': return 'Closed';
-            case 'X': return 'Canceled';
-            default: return 'Unknown';
-        }
-    };
-    return CleanUp;
-}());
 var ConfigManager = /** @class */ (function () {
     function ConfigManager(searchBar, apiHelper, assetHelper) {
         this.searchBar = searchBar;
         this.apiHelper = apiHelper;
         this.assetHelper = assetHelper;
     }
-    ConfigManager.prototype.CheckForConfigUpdate = function () {
+    ConfigManager.prototype.checkForConfigUpdate = function () {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
             var now, lastUpdated, lastUpdatedDate, config, configData;
@@ -1387,59 +1375,53 @@ var ConfigManager = /** @class */ (function () {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        console.log('CheckForConfigUpdate');
                         now = new Date();
                         now.setUTCHours(0, 0, 0, 0);
                         return [4 /*yield*/, chrome.storage.local.get([ConfigManager.Chrome_LastUpdatedKey])];
                     case 1:
                         lastUpdated = (_c.sent()).iep__searchbBar__lastUpdated;
-                        console.log('lastUpdated = ', lastUpdated);
-                        if (!(lastUpdated !== undefined)) return [3 /*break*/, 8];
-                        console.log('lastUpdatedKey in chrome.storage.local');
+                        Utils.log('lastUpdated = ', lastUpdated);
+                        if (!(lastUpdated !== undefined)) return [3 /*break*/, 6];
+                        Utils.log('lastUpdatedKey in chrome.storage.local');
                         lastUpdatedDate = new Date(lastUpdated);
                         lastUpdatedDate.setUTCHours(0, 0, 0, 0);
-                        if (!(lastUpdatedDate < now)) return [3 /*break*/, 6];
-                        console.log('lastUpdatedDate < now');
-                        return [4 /*yield*/, this.apiHelper.GetLatestConfigJson()];
+                        if (!(lastUpdatedDate < now)) return [3 /*break*/, 5];
+                        Utils.log('lastUpdatedDate < now');
+                        return [4 /*yield*/, this.apiHelper.getLatestConfigJson()];
                     case 2:
                         config = _c.sent();
                         if (!(config && config.length > 0)) return [3 /*break*/, 5];
-                        console.log('CheckForConfigUpdate -> GetLatestConfigJson -> config = ', config);
-                        return [4 /*yield*/, this.SetConfig(config, now)];
+                        Utils.log('CheckForConfigUpdate -> GetLatestConfigJson -> config = ', config);
+                        return [4 /*yield*/, this.setConfig(config, now)];
                     case 3:
                         _c.sent();
                         return [4 /*yield*/, chrome.storage.local.set((_b = {}, _b[ConfigManager.Chrome_LastUpdatedKey] = (_a = now.toISOString()) === null || _a === void 0 ? void 0 : _a.split('T')[0], _b))];
                     case 4:
                         _c.sent();
                         _c.label = 5;
-                    case 5: return [3 /*break*/, 7];
+                    case 5: return [3 /*break*/, 9];
                     case 6:
-                        console.log('......Continue......');
-                        _c.label = 7;
-                    case 7: return [3 /*break*/, 11];
-                    case 8:
-                        console.log('lastUpdatedKey NOT in chrome.storage.local');
-                        console.log('prime chrome storage');
-                        return [4 /*yield*/, this.GetInitialConfig()];
-                    case 9:
+                        Utils.log('lastUpdatedKey NOT in chrome.storage.local');
+                        return [4 /*yield*/, this.getInitialConfig()];
+                    case 7:
                         configData = _c.sent();
-                        return [4 /*yield*/, this.SetConfig(configData, now)];
-                    case 10:
+                        return [4 /*yield*/, this.setConfig(configData, now)];
+                    case 8:
                         _c.sent();
-                        _c.label = 11;
-                    case 11: return [2 /*return*/];
+                        _c.label = 9;
+                    case 9: return [2 /*return*/];
                 }
             });
         });
     };
-    ConfigManager.prototype.SetConfig = function (data, now) {
+    ConfigManager.prototype.setConfig = function (data, now) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
             var _b, _c;
             return __generator(this, function (_d) {
                 switch (_d.label) {
                     case 0:
-                        console.log('SetConfig');
+                        Utils.log('SetConfig');
                         return [4 /*yield*/, chrome.storage.local.set((_b = {}, _b[ConfigManager.Chrome_ConfigKey] = data, _b))];
                     case 1:
                         _d.sent();
@@ -1451,38 +1433,35 @@ var ConfigManager = /** @class */ (function () {
             });
         });
     };
-    ConfigManager.prototype.GetInitialConfig = function () {
+    ConfigManager.prototype.getInitialConfig = function () {
         return __awaiter(this, void 0, void 0, function () {
             var result, lastestData, response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('GetInitialConfig');
+                        Utils.log('GetInitialConfig');
                         result = [];
-                        return [4 /*yield*/, this.apiHelper.GetLatestConfigJson()];
+                        return [4 /*yield*/, this.apiHelper.getLatestConfigJson()];
                     case 1:
                         lastestData = _a.sent();
                         if (!(lastestData && lastestData.length > 0)) return [3 /*break*/, 2];
                         result = lastestData;
-                        console.log('GetInitialConfig -> GetLatestConfigJson -> Server Data = ', result);
+                        Utils.log('GetInitialConfig -> GetLatestConfigJson -> Server Data = ', result);
                         return [3 /*break*/, 5];
-                    case 2:
-                        // something went wrong -> get from local
-                        console.log('getting initial config json from server and SERVER FAILED... getting from LOCAL...');
-                        return [4 /*yield*/, fetch(chrome.runtime.getURL(ConfigManager.ConfigPath))];
+                    case 2: return [4 /*yield*/, fetch(chrome.runtime.getURL(ConfigManager.ConfigPath))];
                     case 3:
                         response = _a.sent();
                         return [4 /*yield*/, response.json()];
                     case 4:
                         result = (_a.sent());
-                        console.log('GetInitialConfig -> GetLatestConfigJson -> Local Data = ', result);
+                        Utils.log('GetInitialConfig -> GetLatestConfigJson -> Local Data = ', result);
                         _a.label = 5;
                     case 5: return [2 /*return*/, result.sort(function (a, b) { return a.displayName.localeCompare(b.displayName); })];
                 }
             });
         });
     };
-    ConfigManager.prototype.GetChromeConfig = function () {
+    ConfigManager.prototype.getChromeConfig = function () {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
             var data;
@@ -1490,11 +1469,10 @@ var ConfigManager = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.log('GetChromeConfig');
+                        Utils.log('GetChromeConfig');
                         return [4 /*yield*/, chrome.storage.local.get([ConfigManager.Chrome_ConfigKey])];
                     case 1:
                         data = (_b.sent()).iep__searchbBar__config;
-                        console.log('Chrome Data data = ', data);
                         // Append baseUrls for iMIS links that have client specific urls
                         if (((_a = this.searchBar.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) != null && this.searchBar.ClientContext.baseUrl != "/") {
                             data.forEach(function (item) {
@@ -1510,7 +1488,7 @@ var ConfigManager = /** @class */ (function () {
             });
         });
     };
-    ConfigManager.prototype.SetEventListeners = function (rvToken, baseUrl, includeTags) {
+    ConfigManager.prototype.setEventListeners = function (rvToken, baseUrl, includeTags) {
         var _this = this;
         if (includeTags === void 0) { includeTags = false; }
         // $('.commandBarListItem').off("mouseenter mouseleave click");
@@ -1519,25 +1497,20 @@ var ConfigManager = /** @class */ (function () {
             .on("mouseleave", function (e) { return $(e.currentTarget).removeClass('commandBarHover'); })
             .on('click', function (e) {
             var anchorId = $(e.currentTarget).find('a').attr('id');
-            if (anchorId == "usernameLookup" || anchorId == "eventCodeLookup") {
-                // this is to prevent event conflict with "eventCodeLookup" & "usernameLookup" on click listeners
-            }
-            else {
-                if ($(e.currentTarget).find('.lookupLoader').length == 0) {
-                    $(e.currentTarget).find('a').append(_this.searchBar.GetLoader());
-                }
+            if (anchorId != "usernameLookup" && anchorId != "eventCodeLookup"
+                && $(e.currentTarget).find('.lookupLoader').length == 0) {
+                $(e.currentTarget).find('a').append(_this.searchBar.GetLoader());
             }
         });
         if (includeTags) {
             var input = $('#commandBarInput').val();
-            // $('#eventCodeLookup').off("click");
             $('#eventCodeLookup').on("click", function () { return __awaiter(_this, void 0, void 0, function () {
                 var event;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             $('#eventCodeLookup').append(this.searchBar.GetLoader());
-                            return [4 /*yield*/, this.apiHelper.GetEvent(input, rvToken, baseUrl)];
+                            return [4 /*yield*/, this.apiHelper.getEvent(input, rvToken, baseUrl)];
                         case 1:
                             event = _a.sent();
                             if (!(event == null)) return [3 /*break*/, 2];
@@ -1555,14 +1528,13 @@ var ConfigManager = /** @class */ (function () {
                     }
                 });
             }); });
-            // $('#usernameLookup').off("click");
             $('#usernameLookup').on("click", function () { return __awaiter(_this, void 0, void 0, function () {
                 var imisId;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             $('#usernameLookup').append(this.searchBar.GetLoader());
-                            return [4 /*yield*/, this.apiHelper.FindUserIdByName(input, rvToken, baseUrl)];
+                            return [4 /*yield*/, this.apiHelper.findUserIdByName(input, rvToken, baseUrl)];
                         case 1:
                             imisId = _a.sent();
                             if (!(imisId == null)) return [3 /*break*/, 2];
@@ -1590,15 +1562,15 @@ var ConfigManager = /** @class */ (function () {
             return false;
         }
     };
-    ConfigManager.prototype.Camalize = function (input) {
+    ConfigManager.prototype.convertToCamelCase = function (input) {
         return input.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, function (match, chr) { return chr.toUpperCase(); });
     };
-    ConfigManager.prototype.BuildRoutesHTML = function (data) {
+    ConfigManager.prototype.buildRoutesHtml = function (data) {
         var _this = this;
         var result = '';
         data.forEach(function (item, i) {
             var _a;
-            var displayNameWithBadge = _this.AddVersionBadge(item.displayName);
+            var displayNameWithBadge = _this.addVersionBadge(item.displayName);
             var category = item.category.length > -1 ? "<span class=\"searchCategory\">".concat(item.category, "</span>") : '';
             var externalLinkBadge = _this.isValidUrl(item.destination) ? (_a = _this.assetHelper.ExternalIcon) === null || _a === void 0 ? void 0 : _a.replace("margin-left: 6px;", "margin-left: 3px;") : '';
             var shortcut = item.isShortcut ? "<span class=\"searchDestination\">~".concat(item.destination, "</span>") : '';
@@ -1606,7 +1578,7 @@ var ConfigManager = /** @class */ (function () {
         });
         return result;
     };
-    ConfigManager.prototype.AddVersionBadge = function (input) {
+    ConfigManager.prototype.addVersionBadge = function (input) {
         var displayName = "<span class=\"searchDisplayName\">".concat(input, "</span>");
         var oldVersion = "(2017)";
         var newVersion = "(EMS)";
@@ -1620,13 +1592,13 @@ var ConfigManager = /** @class */ (function () {
         }
         return displayName;
     };
-    ConfigManager.prototype.BuildTagsHTML = function (data, seed, userInput) {
+    ConfigManager.prototype.buildTagsHtml = function (data, seed, userInput) {
         var _this = this;
         var result = '';
         data.forEach(function (item, i) {
             var _a;
             var counter = seed + i;
-            var id = _this.Camalize(item.category);
+            var id = _this.convertToCamelCase(item.category);
             var destination = id == "eventCodeLookup" || id == "usernameLookup" ? '' : "href=\"".concat(item.destination).concat(userInput, "\" ");
             var category = item.category.length > -1 ? "<span class=\"searchCategory\">".concat(item.category, "</span>") : '';
             var externalLinkBadge = _this.isValidUrl(item.destination) ? (_a = _this.assetHelper.ExternalIcon) === null || _a === void 0 ? void 0 : _a.replace("margin-left: 6px;", "margin-left: 3px;") : '';
@@ -1638,6 +1610,51 @@ var ConfigManager = /** @class */ (function () {
     ConfigManager.Chrome_LastUpdatedKey = "iep__searchbBar__lastUpdated";
     ConfigManager.Chrome_ConfigKey = "iep__searchbBar__config";
     return ConfigManager;
+}());
+var Sanitizer = /** @class */ (function () {
+    function Sanitizer() {
+    }
+    // ex: pass in jsonData?.Emails?.$values[position].EmailType
+    Sanitizer.emailType = function (data) {
+        var _a, _b, _c;
+        // return data?.replace('_', '')?.replace('Email', '')?.replace('Address', '')?.trim() ?? 'Other';
+        var email = (_c = (_b = (_a = data === null || data === void 0 ? void 0 : data.replace('_', '')) === null || _a === void 0 ? void 0 : _a.replace('Email', '')) === null || _b === void 0 ? void 0 : _b.replace('Address', '')) === null || _c === void 0 ? void 0 : _c.trim();
+        return email ? email : 'Other';
+    };
+    // ex: pass in jsonData?.UpdateInformation?.UpdatedOn
+    Sanitizer.date = function (data) {
+        var _a, _b, _c;
+        return !data ? '' : (_c = (_b = (_a = new Date(data)) === null || _a === void 0 ? void 0 : _a.toISOString()) === null || _b === void 0 ? void 0 : _b.split('T')[0]) !== null && _c !== void 0 ? _c : '';
+    };
+    // ex: pass in jsonData?.Phones?.$values[2]?.PhoneType
+    Sanitizer.phone = function (data) {
+        var _a, _b;
+        var phone = (_b = (_a = data === null || data === void 0 ? void 0 : data.replace('_', '')) === null || _a === void 0 ? void 0 : _a.replace('Phone', '')) === null || _b === void 0 ? void 0 : _b.trim();
+        return phone ? phone : 'Other';
+    };
+    // ex: jsonData?.Addresses?.$values[0]?.Address?.FullAddress
+    Sanitizer.fullAddress = function (data) {
+        var _a, _b, _c;
+        return (_c = (_b = (_a = data === null || data === void 0 ? void 0 : data.replace('UNITED STATES', 'United States')) === null || _a === void 0 ? void 0 : _a.replace('CANADA', 'Canada')) === null || _b === void 0 ? void 0 : _b.replace('AUSTRALIA', 'Australia')) === null || _c === void 0 ? void 0 : _c.trim();
+    };
+    // ex: jsonData?.Addresses?.$values[0]?.AddressPurpose
+    Sanitizer.addressPurpose = function (data) {
+        var _a, _b;
+        var purpose = (_b = (_a = data === null || data === void 0 ? void 0 : data.replace('Permanent Address', 'Permanent')) === null || _a === void 0 ? void 0 : _a.replace('Address', '')) === null || _b === void 0 ? void 0 : _b.trim();
+        return purpose ? purpose : 'Other';
+    };
+    /** Converts an event status code to a human-readable string. */
+    Sanitizer.statusCodeDescription = function (statusCode) {
+        switch (statusCode) {
+            case 'A': return 'Active';
+            case 'P': return 'Pending';
+            case 'F': return 'Frozen';
+            case 'C': return 'Closed';
+            case 'X': return 'Canceled';
+            default: return 'Unknown';
+        }
+    };
+    return Sanitizer;
 }());
 /// <reference path="../settings/settings.ts" />
 /// <reference path="../utils.ts" />
@@ -1700,7 +1717,7 @@ var SearchBar = /** @class */ (function () {
                             myCombo = "[Alt] + " + myCombo;
                         if (config.workbarKbdCtrl)
                             myCombo = "[Control] + " + myCombo;
-                        // console.log('myCombo = ', myCombo);
+                        // Utils.log('myCombo = ', myCombo);
                         this.PlaceholderTextArray.push("Open the Work Bar with ".concat(myCombo, "."));
                         this.$(function () { return __awaiter(_this, void 0, void 0, function () {
                             var configJson;
@@ -1709,15 +1726,15 @@ var SearchBar = /** @class */ (function () {
                             return __generator(this, function (_f) {
                                 switch (_f.label) {
                                     case 0:
-                                        console.log('************* init **************');
-                                        console.log.apply(console, __spreadArray([Utils.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
+                                        Utils.log('************* init **************');
+                                        Utils.log.apply(Utils, __spreadArray([Utils.VERSION_STRING + "Loaded: Search Bar"], SearchBar.VERSION_STYLES, false));
                                         this.RVToken = this.$("#__RequestVerificationToken").val();
                                         this.ClientContext = JSON.parse(this.$('#__ClientContext').val());
-                                        // console.log('this.ClientContext = ', this.ClientContext);
+                                        // Utils.log('this.ClientContext = ', this.ClientContext);
                                         // we want to prevent non-users from using the searchbar
                                         if (this.ClientContext.isAnonymous)
                                             return [2 /*return*/];
-                                        return [4 /*yield*/, this.config.CheckForConfigUpdate()];
+                                        return [4 /*yield*/, this.config.checkForConfigUpdate()];
                                     case 1:
                                         _f.sent();
                                         return [4 /*yield*/, this.assetHelper.GetAllAssets()];
@@ -1729,7 +1746,7 @@ var SearchBar = /** @class */ (function () {
                                         this.$("#commandBarOverlay .externalIcon").replaceWith((_d = this.assetHelper.ExternalIcon) !== null && _d !== void 0 ? _d : "");
                                         this.$("#commandBarOverlay #commandBarExitButton").html((_e = this.assetHelper.CloseIcon) !== null && _e !== void 0 ? _e : "");
                                         this.BuildOpenSearch();
-                                        return [4 /*yield*/, this.config.GetChromeConfig()];
+                                        return [4 /*yield*/, this.config.GetConfig()];
                                     case 3:
                                         configJson = _f.sent();
                                         this.BuildConfig(configJson);
@@ -1744,7 +1761,10 @@ var SearchBar = /** @class */ (function () {
                                                         // Replace space in e.key with "Spacebar" for consistency
                                                         if (event.key === " ") {
                                                             event.key = Settings.SPACEBAR;
-                                                            // console.log("Key pressed: " + Settings.SPACEBAR);
+                                                            console.log("Key pressed: " + Settings.SPACEBAR);
+                                                        }
+                                                        else {
+                                                            console.log("Key pressed: " + event.key);
                                                         }
                                                         if (!((!this.$(event.target).is('input') && !this.$(event.target).is('textarea'))
                                                             && !isCommandBarVisible
@@ -1787,14 +1807,14 @@ var SearchBar = /** @class */ (function () {
                 event.preventDefault();
             }
             if (_this.$("#commandBarOverlay").is(":visible") && event.key === "Enter" && _this.$('#commandBarInput').get(0) === document.activeElement && !event.shiftKey && !event.ctrlKey && !event.altKey) {
-                console.log('Enter pressed in commandBarInput and commandBarOverlay is visible');
+                Utils.log('Enter pressed in commandBarInput and commandBarOverlay is visible');
                 if (_this.$("#UserDetailsTab").is(":visible")) {
-                    console.log('UserDetailsTab is visible');
+                    Utils.log('UserDetailsTab is visible');
                     (_a = _this.$("#userProfile").get(0)) === null || _a === void 0 ? void 0 : _a.click();
                     event.preventDefault();
                 }
                 else if (_this.$("#EventDetailsTab").is(":visible")) {
-                    console.log('EventDetailsTab is visible');
+                    Utils.log('EventDetailsTab is visible');
                     (_b = _this.$("#eventDashboard").get(0)) === null || _b === void 0 ? void 0 : _b.click();
                     event.preventDefault();
                 }
@@ -1817,26 +1837,26 @@ var SearchBar = /** @class */ (function () {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22;
         var status = (_a = data === null || data === void 0 ? void 0 : data.Status) === null || _a === void 0 ? void 0 : _a.Description;
         var memberType = (_b = data === null || data === void 0 ? void 0 : data.AdditionalAttributes) === null || _b === void 0 ? void 0 : _b.$values[0].Value;
-        var birthDate = CleanUp.Date(data === null || data === void 0 ? void 0 : data.BirthDate);
+        var birthDate = Sanitizer.date(data === null || data === void 0 ? void 0 : data.BirthDate);
         var phone0 = (_d = (_c = data === null || data === void 0 ? void 0 : data.Phones) === null || _c === void 0 ? void 0 : _c.$values[0]) === null || _d === void 0 ? void 0 : _d.Number;
-        var phone0Type = CleanUp.Phone((_f = (_e = data === null || data === void 0 ? void 0 : data.Phones) === null || _e === void 0 ? void 0 : _e.$values[0]) === null || _f === void 0 ? void 0 : _f.PhoneType);
+        var phone0Type = Sanitizer.phone((_f = (_e = data === null || data === void 0 ? void 0 : data.Phones) === null || _e === void 0 ? void 0 : _e.$values[0]) === null || _f === void 0 ? void 0 : _f.PhoneType);
         var phone1 = (_h = (_g = data === null || data === void 0 ? void 0 : data.Phones) === null || _g === void 0 ? void 0 : _g.$values[1]) === null || _h === void 0 ? void 0 : _h.Number;
-        var phone1Type = CleanUp.Phone((_k = (_j = data === null || data === void 0 ? void 0 : data.Phones) === null || _j === void 0 ? void 0 : _j.$values[1]) === null || _k === void 0 ? void 0 : _k.PhoneType);
+        var phone1Type = Sanitizer.phone((_k = (_j = data === null || data === void 0 ? void 0 : data.Phones) === null || _j === void 0 ? void 0 : _j.$values[1]) === null || _k === void 0 ? void 0 : _k.PhoneType);
         var email1 = (_m = (_l = data === null || data === void 0 ? void 0 : data.Emails) === null || _l === void 0 ? void 0 : _l.$values[0]) === null || _m === void 0 ? void 0 : _m.Address;
         var email1IsPrimary = (_p = (_o = data === null || data === void 0 ? void 0 : data.Emails) === null || _o === void 0 ? void 0 : _o.$values[0]) === null || _p === void 0 ? void 0 : _p.IsPrimary;
-        var email1Type = CleanUp.EmailType((_r = (_q = data === null || data === void 0 ? void 0 : data.Emails) === null || _q === void 0 ? void 0 : _q.$values[0]) === null || _r === void 0 ? void 0 : _r.EmailType);
+        var email1Type = Sanitizer.emailType((_r = (_q = data === null || data === void 0 ? void 0 : data.Emails) === null || _q === void 0 ? void 0 : _q.$values[0]) === null || _r === void 0 ? void 0 : _r.EmailType);
         var email2 = (_t = (_s = data === null || data === void 0 ? void 0 : data.Emails) === null || _s === void 0 ? void 0 : _s.$values[1]) === null || _t === void 0 ? void 0 : _t.Address;
         var email2IsPrimary = (_v = (_u = data === null || data === void 0 ? void 0 : data.Emails) === null || _u === void 0 ? void 0 : _u.$values[1]) === null || _v === void 0 ? void 0 : _v.IsPrimary;
-        var email2Type = CleanUp.EmailType((_x = (_w = data === null || data === void 0 ? void 0 : data.Emails) === null || _w === void 0 ? void 0 : _w.$values[1]) === null || _x === void 0 ? void 0 : _x.EmailType);
+        var email2Type = Sanitizer.emailType((_x = (_w = data === null || data === void 0 ? void 0 : data.Emails) === null || _w === void 0 ? void 0 : _w.$values[1]) === null || _x === void 0 ? void 0 : _x.EmailType);
         var email3 = (_z = (_y = data === null || data === void 0 ? void 0 : data.Emails) === null || _y === void 0 ? void 0 : _y.$values[2]) === null || _z === void 0 ? void 0 : _z.Address;
         var email3IsPrimary = (_1 = (_0 = data === null || data === void 0 ? void 0 : data.Emails) === null || _0 === void 0 ? void 0 : _0.$values[2]) === null || _1 === void 0 ? void 0 : _1.IsPrimary;
-        var email3Type = CleanUp.EmailType((_3 = (_2 = data === null || data === void 0 ? void 0 : data.Emails) === null || _2 === void 0 ? void 0 : _2.$values[2]) === null || _3 === void 0 ? void 0 : _3.EmailType);
-        var address0 = CleanUp.FullAddress((_6 = (_5 = (_4 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _4 === void 0 ? void 0 : _4.$values[0]) === null || _5 === void 0 ? void 0 : _5.Address) === null || _6 === void 0 ? void 0 : _6.FullAddress);
-        var address0Type = CleanUp.AddressPurpose((_8 = (_7 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _7 === void 0 ? void 0 : _7.$values[0]) === null || _8 === void 0 ? void 0 : _8.AddressPurpose);
-        var address1 = CleanUp.FullAddress((_11 = (_10 = (_9 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _9 === void 0 ? void 0 : _9.$values[1]) === null || _10 === void 0 ? void 0 : _10.Address) === null || _11 === void 0 ? void 0 : _11.FullAddress);
-        var address1Type = CleanUp.AddressPurpose((_13 = (_12 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _12 === void 0 ? void 0 : _12.$values[1]) === null || _13 === void 0 ? void 0 : _13.AddressPurpose);
-        var address2 = CleanUp.FullAddress((_16 = (_15 = (_14 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _14 === void 0 ? void 0 : _14.$values[2]) === null || _15 === void 0 ? void 0 : _15.Address) === null || _16 === void 0 ? void 0 : _16.FullAddress);
-        var address2Type = CleanUp.AddressPurpose((_18 = (_17 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _17 === void 0 ? void 0 : _17.$values[2]) === null || _18 === void 0 ? void 0 : _18.AddressPurpose);
+        var email3Type = Sanitizer.emailType((_3 = (_2 = data === null || data === void 0 ? void 0 : data.Emails) === null || _2 === void 0 ? void 0 : _2.$values[2]) === null || _3 === void 0 ? void 0 : _3.EmailType);
+        var address0 = Sanitizer.fullAddress((_6 = (_5 = (_4 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _4 === void 0 ? void 0 : _4.$values[0]) === null || _5 === void 0 ? void 0 : _5.Address) === null || _6 === void 0 ? void 0 : _6.FullAddress);
+        var address0Type = Sanitizer.addressPurpose((_8 = (_7 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _7 === void 0 ? void 0 : _7.$values[0]) === null || _8 === void 0 ? void 0 : _8.AddressPurpose);
+        var address1 = Sanitizer.fullAddress((_11 = (_10 = (_9 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _9 === void 0 ? void 0 : _9.$values[1]) === null || _10 === void 0 ? void 0 : _10.Address) === null || _11 === void 0 ? void 0 : _11.FullAddress);
+        var address1Type = Sanitizer.addressPurpose((_13 = (_12 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _12 === void 0 ? void 0 : _12.$values[1]) === null || _13 === void 0 ? void 0 : _13.AddressPurpose);
+        var address2 = Sanitizer.fullAddress((_16 = (_15 = (_14 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _14 === void 0 ? void 0 : _14.$values[2]) === null || _15 === void 0 ? void 0 : _15.Address) === null || _16 === void 0 ? void 0 : _16.FullAddress);
+        var address2Type = Sanitizer.addressPurpose((_18 = (_17 = data === null || data === void 0 ? void 0 : data.Addresses) === null || _17 === void 0 ? void 0 : _17.$values[2]) === null || _18 === void 0 ? void 0 : _18.AddressPurpose);
         var companyName = (_19 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _19 === void 0 ? void 0 : _19.Name;
         var companyId = (_20 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _20 === void 0 ? void 0 : _20.OrganizationPartyId;
         var userTitle = (_21 = data === null || data === void 0 ? void 0 : data.PrimaryOrganization) === null || _21 === void 0 ? void 0 : _21.Title;
@@ -1844,9 +1864,9 @@ var SearchBar = /** @class */ (function () {
     };
     SearchBar.prototype.BuildProfileFooter = function (username, data) {
         var _a, _b, _c, _d;
-        var createdOn = CleanUp.Date((_a = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _a === void 0 ? void 0 : _a.CreatedOn);
+        var createdOn = Sanitizer.date((_a = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _a === void 0 ? void 0 : _a.CreatedOn);
         var createdBy = (_b = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _b === void 0 ? void 0 : _b.CreatedBy;
-        var updatedOn = CleanUp.Date((_c = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _c === void 0 ? void 0 : _c.UpdatedOn);
+        var updatedOn = Sanitizer.date((_c = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _c === void 0 ? void 0 : _c.UpdatedOn);
         var updatedBy = (_d = data === null || data === void 0 ? void 0 : data.UpdateInformation) === null || _d === void 0 ? void 0 : _d.UpdatedBy;
         return "\n            <div class=\"userDetails\" id=\"userCardChangeDetails\">\n                <span id=\"destinationUsersCreatedOn\">\n                    <span class=\"Label workBarLabel\">Created </span>".concat(createdOn, "\n                </span>\n                <span id=\"destinationUsersCreatedBy\">by ").concat(createdBy, "</span>\n                <span id=\"destinationUsersUpdatedOn\">\n                    <span class=\"Label workBarLabel\">Last Updated </span>").concat(updatedOn, "\n                </span>\n                <span id=\"destinationUsersUpdatedBy\">by ").concat(updatedBy, "</span>\n                <span id=\"destinationUsersUsername\">\n                    ").concat(username ? "\n                        <span class=\"Label workBarLabel workBarUsernameLabel\">Username </span>".concat(username, "\n                    ") : '', "\n                </span>\n            </div>\n        ");
     };
@@ -1886,9 +1906,9 @@ var SearchBar = /** @class */ (function () {
         var _a;
         var name = event === null || event === void 0 ? void 0 : event.Name;
         var id = event === null || event === void 0 ? void 0 : event.EventId;
-        var status = CleanUp.Status(event === null || event === void 0 ? void 0 : event.Status);
-        var startDate = CleanUp.Date(event === null || event === void 0 ? void 0 : event.StartDateTime);
-        var endDate = CleanUp.Date(event === null || event === void 0 ? void 0 : event.EndDateTime);
+        var status = Sanitizer.statusCodeDescription(event === null || event === void 0 ? void 0 : event.Status);
+        var startDate = Sanitizer.date(event === null || event === void 0 ? void 0 : event.StartDateTime);
+        var endDate = Sanitizer.date(event === null || event === void 0 ? void 0 : event.EndDateTime);
         var description = ((_a = event === null || event === void 0 ? void 0 : event.Description) !== null && _a !== void 0 ? _a : "").trim().replace(/(<([^>]+)>)/gi, "");
         var virtualMeetingUrl = event === null || event === void 0 ? void 0 : event.VirtualMeetingUrl;
         return "\n            <div id=\"userCardProfile\" class=\"userDetails\">\n                <h3 id=\"destinationUsersName\" style=\"color: #005e7d; margin: 2px\">".concat(name, "</h3>\n                <div id=\"details\" style=\"font-size: 90%;\">\n                    <div id=\"userDetailsTop\" style=\"margin: 0px 0px 5px 1px;\">\n                        <span id=\"destinationUsersId\" class=\"userDetails userSpecificDetail userIndividual\" style=\"padding-right: 6px;\">\n                            <span class=\"Label workBarLabel destinationUsersIdLabel\">ID </span>").concat(id, "\n                        </span>\n                        <span id=\"destinationUsersMemberType\" class=\"userDetails userSpecificDetail\">\n                            <span class=\"Label workBarLabel destinationUsersTypeLabel\">Category </span>").concat(eventCategoryDescription !== null && eventCategoryDescription !== void 0 ? eventCategoryDescription : "", "\n                        </span>\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(startDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.CalendarIcon, "\n                            <span class=\"textBadge\">Start Date</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(startDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(endDate ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.CalendarIcon, "\n                            <span class=\"textBadge\">End Date</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(endDate, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(staffContactName ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.UserTagIcon, "\n                            <span class=\"textBadge\">Staff Contact</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">").concat(staffContactName, "</span>\n                        </div>") : '', "\n                    </div>\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(virtualMeetingUrl ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.LinkSolidIcon, "\n                            <span class=\"textBadge\">Virtual Meeting URL</span>\n                            <span style=\"display:inline-block; vertical-align: middle;\">\n                                <a href=\"").concat(virtualMeetingUrl, "\" class=\"userActionCard\">").concat(virtualMeetingUrl, "</a>\n                            </span>\n                        </div>") : '', "\n                    </div>\n                    <br />\n                    <div class=\"userDetails userSpecificDetail displayBlock\" id=\"destinationUsersBirthdate\">\n                        ").concat(description ? "\n                        <div style=\"padding:2px 0;\">\n                            ".concat(this.assetHelper.DescriptionIcon, "\n                            <span class=\"textBadge\">Description</span>\n                            <span style=\"display:inline-block; vertical-align: middle; padding-top:4px;\">").concat(description, "</span>\n                        </div>") : '', "\n                    </div>\n                </div>\n            </div>\n        ");
@@ -1911,7 +1931,7 @@ var SearchBar = /** @class */ (function () {
                         this.$("#EventDetailsTab").replaceWith(content !== null && content !== void 0 ? content : "");
                         eventCategoryId = (_d = event === null || event === void 0 ? void 0 : event.Category) === null || _d === void 0 ? void 0 : _d.EventCategoryId;
                         if (!eventCategoryId) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.apiHelper.GetEventCategory(eventCategoryId, rvToken, url)];
+                        return [4 /*yield*/, this.apiHelper.getEventCategory(eventCategoryId, rvToken, url)];
                     case 1:
                         _e = _g.sent();
                         return [3 /*break*/, 3];
@@ -1922,7 +1942,7 @@ var SearchBar = /** @class */ (function () {
                         eventCategoryDescription = _e;
                         staffContactId = event === null || event === void 0 ? void 0 : event.NotificationPartyId;
                         if (!staffContactId) return [3 /*break*/, 5];
-                        return [4 /*yield*/, this.apiHelper.GetParty(staffContactId, rvToken, url)];
+                        return [4 /*yield*/, this.apiHelper.getParty(staffContactId, rvToken, url)];
                     case 4:
                         _f = _g.sent();
                         return [3 /*break*/, 6];
@@ -1936,7 +1956,7 @@ var SearchBar = /** @class */ (function () {
                         this.$('#userCardProfile').replaceWith(eventHtml);
                         eventActions = this.BuildEventCardActions(input);
                         this.$('#userCardActions').replaceWith(eventActions);
-                        changeDetails = this.BuildEventFooter(CleanUp.Status(event === null || event === void 0 ? void 0 : event.Status));
+                        changeDetails = this.BuildEventFooter(Sanitizer.statusCodeDescription(event === null || event === void 0 ? void 0 : event.Status));
                         this.$("#userCardChangeDetails").replaceWith(changeDetails);
                         return [2 /*return*/, true];
                     case 7: return [2 /*return*/, false];
@@ -1958,13 +1978,13 @@ var SearchBar = /** @class */ (function () {
                             return [2 /*return*/, false];
                         url = (_b = (_a = this.ClientContext) === null || _a === void 0 ? void 0 : _a.baseUrl) !== null && _b !== void 0 ? _b : "";
                         rvToken = (_c = this.RVToken) !== null && _c !== void 0 ? _c : "";
-                        return [4 /*yield*/, this.apiHelper.GetParty(input, rvToken, url)];
+                        return [4 /*yield*/, this.apiHelper.getParty(input, rvToken, url)];
                     case 1:
                         data = _e.sent();
                         if (!data) return [3 /*break*/, 3];
                         content = this.assetHelper.UserDetailsView;
                         this.$("#UserDetailsTab").replaceWith(content !== null && content !== void 0 ? content : "");
-                        return [4 /*yield*/, this.apiHelper.GetUserName(input, rvToken, url)];
+                        return [4 /*yield*/, this.apiHelper.getUserName(input, rvToken, url)];
                     case 2:
                         username = (_d = _e.sent()) !== null && _d !== void 0 ? _d : "";
                         profile = this.BuildProfile(data);
@@ -1988,9 +2008,9 @@ var SearchBar = /** @class */ (function () {
         var rvToken = (_c = this.RVToken) !== null && _c !== void 0 ? _c : "";
         this.ConfigRoutes = configJson.filter(function (d) { return !d.isTag; });
         this.ConfigTags = configJson.filter(function (d) { return d.isTag; });
-        var view = this.config.BuildRoutesHTML(this.ConfigRoutes);
+        var view = this.config.buildRoutesHtml(this.ConfigRoutes);
         this.$('#commandBarUl').html(view);
-        this.config.SetEventListeners(rvToken, baseUrl);
+        this.config.setEventListeners(rvToken, baseUrl);
     };
     SearchBar.prototype.GetLoader = function () {
         return "<div class=\"lookupLoader\" style=\"display: inline; margin-left: 6px;\">\n                    <span class=\"spinner\"></span>\n                </div>";
@@ -2025,18 +2045,18 @@ var SearchBar = /** @class */ (function () {
     };
     SearchBar.prototype.SetArrowEventListeners = function () {
         var _this = this;
-        // console.log('SetArrowEventListeners');
+        // Utils.log('SetArrowEventListeners');
         this.$('#commandBarInput').off("keydown.ArrowEvents");
         var index = 0;
         var listItems = this.$(".commandBarListItem");
         this.$(listItems[index]).addClass("commandBarSelected");
         this.$('#commandBarInput').on("keydown.ArrowEvents", function (event) {
             var _a, _b, _c;
-            // console.log('index before = ', index);
+            // Utils.log('index before = ', index);
             if (_this.$("#CommandBarSelectTab").is(":visible")) {
                 switch (event.key) {
                     case "ArrowUp":
-                        // console.log('index up = ', index);
+                        // Utils.log('index up = ', index);
                         event.preventDefault();
                         _this.$(listItems[index]).removeClass("commandBarSelected");
                         index = index > 0 ? --index : 0;
@@ -2044,7 +2064,7 @@ var SearchBar = /** @class */ (function () {
                         (_a = _this.$(listItems[index]).get(0)) === null || _a === void 0 ? void 0 : _a.scrollIntoView({ block: "nearest", behavior: "auto", inline: "nearest" });
                         break;
                     case "ArrowDown":
-                        // console.log('index down = ', index);
+                        // Utils.log('index down = ', index);
                         event.preventDefault();
                         _this.$(listItems[index]).removeClass("commandBarSelected");
                         index = index < listItems.length - 1 ? ++index : listItems.length - 1;
@@ -2056,7 +2076,7 @@ var SearchBar = /** @class */ (function () {
                         (_c = _this.$(listItems[index]).children().get(0)) === null || _c === void 0 ? void 0 : _c.click();
                         break;
                 }
-                // console.log('index after = ', index);
+                // Utils.log('index after = ', index);
             }
         });
     };
@@ -2071,7 +2091,7 @@ var SearchBar = /** @class */ (function () {
             this.$("#commandBarInput").after(this.GetInputLoader());
         }
         this.SetUserDetails().then(function (foundUser) {
-            // console.log('foundUser = ', foundUser);
+            // Utils.log('foundUser = ', foundUser);
             _this.$('#commandBarInput').siblings(".inputLoader").remove();
             if (foundUser) {
                 _this.ActivateTab(_this.UserDetailsTab);
@@ -2080,9 +2100,9 @@ var SearchBar = /** @class */ (function () {
                 _this.$("#commandBarInput").after(_this.GetInputErrorBadge());
                 if (_this.$("#CommandBarSelectTab").is(":hidden")) {
                     _this.ActivateTab(_this.CommandBarSelectTab);
-                    var tagsHTML = _this.config.BuildTagsHTML(_this.ConfigTags, 0, currentActionBarValue);
+                    var tagsHTML = _this.config.buildTagsHtml(_this.ConfigTags, 0, currentActionBarValue);
                     _this.$('#commandBarUl').html(tagsHTML);
-                    _this.config.SetEventListeners(rvToken, baseUrl, true);
+                    _this.config.setEventListeners(rvToken, baseUrl, true);
                     _this.SetArrowEventListeners();
                 }
             }
@@ -2111,7 +2131,7 @@ var SearchBar = /** @class */ (function () {
                 _this.debouncer.stop();
                 if (_this.$("#CommandBarSelectTab").is(":hidden")) {
                     _this.ActivateTab(_this.CommandBarSelectTab);
-                    console.log('remove user details view...');
+                    Utils.log('remove user details view...');
                 }
                 if (currentActionBarValue) {
                     var filteredSearch = function (result) { return result.score < 0.6; };
@@ -2127,10 +2147,10 @@ var SearchBar = /** @class */ (function () {
                     var fuse = new Fuse(_this.ConfigRoutes, options);
                     var results = fuse.search(currentActionBarValue);
                     var filteredResults = results.filter(filteredSearch).map(function (fr) { return fr.item; });
-                    var routesHTML = _this.config.BuildRoutesHTML(filteredResults);
-                    var tagsHTML = _this.config.BuildTagsHTML(_this.ConfigTags, filteredResults.length, currentActionBarValue);
+                    var routesHTML = _this.config.buildRoutesHtml(filteredResults);
+                    var tagsHTML = _this.config.buildTagsHtml(_this.ConfigTags, filteredResults.length, currentActionBarValue);
                     _this.$('#commandBarUl').html(routesHTML.concat(tagsHTML));
-                    _this.config.SetEventListeners(rvToken, baseUrl, true);
+                    _this.config.setEventListeners(rvToken, baseUrl, true);
                     _this.SetArrowEventListeners();
                     _this.SetActionCardHotkeyListeners();
                 }
@@ -2141,9 +2161,9 @@ var SearchBar = /** @class */ (function () {
         });
     };
     SearchBar.prototype.BuildDefaultView = function (rvToken, baseUrl) {
-        var routesHTML = this.config.BuildRoutesHTML(this.ConfigRoutes);
+        var routesHTML = this.config.buildRoutesHtml(this.ConfigRoutes);
         this.$('#commandBarUl').html(routesHTML);
-        this.config.SetEventListeners(rvToken, baseUrl);
+        this.config.setEventListeners(rvToken, baseUrl);
         this.SetArrowEventListeners();
         this.SetActionCardHotkeyListeners();
     };
@@ -2178,13 +2198,13 @@ var SearchBar = /** @class */ (function () {
                     this.$('#commandBarOverlay').show();
                     this.$('#commandBarInput').trigger("focus");
                     // // @ts-ignore
-                    // console.log('#commandBarExitButton handlers: ', $._data(this.$('#commandBarExitButton')[0], 'events'));
+                    // Utils.log('#commandBarExitButton handlers: ', $._data(this.$('#commandBarExitButton')[0], 'events'));
                     // // @ts-ignore
-                    // console.log('.commandBarListItem handlers: ', $._data(this.$('.commandBarListItem')[0], 'events'));
+                    // Utils.log('.commandBarListItem handlers: ', $._data(this.$('.commandBarListItem')[0], 'events'));
                     // // @ts-ignore
-                    // console.log('#commandBarInput handlers: ', $._data(this.$('#commandBarInput')[0], 'events'));
+                    // Utils.log('#commandBarInput handlers: ', $._data(this.$('#commandBarInput')[0], 'events'));
                     // // @ts-ignore
-                    // console.log('Document handlers: ', $._data(document, 'events'));
+                    // Utils.log('Document handlers: ', $._data(document, 'events'));
                 }
                 return [2 /*return*/];
             });
@@ -2194,7 +2214,7 @@ var SearchBar = /** @class */ (function () {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_c) {
-                // console.log('HIDE OVERLAY');
+                // Utils.log('HIDE OVERLAY');
                 // remove error badges
                 (_a = this.$('#commandBarOverlay').find('.lookupErrorBadge')) === null || _a === void 0 ? void 0 : _a.remove();
                 (_b = this.$('#commandBarOverlay').find('.inputErrorBadge')) === null || _b === void 0 ? void 0 : _b.remove();

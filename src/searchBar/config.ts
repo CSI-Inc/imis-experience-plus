@@ -6,77 +6,70 @@ class ConfigManager
 
     constructor(private searchBar: SearchBar, private apiHelper: ApiHelper, private assetHelper: AssetHelper) { }
 
-    public async CheckForConfigUpdate(): Promise<void>
+    public async checkForConfigUpdate(): Promise<void>
     {
-        console.log('CheckForConfigUpdate');
         var now = new Date();
         now.setUTCHours(0, 0, 0, 0);
         var lastUpdated = (await chrome.storage.local.get([ConfigManager.Chrome_LastUpdatedKey])).iep__searchbBar__lastUpdated;
-        console.log('lastUpdated = ', lastUpdated);
+        Utils.log('lastUpdated = ', lastUpdated);
         if (lastUpdated !== undefined)
         {
-            console.log('lastUpdatedKey in chrome.storage.local');
+            Utils.log('lastUpdatedKey in chrome.storage.local');
             var lastUpdatedDate = new Date(lastUpdated);
             lastUpdatedDate.setUTCHours(0, 0, 0, 0);
             if (lastUpdatedDate < now)
             {
-                console.log('lastUpdatedDate < now');
-                var config = await this.apiHelper.GetLatestConfigJson();
+                Utils.log('lastUpdatedDate < now');
+                var config = await this.apiHelper.getLatestConfigJson();
                 if (config && config.length > 0)
                 {
-                    console.log('CheckForConfigUpdate -> GetLatestConfigJson -> config = ', config);
-                    await this.SetConfig(config, now);
+                    Utils.log('CheckForConfigUpdate -> GetLatestConfigJson -> config = ', config);
+                    await this.setConfig(config, now);
                     await chrome.storage.local.set({ [ConfigManager.Chrome_LastUpdatedKey]: now.toISOString()?.split('T')[0] });
                 }
             }
-            else
-            {
-                console.log('......Continue......');
-            }
+
         }
-        // first time running updater, fetch config from server and set lastUpdated to today
+        // first time running updater, fetch config and set lastUpdated to today
         else
         {
-            console.log('lastUpdatedKey NOT in chrome.storage.local');
-            console.log('prime chrome storage');
-            var configData = await this.GetInitialConfig();
-            await this.SetConfig(configData, now);
+            Utils.log('lastUpdatedKey NOT in chrome.storage.local');
+            var configData = await this.getInitialConfig();
+            await this.setConfig(configData, now);
         }
     }
 
-    public async SetConfig(data: ConfigItem[], now: Date): Promise<void>
+    public async setConfig(data: ConfigItem[], now: Date): Promise<void>
     {
-        console.log('SetConfig');
+        Utils.log('SetConfig');
         await chrome.storage.local.set({ [ConfigManager.Chrome_ConfigKey]: data });
         await chrome.storage.local.set({ [ConfigManager.Chrome_LastUpdatedKey]: now.toISOString()?.split('T')[0] });
     }
 
-    public async GetInitialConfig(): Promise<ConfigItem[]>
+    public async getInitialConfig(): Promise<ConfigItem[]>
     {
-        console.log('GetInitialConfig');
+        Utils.log('GetInitialConfig');
         var result: ConfigItem[] = [];
-        var lastestData = await this.apiHelper.GetLatestConfigJson();
+        var lastestData = await this.apiHelper.getLatestConfigJson();
         if (lastestData && lastestData.length > 0)
         {
             result = lastestData;
-            console.log('GetInitialConfig -> GetLatestConfigJson -> Server Data = ', result);
+            Utils.log('GetInitialConfig -> GetLatestConfigJson -> Server Data = ', result);
         }
         else
         {
             // something went wrong -> get from local
-            console.log('getting initial config json from server and SERVER FAILED... getting from LOCAL...');
             var response = await fetch(chrome.runtime.getURL(ConfigManager.ConfigPath));
             result = await response.json() as ConfigItem[];
-            console.log('GetInitialConfig -> GetLatestConfigJson -> Local Data = ', result);
+            Utils.log('GetInitialConfig -> GetLatestConfigJson -> Local Data = ', result);
         }
         return result.sort((a, b) => a.displayName.localeCompare(b.displayName));
     }
 
-    public async GetChromeConfig(): Promise<ConfigItem[]>
+    public async getChromeConfig(): Promise<ConfigItem[]>
     {
-        console.log('GetChromeConfig');
+        Utils.log('GetChromeConfig');
         var data = (await chrome.storage.local.get([ConfigManager.Chrome_ConfigKey])).iep__searchbBar__config as ConfigItem[];
-        console.log('Chrome Data data = ', data);
         // Append baseUrls for iMIS links that have client specific urls
         if (this.searchBar.ClientContext?.baseUrl != null && this.searchBar.ClientContext.baseUrl != "/")
         {
@@ -92,7 +85,7 @@ class ConfigManager
         return data.sort((a, b) => a.displayName.localeCompare(b.displayName));
     }
 
-    public SetEventListeners(rvToken: string, baseUrl: string, includeTags = false): void
+    public setEventListeners(rvToken: string, baseUrl: string, includeTags = false): void
     {
         // $('.commandBarListItem').off("mouseenter mouseleave click");
         $('.commandBarListItem')
@@ -101,26 +94,21 @@ class ConfigManager
             .on('click', e =>
             {
                 var anchorId = $(e.currentTarget).find('a').attr('id');
-                if (anchorId == "usernameLookup" || anchorId == "eventCodeLookup")
+                if (anchorId != "usernameLookup" && anchorId != "eventCodeLookup" 
+                    && $(e.currentTarget).find('.lookupLoader').length == 0)
                 {
-                    // this is to prevent event conflict with "eventCodeLookup" & "usernameLookup" on click listeners
-                } else
-                {
-                    if ($(e.currentTarget).find('.lookupLoader').length == 0)
-                    {
-                        $(e.currentTarget).find('a').append(this.searchBar.GetLoader());
-                    }
+                    $(e.currentTarget).find('a').append(this.searchBar.GetLoader());
                 }
             });
 
         if (includeTags)
         {
             var input = $('#commandBarInput').val() as string;
-            // $('#eventCodeLookup').off("click");
+            
             $('#eventCodeLookup').on("click", async () =>
             {
                 $('#eventCodeLookup').append(this.searchBar.GetLoader());
-                var event = await this.apiHelper.GetEvent(input, rvToken, baseUrl);
+                var event = await this.apiHelper.getEvent(input, rvToken, baseUrl);
                 if (event == null)
                 {
                     $('#eventCodeLookup .lookupLoader').remove();
@@ -136,11 +124,11 @@ class ConfigManager
                     this.searchBar.ActivateTab(this.searchBar.EventDetailsTab);
                 }
             });
-            // $('#usernameLookup').off("click");
+
             $('#usernameLookup').on("click", async () =>
             {
                 $('#usernameLookup').append(this.searchBar.GetLoader());
-                var imisId = await this.apiHelper.FindUserIdByName(input, rvToken, baseUrl);
+                var imisId = await this.apiHelper.findUserIdByName(input, rvToken, baseUrl);
                 if (imisId == null)
                 {
                     $('#usernameLookup .lookupLoader').remove();
@@ -171,17 +159,17 @@ class ConfigManager
         }
     }
 
-    public Camalize(input: string): string
+    public convertToCamelCase(input: string): string
     {
         return input.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (match, chr) => chr.toUpperCase());
     }
 
-    public BuildRoutesHTML(data: ConfigItem[]): string
+    public buildRoutesHtml(data: ConfigItem[]): string
     {
         var result = '';
         data.forEach((item, i) =>
         {
-            var displayNameWithBadge = this.AddVersionBadge(item.displayName);
+            var displayNameWithBadge = this.addVersionBadge(item.displayName);
             var category = item.category.length > -1 ? `<span class="searchCategory">${item.category}</span>` : '';
             var externalLinkBadge = this.isValidUrl(item.destination) ? this.assetHelper.ExternalIcon?.replace("margin-left: 6px;", "margin-left: 3px;") : '';
             var shortcut = item.isShortcut ? `<span class="searchDestination">~${item.destination}</span>` : '';
@@ -199,7 +187,7 @@ class ConfigManager
         return result;
     }
 
-    private AddVersionBadge(input: string): string
+    private addVersionBadge(input: string): string
     {
         var displayName = `<span class="searchDisplayName">${input}</span>`;
         var oldVersion = "(2017)";
@@ -217,13 +205,13 @@ class ConfigManager
         return displayName;
     }
 
-    public BuildTagsHTML(data: ConfigItem[], seed: number, userInput: string): string
+    public buildTagsHtml(data: ConfigItem[], seed: number, userInput: string): string
     {
         var result = '';
         data.forEach((item, i) =>
         {
             var counter = seed + i;
-            var id = this.Camalize(item.category);
+            var id = this.convertToCamelCase(item.category);
             var destination = id == "eventCodeLookup" || id == "usernameLookup" ? '' : `href="${item.destination}${userInput}" `;
             var category = item.category.length > -1 ? `<span class="searchCategory">${item.category}</span>` : '';
             var externalLinkBadge = this.isValidUrl(item.destination) ? this.assetHelper.ExternalIcon?.replace("margin-left: 6px;", "margin-left: 3px;") : '';

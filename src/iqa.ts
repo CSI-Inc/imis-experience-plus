@@ -54,7 +54,7 @@ class IqaExtensions
      */
     initIqaBrowserExtensions(): void
     {
-        console.log(Utils.VERSION_STRING + "Loaded: IQA Module", ...IqaExtensions.VERSION_STYLES);
+        Utils.log(Utils.VERSION_STRING + "Loaded: IQA Module", ...IqaExtensions.VERSION_STYLES);
 
         // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
@@ -143,7 +143,7 @@ class IqaExtensions
      */
     initIqaExtensions(): void
     {
-        console.log(Utils.VERSION_STRING + "Loaded: IQA Extensions", ...IqaExtensions.VERSION_STYLES);
+        Utils.log(Utils.VERSION_STRING + "Loaded: IQA Extensions", ...IqaExtensions.VERSION_STYLES);
 
         let isImis2017 = this.$('.SubTabStrip .rtsLevel.rtsLevel1 .rtsTxt:contains("Template")').length === 0;
 
@@ -246,7 +246,17 @@ class IqaExtensions
         {
             this.$('div[id*="SourcesPanel_Body"] table.Grid tr.GridHeader td:last-child').css('width', '120px');
         }
+        else
+        {
+            this.$('div[id*="SourcesPanel_Body"] table.Grid tr.GridHeader td:last-child').css('width', '35px').css('min-width', '25px');
+        }
         this.$('div[id*="SourcesPanel_Body"] table.Grid tr:first-child td:nth-last-child(2)').css('min-width', '150px');
+
+        // Copy the border style inside tr.GridHeader from the third column to the last column
+        this.$('div[id*="SourcesPanel_Body"] table.Grid tr.GridHeader td:nth-child(3)').each((_, e) =>
+        {
+            this.$(e).nextAll('td').css('border', this.$(e).css('border'));
+        });
 
         // Text Boxes inside Table Cells
         this.$('div[id*="SourcesPanel_Body"] table.Grid td > input[type=text]').css('width', '100%');
@@ -283,14 +293,35 @@ class IqaExtensions
             .find('span')
             .changeElementType('h3');
 
+        // Query for all table rows after the queryOptsRow
+        queryOptsRow.nextAll('tr').find('td').css('border-width', '0');
+
+        // Consistent bolding
+        queryOptsRow.nextAll('tr').find('td.PanelTablePrompt span').css('font-weight', '600');
+
         ft.find('table.Grid tr.GridHeader td:last-child').css('min-width', '140px')
         ft.find('table.Grid tr.GridHeader td:nth-last-child(2)').css('min-width', '180px')
         ft.find('table.Grid tr.GridHeader td:contains("Function")').parent('tr').find('td:nth-last-child(2)').text('Prompt Label');
 
-        ft.find('table.Grid tr.GridRow td:nth-child(7) input').css('width', '100%');
-        ft.find('table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', '100%');
-        ft.find('table.Grid tr.GridRow td:nth-child(5) input').css('width', '100%');
-        ft.find('table.Grid tr.GridAlternateRow td:nth-child(5) input').css('width', '100%');
+        // Value column - excludes any combo pickers
+        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=text], table.Grid tr.GridAlternateRow td:nth-child(5) input[type=text]').each((_, e) =>
+        {
+            if (this.$(e).parents('span.rcbInner').length === 0)
+            {
+                this.$(e).css('width', 'calc(100% - 130px)');
+            }
+        });
+        
+        // Special case for date pickers and other image buttons
+        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=image]').prev('input[type=text]').css('width', 'calc(100% - 193px)');
+        ft.find('table.Grid tr.GridAlternateRow td:nth-child(5) input[type=image]').prev('input[type=text]').css('width', 'calc(100% - 193px)');
+
+        // Find any .RadComboBox items inside the 5th column and set a negative margin
+        ft.find('table.Grid tr.GridRow td:nth-child(5) .RadComboBox, table.Grid tr.GridAlternateRow td:nth-child(5) .RadComboBox').css('margin-top', '-4px');
+
+        // Prompt Label column
+        ft.find('table.Grid tr.GridRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
+        ft.find('table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
 
         if (isImis2017)
         {

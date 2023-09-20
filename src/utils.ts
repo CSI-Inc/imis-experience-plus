@@ -1,5 +1,8 @@
 class Utils
 {
+    /** Change this to true to enable console output for debugging */
+    private static readonly ENABLE_CONSOLE_OUTPUT = false;
+
     public static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.3.3 %c ";
 
     /** Determines if the current page is an IMIS page or not. This is used to determine if the extension should be enabled or not. */
@@ -10,6 +13,12 @@ class Utils
             && $('body').get(0)?.id === 'MainBody'
             && $('form').get(0)?.id === 'aspnetForm';
     }
+
+    /** Logs to the console if console output is enabled */
+    public static log(...args: any[]): void
+    {
+        if (this.ENABLE_CONSOLE_OUTPUT) Utils.log(...args);
+    }
 }
 
 class Debouncer
@@ -19,7 +28,7 @@ class Debouncer
     /** Starts a debounce operation with args */
     public start(callback: (...args: any[]) => void, delay: number, ...args: any[]): void
     {
-        console.log('Started debounce operation');
+        Utils.log('Started debounce operation');
         this.stop();
         this.id = window.setTimeout(callback, delay, ...args);
     }
@@ -35,12 +44,12 @@ class Debouncer
     {
         if (this.id)
         {
-            console.log('Stopped debounce operation');
+            Utils.log('Stopped debounce operation');
             window.clearTimeout(this.id);
         }
         else
         {
-            console.log('No debounce operation to stop');
+            Utils.log('No debounce operation to stop');
         }
     }
 }
