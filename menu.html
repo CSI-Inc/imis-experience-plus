@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Menu</title>
+    <link rel="stylesheet" href="https://cdn.cloud.csiinc.com/semantic/2.8.3/semantic.min.css">
+
+    <style type="text/css">
+        html {
+            width: 400px;
+        }
+
+        body {
+            margin: 0;
+            padding: 1rem;
+            background-color: #E0E0E0;
+        }
+
+        b.s {
+            font-weight: 600;
+        }
+
+        #iep-logo {
+            height: 120px;
+            width: auto;
+        }
+
+        #csilogo {
+            height: 50px;
+            width: auto;
+        }
+
+        .ui.checkbox>input[type="checkbox"]+label {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        div#reload-notice {
+            background-color: #D55E5E;
+            color: white;
+            margin: 1rem -1.1rem -1.1rem;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .community-links {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+    </style>
+
+</head>
+
+<body id="iep-menu">
+    <div class="ui basic fitted center aligned segment">
+        <img src="assets/images/imis-experience-plus.png" id="iep-logo" />
+
+        <h2 style="margin-bottom: 0; margin-top: 0.5rem;">Settings</h2>
+    </div>
+    <div class="ui unstackable form">
+        <div class="ui raised segment">
+            <div class="field">
+                <div class="ui large toggle checkbox">
+                    <input type="checkbox" name="enable-iqa" id="enable-iqa" checked="checked">
+                    <label for="enable-iqa"><b class="s">Enhanced IQA Editor</b></label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui large toggle checkbox">
+                    <input type="checkbox" name="enable-rise" id="enable-rise" checked="checked">
+                    <label for="enable-rise"><b class="s">Enhanced RiSE Page Editor</b></label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui large toggle checkbox">
+                    <input type="checkbox" name="enable-workbar" id="enable-workbar" checked="checked">
+                    <label for="enable-workbar"><b class="s">Work Bar</b></label>
+                </div>
+            </div>
+            <div class="ten wide field">
+                <label>Work Bar Keyboard Shortcut</label>
+                <div class="ui left icon input">
+                    <i class="keyboard icon"></i>
+                    <input type="text" name="workbar-kbd" id="workbar-kbd" placeholder="Press a single key..." />
+                </div>
+            </div>
+            <div class="inline fields" style="margin-bottom: 0;">
+                <div class="three wide field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" name="kbd-ctrl" id="kbd-ctrl" checked="checked">
+                        <label for="kbd-ctrl"><b class="s">Ctrl</b></label>
+                    </div>
+                </div>
+                <div class="three wide field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" name="kbd-alt" id="kbd-alt" checked="checked">
+                        <label for="kbd-alt"><b class="s">Alt</b></label>
+                    </div>
+                </div>
+                <div class="three wide field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" name="kbd-shift" id="kbd-shift" checked="checked">
+                        <label for="kbd-shift"><b class="s">Shift</b></label>
+                    </div>
+                </div>
+            </div>
+            <div id="reload-notice" style="display: none;">
+                <i class="refresh icon"></i>
+                <span>Reload to Apply Changes</span>
+            </div>
+        </div>
+        <div class="ui basic center aligned segment">
+            <p>
+                <span class="ui text">
+                    Made with ❤️ by the iMIS community and CSI!
+                </span>
+            </p>
+            <p class="community-links">
+                <a href="https://github.com/CSI-Inc/imis-experience-plus/issues/new?assignees=&labels=bug&projects=&template=report-a-bug.md&title=" target="_blank">Report a Bug</a>
+                &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+                <a href="https://github.com/CSI-Inc/imis-experience-plus/issues/new?assignees=&labels=enhancement&projects=&template=suggest-a-feature.md&title=" target="_blank">Suggest a Feature</a>
+            </p>
+            <p>
+                <a href="https://www.csiinc.com/?utm_source=iep-menu" target="_blank"><img src="/assets/images/csilogo.png" id="csilogo" /></a>
+            </p>
+        </div>
+    </div>
+
+    <script src="/lib/jquery/jquery-3.6.0.js"></script>
+    <script src="/imis-plus.js"></script>
+</body>
+
+</html>

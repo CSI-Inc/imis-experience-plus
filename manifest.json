@@ -1,11 +1,17 @@
 {
     "name": "iMIS Experience Plus",
-    "version": "1.2.1",
+    "version": "1.3.0",
     "manifest_version": 3,
     "description": "A browser extension to improve the user experience within the iMIS Staff Site. Made with ❤️ by the iMIS community and CSI.",
-    "permissions": [
+    "host_permissions": [
         "https://*/*"
     ],
+    "permissions": [
+        "storage"
+    ],
+    "action": {
+        "default_popup": "menu.html"
+    },
     "incognito": "split",
     "content_scripts": [
         {
@@ -13,6 +19,7 @@
                 "https://*/*"
             ],
             "js": [
+                "lib/fuse/fuse-6.6.2.js",
                 "lib/jquery/jquery-3.6.0.js",
                 "imis-plus.js"
             ],
@@ -30,5 +37,19 @@
         "64": "icons/imis-plus-64.png",
         "128": "icons/imis-plus-128.png",
         "256": "icons/imis-plus-256.png"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "assets/*"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self';",
+        "sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; child-src 'self';"
     }
 }

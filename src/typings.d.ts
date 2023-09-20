@@ -15,4 +15,7 @@ interface Window
 {
     gWebRoot: string;
     WebKitMutationObserver: MutationObserver;
+    chrome: any;
 }
+
+declare var Fuse: any;

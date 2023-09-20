@@ -6,9 +6,17 @@
         "strict": true,
         "target": "es5",
         "noImplicitAny": true,
-        "allowJs": false
+        "allowJs": false,
+        "lib": [
+            "es2015",
+            "DOM"
+        ],
+        "skipLibCheck": true /* Skip type checking all .d.ts files. */
     },
     "include": [
-        "src/**/*"
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
     ]
 }

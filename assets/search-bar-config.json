@@ -1,0 +1,938 @@
+[
+  {
+    "category": "Community",
+    "displayName": "Committees: Manage Committees",
+    "altName": "",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/CommitteeManagement/CommitteeListDisplay.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Committees: Manage Committee Positions",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/Contacts/Committee_Positions.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Committees: Committee Minutes Configuration",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Customers/CommitteeMinutes.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Community",
+    "displayName": "Communities",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Communities/Communities.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Community",
+    "displayName": "Groups",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Groups/Find_Groups.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Chapters",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Shared/LegacyBillingItem.aspx?ItemClassId=CHAPT",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Generate Renewals",
+    "altName": "billing cycle autopay charge",
+    "isTag": false,
+    "destination": "/imis/Setup/Billing/BillGeneration.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Billing Cycles",
+    "altName": "renewals itemized joins membership dues",
+    "isTag": false,
+    "destination": "/imis/Setup/Billing/BillingCycle.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Users",
+    "displayName": "Manage Duplicates",
+    "altName": "remove dupe match key",
+    "isTag": false,
+    "destination": "/iCore/Contacts/Manage_Duplicates.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Users",
+    "displayName": "User Security",
+    "altName": "password username change login expired",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/Contact/User/FindUser.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Gifts: Enter Gifts",
+    "altName": "donation gift entry pledge payment installement",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/DonationEntry.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Gifts: Find Gifts",
+    "altName": "search donation pledge",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/Find_gifts.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Funds: List Funds",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/Fund-List.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Funds: New Fund",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/Add_gift_item.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Reverse Open Pledges",
+    "altName": "installments refund invoice",
+    "isTag": false,
+    "destination": "/iParts/Commerce/OpenInvoiceReversals/PledgeReversals.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Promotions",
+    "altName": "codes discount prorate coupon",
+    "isTag": false,
+    "destination": "/iCore/Store/Manage/ManagePromotions.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Promotions: New Promotion",
+    "altName": "codes discount prorate coupon",
+    "isTag": false,
+    "destination": "/iParts/Commerce/PromotionCreator/PromotionEdit.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Products: New Product",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Store/Manage/Add_Item.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Process Orders: Issue Quotes",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Commerce/Order-Stage-Processing/Issue-Quotes/Issue-quotes-page.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Process Orders: Convert Quotes",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Commerce/Order-Stage-Processing/Convert-Quotes/Convert-quotes-page.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Process Orders: Print Shipping Papers",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Commerce/Order-Stage-Processing/Print-Shipping-Papers/Shipping-papers-page.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Process Orders: Ship Orders",
+    "altName": "poso",
+    "isTag": false,
+    "destination": "/iCore/Commerce/Order-Stage-Processing/Ship-Orders/Ship-orders-page.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Process Orders: Generate Invoices",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Commerce/Order-Stage-Processing/Invoice/Invoice-orders-page.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Process Orders: Release Backorders",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Commerce/Order-Stage-Processing/Manual-Release-Backorder/Manual-Release-Backorders.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Events",
+    "displayName": "Events: Browse",
+    "altName": "meeting",
+    "isTag": false,
+    "destination": "/iCore/Events/Events_List.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Events",
+    "displayName": "Registrations: Browse",
+    "altName": "meeting event registrants attendees list report",
+    "isTag": false,
+    "destination": "/iCore/Events/Registrations/Find-registrations.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Finance",
+    "displayName": "Batches",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Commerce/Batches/Batches.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Finance",
+    "displayName": "Pay Central Live",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Finance/PayCentralLive.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Intelligent Query Architect",
+    "altName": "IQA builder ",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/IQA/Default.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Intelligent Query Architect: New Query",
+    "altName": "IQA builder",
+    "isTag": false,
+    "destination": "/iMIS/QueryBuilder/Design.aspx?iMode=New&iUniformKey=00000000-0000-0000-0000-000000000000&iOperation=New&iFolderHierarchyKey=d2c71101-e31c-4dcf-830f-8647236f99f2&DocumentTypeCode=IQD&CloseWindowOnCommit=true",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Business Object Designer",
+    "altName": "bod biz",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BOA/Default.aspx?ShowDescription=True",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Business Object Designer: New Business Object",
+    "altName": "bod biz designer",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BOA/Design.aspx?iMode=New&iOperation=New&iFolderHierarchyKey=1bd68892-ef47-4bc0-b873-3ce0134f9a9c&DocumentTypeCode=BOD",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Document System",
+    "altName": "iqa query content everything",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/DocumentBrowser.aspx?ExcludeAddTypes=ATH%2cBOD%2cCFL%2cCOM%2cCON%2cLAY%2cNAV%2cRCT%2cTCT%2cWEB%2cWSL%2cWST&ShowDescription=True",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Manage Sitemaps",
+    "altName": "menu urls",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/PerspectiveList.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Manage Websites",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/WebsiteList.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Manage Shortcuts",
+    "altName": "",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/ContentManagement/URLMapping.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Communication Templates",
+    "altName": "emails mass",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/DocumentBrowser.aspx?TypeFilter=COM%2cFOL%2cIQD%2cSRT&iRootFolder=%24%2fCommon%2fCommunications&FolderHierarchyKey=356E5D86-93FE-430B-8F1C-0021B3C012BC",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Communication Logs",
+    "altName": "emails logs sent received delivered failed",
+    "isTag": false,
+    "destination": "/iCore/Communications/Communication_Logs.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Manage Content",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/ContentDesigner.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Manage Layouts",
+    "altName": "bootstrap",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/ContentLayoutList.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Manage Images",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/ImageManager.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Manage Files",
+    "altName": "upload download attachments",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/ObjectBrowser.aspx?DocumentPath=%24%2fCommon%2fUploaded+files&iRootFolder=%24%2fCommon%2fUploaded+files&AllowUpwardNavigation=False&ShowDescription=True&ExcludeAddTypes=ATH%2cBOD%2cCFL%2cCOM%2cCON%2cEX0%2cEX2%2cEX3%2cEX4%2cEX5%2cEXP%2cIQD%2cLAY%2cMEP%2cNAV%2cOPP%2cRCT%2cRDL%2cRFM%2cRSP%2cTCT%2cWEB%2cWFD%2cWLT%2cWSL%2cWST",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Website Templates",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/WebsiteTemplateList.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Website Layouts",
+    "altName": "bootstrap",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/WebsiteLayoutList.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Publishing Servers",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/PublishServerList.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Form Builder: Library",
+    "altName": "sonic survey",
+    "isTag": false,
+    "destination": "/iCore/Forms/Form-Library.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Form Builder: Approval Queue",
+    "altName": "sonic survey",
+    "isTag": false,
+    "destination": "/iCore/Forms/Approval/FormApprovalsReview.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Form Builder: Health Check",
+    "altName": "sonic survey",
+    "isTag": false,
+    "destination": "/iCore/Forms/Form-Health-Check.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Form Builder: Form Groups",
+    "altName": "sonic survey",
+    "isTag": false,
+    "destination": "/iCore/Forms/Form-Groups.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Panel Definitions",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iParts/Common/PanelEditor/PanelDefinitionList.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Process Automation: Browse",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iParts/Common/PanelEditor/PanelDefinitionList.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Process Automation: Logs",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Tasks/Process_automation.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "RiSE",
+    "displayName": "Process Automation: New Task/Alert",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iParts/Common/Tasks/TaskEditDialog.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "About iMIS",
+    "altName": "settings, purge system cache",
+    "isTag": false,
+    "destination": "/iMIS/Setup/AboutImis.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "General Lookup Tables",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/General_Lookup_Tables.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Contact Settings",
+    "altName": "bill organization company administrator address verification service avs regex default country",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=ContactsGeneral",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Contact Security",
+    "altName": "public directory access users members authenticated",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Customers/ContactSecuritySettings.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Communication Preferences: View Configuration",
+    "altName": "marketing opt in opt out gdpr privacy",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Customers/ContactSecuritySettings.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Account Management",
+    "altName": "password requirements timeout warning reset username recaptcha spam expiration reset token",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=AccountManagementRiSE",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Authentication & Password Configuration",
+    "altName": "password requirements minimum length expiration reuse timeout length idle mfa multi factor",
+    "isTag": false,
+    "destination": "/iMIS/Setup/PasswordExpirationConfiguration.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Social Media Settings",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/Authorization_Providers.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Client Applications & Single Sign On",
+    "altName": "sso login redirect refresh token",
+    "isTag": false,
+    "destination": "/iParts/Common/SSO/ClientApplication.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Customer Types",
+    "altName": "membertypes member types",
+    "isTag": false,
+    "destination": "/imis/Setup/Customers/CustomerType.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Activity Types: New Activity Type",
+    "altName": "",
+    "isTag": false,
+    "destination": "/imis/Setup/Customers/ActivityTypeDialog.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Relationships: View Relationship Types",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/Contacts/RelationshipTypes.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Contacts: System Options",
+    "altName": "chapter last id major key phone number format prefix sync address work phone home email fax flow down flow-down organization parent organization pricing",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Customers/Setup.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Address Formats",
+    "altName": "formula",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/Addresses/Address_Formats.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Address Formats: States & Provinces",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Addresses/States-and-Provinces.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Address Formats: Countries",
+    "altName": "country",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/Addresses/Countries.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Communities: Settings",
+    "altName": "subject notification",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=CommunitySettings",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Membership & Billing Configurations",
+    "altName": "cash accrual annual anniversary paid thru date interval balance start date fiscal year grace chapter administrator billing contact",
+    "isTag": false,
+    "destination": "/imis/Setup/Billing/BillingSetup.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Fundraising Configuration",
+    "altName": "receipt nummber financial entity premium order",
+    "isTag": false,
+    "destination": "/imis/Setup/Fundraising/Setup.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Fundraising Configuration: Gift Aid (UK)",
+    "altName": "HMRC gateway contact tax office",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=GiftAidUK",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Events Configuration",
+    "altName": "additional fields preferences invoices adjustments zoom integration",
+    "isTag": false,
+    "destination": "/imis/Setup/Events/Setup.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Events Configuration: Resource Types",
+    "altName": "space speaker staff",
+    "isTag": false,
+    "destination": "/imis/Setup/Events/ResourceType.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Commerce Configuration",
+    "altName": "order confirmation communication template default order type cart nocharge",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=CommerceGeneral",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Commerce Configuration: Order Types",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Commerce/OrderTypes.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Commerce Configuration: New Order Type",
+    "altName": "",
+    "isTag": false,
+    "destination": "/imis/Setup/Commerce/OrderTypesDialog.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Commerce Configuration: Product Categories",
+    "altName": "category",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Commerce/ProductCategories.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Commerce Configuration: New Product Category",
+    "altName": "",
+    "isTag": false,
+    "destination": "/imis/Setup/Commerce/ProductCategoriesDialog.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Commerce Configuration: Shipping",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Commerce/FreightRate.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Commerce Configuration: Zones",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Commerce/FreightZone.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Commerce Configuration: New Zone",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Commerce/FreightZoneDialog.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Commerce Configuration: System Options",
+    "altName": "default shipping add-on sales tax authority inventory gl default general ledger cogs cost of goods sold",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Commerce/Setup.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Finance Configuration",
+    "altName": "accounting settings default entity entities currency dollar fiscal year prepayment overpayment partial payment refund write-off batch control manual general ledger export gl interface csv file format 3d secure 3ds",
+    "isTag": false,
+    "destination": "/imis/Setup/Accounting/Setup.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Finance Configuration: Financial Entities",
+    "altName": "entity ",
+    "isTag": false,
+    "destination": "/imis/Setup/Accounting/FinancialEntities.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Finance Configuration: New Financial Entity",
+    "altName": "entity ",
+    "isTag": false,
+    "destination": "/imis/Setup/Accounting/FinancialEntityCreator.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Reports",
+    "displayName": "Report Writer",
+    "altName": "exago power bi business intelligence",
+    "isTag": false,
+    "destination": "/imis/reporting/reportviewer.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Reports",
+    "displayName": "All Reports",
+    "altName": "continuum",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/ObjectBrowser.aspx?iTypeFilter=FOL%2cCPE%2cIQD%2cRPT%2cSRT%2cRSP%2cRDL%2cEX0%2cEX1%2cEX2%2cEX3%2cEX4%2cEX5%2cEXP%2cEXM&",
+    "isShortcut": false
+  },
+  {
+    "category": "Reports",
+    "displayName": "Contact Reports",
+    "altName": "continuum",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/ObjectBrowser.aspx?DocumentPath=%24%2fContactManagement%2fDefaultSystem%2fReports&iTypeFilter=FOL%2cCPE%2cIQD%2cRPT%2cSRT%2cRSP%2cRDL&ShowHierarchyTree=False&DoubleClickAction=Execute&AllowUpwardNavigation=False&ShowDescription=True",
+    "isShortcut": false
+  },
+  {
+    "category": "Reports",
+    "displayName": "Membership Reports",
+    "altName": "continuum",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/ObjectBrowser.aspx?DocumentPath=%24%2fMembership%2fDefaultSystem%2fReports&iTypeFilter=FOL%2cCPE%2cIQD%2cRPT%2cSRT%2cRSP%2cRDL&ShowHierarchyTree=False&DoubleClickAction=Execute&AllowUpwardNavigation=False&ShowDescription=True",
+    "isShortcut": false
+  },
+  {
+    "category": "Reports",
+    "displayName": "Fundraising Reports",
+    "altName": "continuum donor donation gift pledge",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/ObjectBrowser.aspx?DocumentPath=%24%2fFundraising%2fDefaultSystem%2fReports&iTypeFilter=FOL%2cCPE%2cIQD%2cRPT%2cSRT%2cRSP%2cRDL&ShowHierarchyTree=False&DoubleClickAction=Execute&AllowUpwardNavigation=False&ShowDescription=True",
+    "isShortcut": false
+  },
+  {
+    "category": "Reports",
+    "displayName": "Event Reports",
+    "altName": "nametag registration registrant question badges",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/ObjectBrowser.aspx?DocumentPath=%24%2fEventManagement%2fDefaultSystem%2fReports&iTypeFilter=FOL%2cCPE%2cIQD%2cRPT%2cSRT%2cRSP%2cRDL&ShowHierarchyTree=False&DoubleClickAction=Execute&AllowUpwardNavigation=False&ShowDescription=True",
+    "isShortcut": false
+  },
+  {
+    "category": "Reports",
+    "displayName": "Commerce Reports",
+    "altName": "",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/ObjectBrowser.aspx?DocumentPath=%24%2fOrderManagement%2fDefaultSystem%2fReports&iTypeFilter=FOL%2cCPE%2cIQD%2cRPT%2cSRT%2cRSP%2cRDL&ShowHierarchyTree=False&DoubleClickAction=Execute&AllowUpwardNavigation=False&ShowDescription=True",
+    "isShortcut": false
+  },
+  {
+    "category": "Reports",
+    "displayName": "Accounting Reports",
+    "altName": "",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/ObjectBrowser.aspx?DocumentPath=%24%2fAccounting%2fDefaultSystem%2fReports&iTypeFilter=FOL%2cCPE%2cIQD%2cRPT%2cSRT%2cRSP%2cRDL&ShowHierarchyTree=False&DoubleClickAction=Execute&AllowUpwardNavigation=False&ShowDescription=True",
+    "isShortcut": false
+  },
+  {
+    "category": "Reports",
+    "displayName": "Certification Reports",
+    "altName": "",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/ObjectBrowser.aspx?DocumentPath=%24%2fCertificationManagement%2fDefaultSystem%2fReportsView&iTypeFilter=FOL%2cCPE%2cIQD%2cRPT%2cSRT%2cRSP%2cRDL&ShowHierarchyTree=False&DoubleClickAction=Execute&AllowUpwardNavigation=False&ShowDescription=True",
+    "isShortcut": false
+  },
+  {
+    "category": "Reports",
+    "displayName": "Content Reports",
+    "altName": "",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/ObjectBrowser.aspx?DocumentPath=%24%2fContentManagement%2fDefaultSystem%2fReports&iTypeFilter=FOL%2cCPE%2cIQD%2cRPT%2cSRT%2cRSP%2cRDL&ShowHierarchyTree=False&DoubleClickAction=Execute&AllowUpwardNavigation=False&ShowDescription=True",
+    "isShortcut": false
+  },
+  {
+    "category": "Community",
+    "displayName": "Community Dashboard",
+    "altName": "",
+    "isTag": false,
+    "destination": "/StaffCommunityLanding",
+    "isShortcut": true
+  },
+  {
+    "category": "Engagement",
+    "displayName": "Engagement Dashboard: Overall",
+    "altName": "",
+    "isTag": false,
+    "destination": "/StaffEngagementLanding",
+    "isShortcut": true
+  },
+  {
+    "category": "Engagement",
+    "displayName": "Engagement Dashboard: Organizations",
+    "altName": "",
+    "isTag": false,
+    "destination": "/StaffOrgEngagement",
+    "isShortcut": true
+  },
+  {
+    "category": "Community",
+    "displayName": "Find Contacts",
+    "altName": "search",
+    "isTag": false,
+    "destination": "/StaffFindContacts",
+    "isShortcut": true
+  },
+  {
+    "category": "Community",
+    "displayName": "Add Contact",
+    "altName": "new",
+    "isTag": false,
+    "destination": "/StaffAddContact",
+    "isShortcut": true
+  },
+  {
+    "category": "Data",
+    "displayName": "Data Integrity Dashboard",
+    "altName": "qa quality assurance",
+    "isTag": false,
+    "destination": "/DataIntegrityDashboard",
+    "isShortcut": true
+  },
+  {
+    "category": "Community",
+    "displayName": "Volunteer Dashboard",
+    "altName": "",
+    "isTag": false,
+    "destination": "/StaffVolunteersLanding",
+    "isShortcut": true
+  },
+  {
+    "category": "Membership",
+    "displayName": "Membership Dashboard",
+    "altName": "",
+    "isTag": false,
+    "destination": "/StaffMembershipLanding",
+    "isShortcut": true
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Fundraising Dashboard",
+    "altName": "",
+    "isTag": false,
+    "destination": "/StaffFundraisingLanding",
+    "isShortcut": true
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Moves Management Dashboard",
+    "altName": "",
+    "isTag": false,
+    "destination": "/StaffMovesManagementLanding",
+    "isShortcut": true
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "AutoPay Fundraising Dashboard",
+    "altName": "",
+    "isTag": false,
+    "destination": "/AutoPayFundraisingDashboard",
+    "isShortcut": true
+  },
+  {
+    "category": "Events",
+    "displayName": "Events Dashboard",
+    "altName": "",
+    "isTag": false,
+    "destination": "/StaffEventsLanding",
+    "isShortcut": true
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Commerce Dashboard",
+    "altName": "",
+    "isTag": false,
+    "destination": "/StaffCommerceLanding",
+    "isShortcut": true
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Communication Dashboard",
+    "altName": "",
+    "isTag": false,
+    "destination": "/StaffCommunicationLanding",
+    "isShortcut": true
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Cart",
+    "altName": "checkout basket",
+    "isTag": false,
+    "destination": "/Cart",
+    "isShortcut": true
+  },
+  {
+    "category": "Resource",
+    "displayName": "iMIS Glossary",
+    "altName": "",
+    "isTag": false,
+    "destination": "https://help.imis.com/enterprise/features/glossary.htm",
+    "isShortcut": false
+  },
+  {
+    "category": "Event Code Lookup",
+    "displayName": "",
+    "altName": "",
+    "isTag": true,
+    "destination": "",
+    "isShortcut": false
+  },
+  {
+    "category": "Username Lookup",
+    "displayName": "",
+    "altName": "",
+    "isTag": true,
+    "destination": "",
+    "isShortcut": false
+  },
+  {
+    "category": "Keyword Search",
+    "displayName": "",
+    "altName": "",
+    "isTag": true,
+    "destination": "/Search?SearchTerms=",
+    "isShortcut": false
+  },
+  {
+    "category": "Documentation Search",
+    "displayName": "",
+    "altName": "",
+    "isTag": true,
+    "destination": "https://help.imis.com/enterprise/index.htm?q=",
+    "isShortcut": false
+  }
+]

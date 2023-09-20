@@ -1,6 +1,8 @@
-class ImisExtensions
+/// <reference path="settings/settings.ts" />
+/// <reference path="utils.ts" />
+
+class IqaExtensions
 {
-    private static readonly VERSION_STRING = "%c CSI %c iMIS Experience Plus! %c v1.2.0 %c ";
     private static readonly VERSION_STYLES = [
         "background-color: #e6b222; color: white;", // CSI
         "background-color: #374ea2; color: white;", // iEP
@@ -8,10 +10,14 @@ class ImisExtensions
         "background-color: inherit; color: inherit;", // Message
     ]
 
+    private settings: Settings;
+
     constructor(private $: JQueryStatic)
     {
+        this.settings = new Settings($);
+
         // Run some checks to determine if we are inside of the iMIS staff site
-        if (this.$('head').get(0)?.id !== 'ctl00_Head1' && this.$('form').get(0)?.id !== 'aspnetForm')
+        if (!Utils.isImisPage($))
         {
             // Not iMIS - do nothing
             return;
@@ -27,8 +33,12 @@ class ImisExtensions
     /**
      * Initializes the various elements of this module.
      */
-    init(): void
+    async init(): Promise<void>
     {
+        var config = await this.settings.load();
+
+        if (!config.enableIqa) return;
+
         if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1)
         {
             this.initIqaExtensions();
@@ -44,11 +54,11 @@ class ImisExtensions
      */
     initIqaBrowserExtensions(): void
     {
-        console.log(ImisExtensions.VERSION_STRING + "Loaded: IQA Browser Extensions", ...ImisExtensions.VERSION_STYLES);
+        Utils.log(Utils.VERSION_STRING + "Loaded: IQA Module", ...IqaExtensions.VERSION_STYLES);
 
-        // Inject Font Awesome 
+        // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
-        
+
         let qf = this.$('div[id*=ObjectQuickFindPanel');
 
         qf.css({
@@ -57,7 +67,7 @@ class ImisExtensions
             display: 'inline-flex',
             justifyContent: 'flex-end',
             alignContent: 'center',
-            flexWrap: 'nowrap' 
+            flexWrap: 'nowrap'
         });
         qf.css('width', '55%').css('text-align', 'right');
 
@@ -79,7 +89,8 @@ class ImisExtensions
             navigator.clipboard.writeText(iqaPath?.toString() ?? "").then(() =>
             {
                 iqaBox.val('Copied!');
-                window.setTimeout(() => {
+                window.setTimeout(() =>
+                {
                     this.$(e.currentTarget).removeClass('disabled').css('pointerEvents', '');
                     iqaBox.val(iqaPath ?? "");
                 }, 2000);
@@ -111,7 +122,7 @@ class ImisExtensions
                     $('#__csi__iep__iqapath').val('Select an IQA...');
                 }
                 return true;
-            });    
+            });
         };
 
         bindClickListener();
@@ -119,8 +130,8 @@ class ImisExtensions
         // Hook into DOM changes since the DOM elements change when navigation occurs
         let mObs = window.MutationObserver || window.WebKitMutationObserver;
 
-        var observer = new mObs(function(_, __) {
-            //console.log("Mutation detected!", {m, obs});
+        var observer = new mObs(function (_, __)
+        {
             bindClickListener();
         });
 
@@ -132,11 +143,11 @@ class ImisExtensions
      */
     initIqaExtensions(): void
     {
-        console.log(ImisExtensions.VERSION_STRING + "Loaded: IQA Extensions", ...ImisExtensions.VERSION_STYLES);
-        
+        Utils.log(Utils.VERSION_STRING + "Loaded: IQA Extensions", ...IqaExtensions.VERSION_STYLES);
+
         let isImis2017 = this.$('.SubTabStrip .rtsLevel.rtsLevel1 .rtsTxt:contains("Template")').length === 0;
 
-        // Inject Font Awesome 
+        // Inject Font Awesome
         this.$('head').append('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />');
 
         // Add some ICONS!
@@ -167,6 +178,16 @@ class ImisExtensions
         // FIX THE MARGINS
         this.$('.Section .PanelTitle span').css('margin-left', '15px');
 
+        // Sticky the header and top buttons
+        this.$('#MainPanel > div[id$=ContentPanel] .Section').first().css({
+            position: 'sticky',
+            top: '0',
+            backgroundColor: 'white',
+            borderBottom: '1px solid #DDD',
+            paddingBottom: '1rem',
+            zIndex: '999999'
+        });
+
         // Remove Table Borders
         this.$('table.Grid').get(0)?.style.setProperty('border', '0', 'important');
 
@@ -189,12 +210,12 @@ class ImisExtensions
         // === Display Tab ===
 
         this.$('div[id*="SummaryPanel_Body"] span.Label')
-            .filter((_,e) => this.$(e).text() === "Path")
+            .filter((_, e) => this.$(e).text() === "Path")
             .parent()
             .css('lineHeight', '2.2');
 
         this.$('div[id*="SummaryPanel_Body"] span.Label')
-            .filter((_,e) => this.$(e).text() === "Path")
+            .filter((_, e) => this.$(e).text() === "Path")
             .parent()
             .next()
             .append('<a class="csi__iep__copy__path btn PrimaryButton"><i class="fa fa-fw fa-clipboard"></i> Copy</a>')
@@ -204,9 +225,11 @@ class ImisExtensions
             let target = this.$(e.currentTarget);
             target.addClass('disabled').css('pointerEvents', 'none');
             let qt = target.parent().children('span').first().text();
-            navigator.clipboard.writeText(qt.trim()).then(() => {
+            navigator.clipboard.writeText(qt.trim()).then(() =>
+            {
                 target.after('<span class="csi__iep__tempmsg"> Copied!</span>');
-                window.setTimeout(() => this.$('.csi__iep__tempmsg').fadeOut(() => {
+                window.setTimeout(() => this.$('.csi__iep__tempmsg').fadeOut(() =>
+                {
                     this.$('.csi__iep__tempmsg').remove();
                     target.removeClass('disabled').css('pointerEvents', '');
                 }), 2000);
@@ -223,7 +246,17 @@ class ImisExtensions
         {
             this.$('div[id*="SourcesPanel_Body"] table.Grid tr.GridHeader td:last-child').css('width', '120px');
         }
+        else
+        {
+            this.$('div[id*="SourcesPanel_Body"] table.Grid tr.GridHeader td:last-child').css('width', '35px').css('min-width', '25px');
+        }
         this.$('div[id*="SourcesPanel_Body"] table.Grid tr:first-child td:nth-last-child(2)').css('min-width', '150px');
+
+        // Copy the border style inside tr.GridHeader from the third column to the last column
+        this.$('div[id*="SourcesPanel_Body"] table.Grid tr.GridHeader td:nth-child(3)').each((_, e) =>
+        {
+            this.$(e).nextAll('td').css('border', this.$(e).css('border'));
+        });
 
         // Text Boxes inside Table Cells
         this.$('div[id*="SourcesPanel_Body"] table.Grid td > input[type=text]').css('width', '100%');
@@ -233,10 +266,10 @@ class ImisExtensions
         this.$('tr.GridHeader td:contains("Description")').parent('tr').remove();
 
         // === Sorting Tab ===
-        
+
         this.$('div[id*="SortPanel_Body"] table.Grid tr:first-child td:first-child').css('border', 'none');
-        this.$('div[id*="SortPanel_Body"] table.Grid tr:first-child td:first-child input.TextButton').addClass('PrimaryButton'); 
-        
+        this.$('div[id*="SortPanel_Body"] table.Grid tr:first-child td:first-child input.TextButton').addClass('PrimaryButton');
+
         // === Filters Tab ===
 
         // Table updates
@@ -260,14 +293,35 @@ class ImisExtensions
             .find('span')
             .changeElementType('h3');
 
+        // Query for all table rows after the queryOptsRow
+        queryOptsRow.nextAll('tr').find('td').css('border-width', '0');
+
+        // Consistent bolding
+        queryOptsRow.nextAll('tr').find('td.PanelTablePrompt span').css('font-weight', '600');
+
         ft.find('table.Grid tr.GridHeader td:last-child').css('min-width', '140px')
         ft.find('table.Grid tr.GridHeader td:nth-last-child(2)').css('min-width', '180px')
         ft.find('table.Grid tr.GridHeader td:contains("Function")').parent('tr').find('td:nth-last-child(2)').text('Prompt Label');
 
-        ft.find('table.Grid tr.GridRow td:nth-child(7) input').css('width', '100%');
-        ft.find('table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', '100%');
-        ft.find('table.Grid tr.GridRow td:nth-child(5) input').css('width', '100%');
-        ft.find('table.Grid tr.GridAlternateRow td:nth-child(5) input').css('width', '100%');
+        // Value column - excludes any combo pickers
+        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=text], table.Grid tr.GridAlternateRow td:nth-child(5) input[type=text]').each((_, e) =>
+        {
+            if (this.$(e).parents('span.rcbInner').length === 0)
+            {
+                this.$(e).css('width', 'calc(100% - 130px)');
+            }
+        });
+        
+        // Special case for date pickers and other image buttons
+        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=image]').prev('input[type=text]').css('width', 'calc(100% - 193px)');
+        ft.find('table.Grid tr.GridAlternateRow td:nth-child(5) input[type=image]').prev('input[type=text]').css('width', 'calc(100% - 193px)');
+
+        // Find any .RadComboBox items inside the 5th column and set a negative margin
+        ft.find('table.Grid tr.GridRow td:nth-child(5) .RadComboBox, table.Grid tr.GridAlternateRow td:nth-child(5) .RadComboBox').css('margin-top', '-4px');
+
+        // Prompt Label column
+        ft.find('table.Grid tr.GridRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
+        ft.find('table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
 
         if (isImis2017)
         {
@@ -315,11 +369,31 @@ class ImisExtensions
         dt.find('table.Grid').css('width', '1400px');
         dt.find('table.Grid').css('max-width', '100%');
         dt.find('tr.GridHeader td:first-child').css('width', '75px')
+        dt.find('tr.GridHeader td:nth-child(2)').css('width', 'width: 35%')
         dt.find('tr.GridHeader td:last-child').css('width', '50px')
         dt.find('tr.GridHeader td:nth-child(3)').css('width', '110px')
         dt.find('tr.GridHeader td:nth-child(6)').css('width', '82px')
         dt.find('tr:first-child td').css('border', '0').css('border-bottom', '1px solid #ddd');
 
+        // Sticky Table Headers
+        var commonStickyStyles = {
+            position: 'sticky',
+            top: '56px',
+            borderBottom: '1px solid #DDD'
+        };
+        dt.find('table.Grid tr:nth-child(2) td:first-child').css({
+            zIndex: '9990',
+            ...commonStickyStyles
+        });
+        dt.find('table.Grid tr:nth-child(2) td:nth-child(2)').css({
+            zIndex: '9992',
+            ...commonStickyStyles
+        });
+        dt.find('table.Grid .SectionTitle:contains("Available")').closest('td').css({
+            zIndex: '9991',
+            ...commonStickyStyles
+        });
+        
         // Text Updates
         dt.find('tr:first-child td label:contains("Only display unique results")').text("Only display unique results (SELECT DISTINCT)");
 
@@ -355,13 +429,17 @@ class ImisExtensions
         // Find custom rows
         dt.find('input[type=checkbox]').filter(':checked').parents('tr').each((_, el) =>
         {
+            // Get the contents of the cell - possibly custom SQL
+            let expr = this.$(el).find('td:nth-child(2)').text()?.toString().toUpperCase();
+
             if (isImis2017 && (
-                    $(el).find('td:nth-child(3) select option').length === 1
-                    && this.$(el).find('td:nth-child(8) input').is(':disabled'))
+                $(el).find('td:nth-child(3) select option').length === 1
+                && this.$(el).find('td:nth-child(8) input').is(':disabled'))
                 || !isImis2017 && (
                     $(el).find('td:nth-child(3) select option').length === 1
                     && this.$(el).find('td:nth-child(6) input').length === 0)
-                )
+                || /CASE\s+?WHEN/gim.test(expr) || (expr.indexOf('(') > -1 && expr.indexOf(')') > -1)
+            )
             {
                 this.$(el).find('td')
                     .css('background-color', '#effaff')
@@ -376,7 +454,6 @@ class ImisExtensions
             }
         });
 
-
         if (advMode)
         {
             if (isImis2017)
@@ -384,10 +461,10 @@ class ImisExtensions
                 // Advanced Display Editor for iMIS 2017
 
                 dt.find('table.Grid:last-child tr.GridHeader > td:first-child').css('width', '75%');
-                
+
                 dt.find('table.Grid').first().css('margin-bottom', '200px');
                 let gridRowCount = dt.find('table.Grid tr').length;
-    
+
                 let qfr = dt.find('table.Grid td:contains("Available")').first();
                 if (parseInt((qfr.attr('colspan') ?? "0")) > 3 && qfr.find('input').length > 0)
                 {
@@ -397,8 +474,8 @@ class ImisExtensions
                         float: 'none',
                         margin: '5px 20px'
                     });
-                } 
-    
+                }
+
                 // Move the last three table rows to a separate table, for styling.
                 let customRows = dt.find('table.Grid tr').filter(i => i >= gridRowCount - 3);
                 dt.find('table.Grid').last().after('<table class="csi__iep__customsql Grid align-middle"></table>');
@@ -412,11 +489,11 @@ class ImisExtensions
                 newTable.find('tr:nth-child(2) td:first-child').css('width', '60%');
                 newTable.find('tr:nth-child(2) td:nth-child(2)').css('width', '30%');
                 newTable.find('tr:nth-child(2) td:nth-child(3)').css('width', '140px');
-    
+
                 newTable.find('tr:nth-child(3) td:first-child input').changeElementType('textarea').attr('rows', '4').css('font-family', 'Consolas, monospace').css('font-size', '13px');
                 newTable.find('tr:nth-child(3) td:nth-child(2) input').css('width', '94%').before('<span>AS </span>').parent().css('vertical-align', 'middle');
                 newTable.find('tr:nth-child(3) td:nth-child(3)').css('vertical-align', 'middle').css('position', 'relative');
-    
+
                 newTable.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]')
                     .css('background-image', 'none')
                     .css('background-position', '-9999px -9999px')
@@ -426,15 +503,15 @@ class ImisExtensions
                     .css('width', '100%')
                     .css('height', '100%')
                     .css('z-index', '99');
-    
+
                 newTable.find('tr:nth-child(3) td:nth-child(3) > span.RadButton[title="Add"]').parent().css('position', 'relative')
-                        .append('<a class="btn PrimaryButton ex-commit-button"><i class="fas fa-fw fa-plus"></i> Add</a>');
-    
+                    .append('<a class="btn PrimaryButton ex-commit-button"><i class="fas fa-fw fa-plus"></i> Add</a>');
+
                 // Edit Event Handler
                 this.$('.ex-button-edit-customsql-row').on('click', e =>
                 {
                     let editBtn = $(e.currentTarget);
-    
+
                     if (editBtn.hasClass('disabled'))
                     {
                         return;
@@ -443,25 +520,25 @@ class ImisExtensions
                     let row = dt.find('tr:nth-child(' + i + ')');
                     let sql = row.find('td:nth-child(2)').text();
                     let name = row.find('td:nth-child(4) input').val()?.toString() ?? "";
-    
+
                     newTable.find('tr:nth-child(3) td:nth-child(1) textarea').val(sql);
                     newTable.find('tr:nth-child(3) td:nth-child(2) input').val(name);
-    
+
                     row.find('td').first().find('input').prop('checked', false);
                     this.$('.ex-button-edit-customsql-row').addClass('disabled').css('cursor', 'default');
                     editBtn.hide().after('<a class="btn PrimaryButton ex-button-undo-customsql-row"><i class="fas fa-fw fa-undo"></i> Undo</a>');
-    
+
                     this.$('.ex-button-undo-customsql-row').on('click', () =>
                     {
                         row.find('td').first().find('input').prop('checked', true);
                         newTable.find('tr:nth-child(3) td:nth-child(1) textarea').val('');
                         newTable.find('tr:nth-child(3) td:nth-child(2) input').val('');
-    
+
                         $('.ex-button-undo-customsql-row').remove();
                         editBtn.show();
                         this.$('.ex-button-edit-customsql-row').removeClass('disabled').css('cursor', '');
                     });
-                });    
+                });
             }
             else
             {
@@ -553,8 +630,8 @@ class ImisExtensions
     }
 
     /**
-     * Sources: 
-     * https://stackoverflow.com/questions/8584098/how-to-change-an-element-type-using-jquery 
+     * Sources:
+     * https://stackoverflow.com/questions/8584098/how-to-change-an-element-type-using-jquery
      */
     addJQueryExtensions(): void
     {
@@ -591,4 +668,4 @@ class ImisExtensions
     }
 }
 
-new ImisExtensions(jQuery);
+new IqaExtensions(jQuery);

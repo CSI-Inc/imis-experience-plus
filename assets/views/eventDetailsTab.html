@@ -1,0 +1,35 @@
+<div id="EventDetailsTab" style="display: none;">
+    <div class="stack">
+        <div id="userCardProfile" class="userDetails">
+            <h3 id="destinationUsersName" style="color: #005e7d; margin: 2px"></h3>
+            <div id="details" style="font-size: 90%;">
+                <span id="eventKey" class="Label workBarLabel">Event Id: </span>
+                <span id="eventStatus" class="Label workBarLabel">Event Status: </span>
+                <span id="eventCategory" class="Label workBarLabel">Event Category: </span>
+                <br />
+                <span id="eventStart" class="Label workBarLabel">Start: START DATE</span>
+                <span id="eventEnd" class="Label workBarLabel">End: END DATE</span>
+                <br />
+                <span id="eventStaffContact" class="Label workBarLabel">
+                    [ICON] Staff Contact [Staff Contact Name] [Badge: $NotificationPartyId]
+                </span>
+                <!-- [if virtual meeting is not blank] -->
+                <span id="eventVirtualMeeting" class="Label workBarLabel">
+                    Virtual Meeting URL: [$VirtualMeetingUrl]
+                </span>
+                <!-- [/if virtual meeting is not blank] -->
+                <span class="Label workBarLabel">Description: [$Description]</span>
+            </div>
+        </div>
+        <div id="userCardActions" class="userDetails"></div>
+    </div>
+    <div id="userCardChangeCard">
+        <div id="userCardChangeArea">
+            <div class="userDetails" id="userCardChangeDetails">
+                <span id="destinationUsersCreatedOn">
+                    <span class="Label workBarLabel">Status </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
