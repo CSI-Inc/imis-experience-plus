@@ -42,9 +42,9 @@ var Settings = /** @class */ (function () {
         this.$ = $;
         this.origConfig = {};
         this.defaultConfig = {
-            enableIqa: true,
-            enableRise: true,
-            enableWorkbar: true,
+            enableIqav2: true,
+            enableRisev2: false,
+            enableWorkbarv2: false,
             workbarShortcut: Settings.SPACEBAR,
             workbarKbdCtrl: true,
             workbarKbdAlt: false,
@@ -63,9 +63,9 @@ var Settings = /** @class */ (function () {
                         return [4 /*yield*/, this.load()];
                     case 1:
                         config = _a.sent();
-                        $('#enable-iqa').prop('checked', config.enableIqa);
-                        $('#enable-rise').prop('checked', config.enableRise);
-                        $('#enable-workbar').prop('checked', config.enableWorkbar);
+                        $('#enable-iqa').prop('checked', config.enableIqav2);
+                        $('#enable-rise').prop('checked', config.enableRisev2);
+                        $('#enable-workbar').prop('checked', config.enableWorkbarv2);
                         $('#workbar-kbd').val(config.workbarShortcut);
                         $('#kbd-ctrl').prop('checked', config.workbarKbdCtrl);
                         $('#kbd-alt').prop('checked', config.workbarKbdAlt);
@@ -76,9 +76,9 @@ var Settings = /** @class */ (function () {
                         this.updateDependentControlState();
                         this.origConfig = config;
                         $('input').on('change keydown', function () {
-                            if (_this.origConfig.enableIqa !== $('#enable-iqa').prop('checked')
-                                || _this.origConfig.enableRise !== $('#enable-rise').prop('checked')
-                                || _this.origConfig.enableWorkbar !== $('#enable-workbar').prop('checked')
+                            if (_this.origConfig.enableIqav2 !== $('#enable-iqa').prop('checked')
+                                || _this.origConfig.enableRisev2 !== $('#enable-rise').prop('checked')
+                                || _this.origConfig.enableWorkbarv2 !== $('#enable-workbar').prop('checked')
                                 || _this.origConfig.workbarShortcut !== $('#workbar-kbd').val()
                                 || _this.origConfig.workbarKbdCtrl !== $('#kbd-ctrl').prop('checked')
                                 || _this.origConfig.workbarKbdAlt !== $('#kbd-alt').prop('checked')
@@ -143,9 +143,9 @@ var Settings = /** @class */ (function () {
     };
     Settings.prototype.save = function () {
         chrome.storage.sync.set({
-            enableIqa: $('#enable-iqa').prop('checked'),
-            enableRise: $('#enable-rise').prop('checked'),
-            enableWorkbar: $('#enable-workbar').prop('checked'),
+            enableIqav2: $('#enable-iqa').prop('checked'),
+            enableRisev2: $('#enable-rise').prop('checked'),
+            enableWorkbarv2: $('#enable-workbar').prop('checked'),
             workbarShortcut: $('#workbar-kbd').val(),
             workbarKbdCtrl: $('#kbd-ctrl').prop('checked'),
             workbarKbdAlt: $('#kbd-alt').prop('checked'),
@@ -159,9 +159,9 @@ var Settings = /** @class */ (function () {
                 return [2 /*return*/, new Promise(function (resolve) {
                         chrome.storage.sync.get(_this.defaultConfig, function (settings) {
                             resolve({
-                                enableIqa: settings.enableIqa,
-                                enableRise: settings.enableRise,
-                                enableWorkbar: settings.enableWorkbar,
+                                enableIqav2: settings.enableIqav2,
+                                enableRisev2: settings.enableRisev2,
+                                enableWorkbarv2: settings.enableWorkbarv2,
                                 workbarShortcut: settings.workbarShortcut,
                                 workbarKbdCtrl: settings.workbarKbdCtrl,
                                 workbarKbdAlt: settings.workbarKbdAlt,
@@ -281,7 +281,7 @@ var IqaExtensions = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.settings.load()];
                     case 1:
                         config = _a.sent();
-                        if (!config.enableIqa)
+                        if (!config.enableIqav2)
                             return [2 /*return*/];
                         if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1) {
                             this.initIqaExtensions();
@@ -786,7 +786,7 @@ var RiseExtensions = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.settings.load()];
                     case 1:
                         config = _a.sent();
-                        if (!config.enableRise)
+                        if (!config.enableRisev2)
                             return [2 /*return*/];
                         if (window.location.pathname.indexOf('/ContentManagement/ContentDesigner/ContentRecordEdit.aspx') > -1) {
                             this.$(function () {
@@ -1702,7 +1702,7 @@ var WorkBar = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.settings.load()];
                     case 1:
                         config = _a.sent();
-                        if (!config.enableWorkbar)
+                        if (!config.enableWorkbarv2)
                             return [2 /*return*/];
                         myCombo = "[".concat(config.workbarShortcut, "]");
                         if (config.workbarKbdShift)

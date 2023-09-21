@@ -37,7 +37,7 @@ class RiseExtensions
     {
         var config = await this.settings.load();
 
-        if (!config.enableRise) return;
+        if (!config.enableRisev2) return;
 
         if (window.location.pathname.indexOf('/ContentManagement/ContentDesigner/ContentRecordEdit.aspx') > -1)
         {

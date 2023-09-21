@@ -37,7 +37,7 @@ class IqaExtensions
     {
         var config = await this.settings.load();
 
-        if (!config.enableIqa) return;
+        if (!config.enableIqav2) return;
 
         if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1)
         {

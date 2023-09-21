@@ -9,6 +9,7 @@
     <style type="text/css">
         html {
             width: 400px;
+            min-height: 600px;
         }
 
         body {
@@ -49,13 +50,30 @@
             font-size: 0.9rem;
             font-weight: 600;
         }
+
+        .menu-footer p
+        {
+            margin: 0.75em 0;
+        }
+
+        .menu-footer p:last-child
+        {
+            margin-bottom: 0;
+        }
+
+        .ui.segment.menu-footer
+        {
+            padding-top: 0.25em;
+            margin-bottom: 0 !important;
+            padding-bottom: 0  !important;
+        }
     </style>
 
 </head>
 
 <body id="iep-menu">
     <div class="ui basic fitted center aligned segment">
-        <img src="assets/images/imis-experience-plus.png" id="iep-logo" />
+        <img src="/assets/images/imis-experience-plus.png" id="iep-logo" />
 
         <h2 style="margin-bottom: 0; margin-top: 0.5rem;">Settings</h2>
     </div>
@@ -111,7 +129,7 @@
                 <span>Reload to Apply Changes</span>
             </div>
         </div>
-        <div class="ui basic center aligned segment">
+        <div class="ui menu-footer basic center aligned segment">
             <p>
                 <span class="ui text">
                     Made with ❤️ by the iMIS community and CSI!
