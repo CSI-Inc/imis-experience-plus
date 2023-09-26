@@ -17,7 +17,7 @@
   },
   {
     "category": "Settings",
-    "displayName": "Committees: Committee Minutes Configuration",
+    "displayName": "Committees: Committee Minutes Configuration (EMS)",
     "altName": "",
     "isTag": false,
     "destination": "/iMIS/Setup/Customers/CommitteeMinutes.aspx",
@@ -33,7 +33,7 @@
   },
   {
     "category": "Community",
-    "displayName": "Groups",
+    "displayName": "Groups (EMS)",
     "altName": "",
     "isTag": false,
     "destination": "/iCore/Groups/Find_Groups.aspx",
@@ -81,10 +81,18 @@
   },
   {
     "category": "Fundraising",
-    "displayName": "Gifts: Enter Gifts",
+    "displayName": "Gifts: Enter Gifts (EMS)",
     "altName": "donation gift entry pledge payment installement",
     "isTag": false,
     "destination": "/iCore/Fundraising/DonationEntry.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Gifts: Enter Gifts (2017)",
+    "altName": "donation gift entry pledge payment installement",
+    "isTag": false,
+    "destination": "/iMIS/RapidGiftEntry/Admin/GiftEntry.aspx",
     "isShortcut": false
   },
   {
@@ -97,7 +105,7 @@
   },
   {
     "category": "Fundraising",
-    "displayName": "Funds: List Funds",
+    "displayName": "Funds: List Funds (EMS)",
     "altName": "",
     "isTag": false,
     "destination": "/iCore/Fundraising/Fund-List.aspx",
@@ -113,7 +121,7 @@
   },
   {
     "category": "Fundraising",
-    "displayName": "Reverse Open Pledges",
+    "displayName": "Reverse Open Pledges (EMS)",
     "altName": "installments refund invoice",
     "isTag": false,
     "destination": "/iParts/Commerce/OpenInvoiceReversals/PledgeReversals.aspx",
@@ -145,7 +153,7 @@
   },
   {
     "category": "Commerce",
-    "displayName": "Process Orders: Issue Quotes",
+    "displayName": "Process Orders: Issue Quotes (EMS)",
     "altName": "",
     "isTag": false,
     "destination": "/iCore/Commerce/Order-Stage-Processing/Issue-Quotes/Issue-quotes-page.aspx",
@@ -153,7 +161,7 @@
   },
   {
     "category": "Commerce",
-    "displayName": "Process Orders: Convert Quotes",
+    "displayName": "Process Orders: Convert Quotes (EMS)",
     "altName": "",
     "isTag": false,
     "destination": "/iCore/Commerce/Order-Stage-Processing/Convert-Quotes/Convert-quotes-page.aspx",
@@ -161,7 +169,7 @@
   },
   {
     "category": "Commerce",
-    "displayName": "Process Orders: Print Shipping Papers",
+    "displayName": "Process Orders: Print Shipping Papers (EMS)",
     "altName": "",
     "isTag": false,
     "destination": "/iCore/Commerce/Order-Stage-Processing/Print-Shipping-Papers/Shipping-papers-page.aspx",
@@ -169,7 +177,7 @@
   },
   {
     "category": "Commerce",
-    "displayName": "Process Orders: Ship Orders",
+    "displayName": "Process Orders: Ship Orders (EMS)",
     "altName": "poso",
     "isTag": false,
     "destination": "/iCore/Commerce/Order-Stage-Processing/Ship-Orders/Ship-orders-page.aspx",
@@ -177,7 +185,7 @@
   },
   {
     "category": "Commerce",
-    "displayName": "Process Orders: Generate Invoices",
+    "displayName": "Process Orders: Generate Invoices (EMS)",
     "altName": "",
     "isTag": false,
     "destination": "/iCore/Commerce/Order-Stage-Processing/Invoice/Invoice-orders-page.aspx",
@@ -185,7 +193,7 @@
   },
   {
     "category": "Commerce",
-    "displayName": "Process Orders: Release Backorders",
+    "displayName": "Process Orders: Release Backorders (EMS)",
     "altName": "",
     "isTag": false,
     "destination": "/iCore/Commerce/Order-Stage-Processing/Manual-Release-Backorder/Manual-Release-Backorders.aspx",
@@ -193,7 +201,7 @@
   },
   {
     "category": "Events",
-    "displayName": "Events: Browse",
+    "displayName": "Browse Events",
     "altName": "meeting",
     "isTag": false,
     "destination": "/iCore/Events/Events_List.aspx",
@@ -201,7 +209,7 @@
   },
   {
     "category": "Events",
-    "displayName": "Registrations: Browse",
+    "displayName": "Find Event Registrants (EMS)",
     "altName": "meeting event registrants attendees list report",
     "isTag": false,
     "destination": "/iCore/Events/Registrations/Find-registrations.aspx",
@@ -217,7 +225,7 @@
   },
   {
     "category": "Finance",
-    "displayName": "Pay Central Live",
+    "displayName": "Pay Central Live (EMS)",
     "altName": "",
     "isTag": false,
     "destination": "/iCore/Finance/PayCentralLive.aspx",
@@ -361,7 +369,7 @@
   },
   {
     "category": "RiSE",
-    "displayName": "Form Builder: Library",
+    "displayName": "Form Builder: Library (EMS)",
     "altName": "sonic survey",
     "isTag": false,
     "destination": "/iCore/Forms/Form-Library.aspx",
@@ -369,7 +377,7 @@
   },
   {
     "category": "RiSE",
-    "displayName": "Form Builder: Approval Queue",
+    "displayName": "Form Builder: Approval Queue (EMS)",
     "altName": "sonic survey",
     "isTag": false,
     "destination": "/iCore/Forms/Approval/FormApprovalsReview.aspx",
@@ -377,7 +385,7 @@
   },
   {
     "category": "RiSE",
-    "displayName": "Form Builder: Health Check",
+    "displayName": "Form Builder: Health Check (EMS)",
     "altName": "sonic survey",
     "isTag": false,
     "destination": "/iCore/Forms/Form-Health-Check.aspx",
@@ -385,7 +393,7 @@
   },
   {
     "category": "RiSE",
-    "displayName": "Form Builder: Form Groups",
+    "displayName": "Form Builder: Form Groups (EMS)",
     "altName": "sonic survey",
     "isTag": false,
     "destination": "/iCore/Forms/Form-Groups.aspx",
@@ -425,10 +433,34 @@
   },
   {
     "category": "Settings",
-    "displayName": "About iMIS",
+    "displayName": "About iMIS (EMS)",
     "altName": "settings, purge system cache",
     "isTag": false,
     "destination": "/iMIS/Setup/AboutImis.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "About iMIS (2017)",
+    "altName": "settings, purge system cache",
+    "isTag": false,
+    "destination": "/Settings/About_iMIS/iMIS/ContentManagement/Template.aspx?ContentCode=AMC.Home",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Organization",
+    "altName": "default email customer type lower case date time export",
+    "isTag": false,
+    "destination": "/Core/Admin/QuickSetup.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "OpenID Connect (EMS)",
+    "altName": "OIDC",
+    "isTag": false,
+    "destination": "/iParts/Internal/Setup/OpenIDProviderSetup.aspx",
     "isShortcut": false
   },
   {
@@ -449,10 +481,18 @@
   },
   {
     "category": "Settings",
-    "displayName": "Contact Security",
+    "displayName": "Contact Security (EMS)",
     "altName": "public directory access users members authenticated",
     "isTag": false,
     "destination": "/iMIS/Setup/Customers/ContactSecuritySettings.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Contact Security (2017)",
+    "altName": "public directory access users members authenticated",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=ContactSecurity",
     "isShortcut": false
   },
   {
@@ -489,10 +529,18 @@
   },
   {
     "category": "Settings",
-    "displayName": "Client Applications & Single Sign On",
+    "displayName": "Client Applications & Single Sign On (EMS)",
     "altName": "sso login redirect refresh token",
     "isTag": false,
     "destination": "/iParts/Common/SSO/ClientApplication.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Client Applications & Single Sign On (2017)",
+    "altName": "sso login redirect refresh token",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/Shared/SecurityAdmin/ClientApplication.aspx",
     "isShortcut": false
   },
   {
@@ -537,7 +585,7 @@
   },
   {
     "category": "Settings",
-    "displayName": "Address Formats: States & Provinces",
+    "displayName": "Address Configuration: States & Provinces (EMS)",
     "altName": "",
     "isTag": false,
     "destination": "/iCore/Addresses/States-and-Provinces.aspx",
@@ -545,7 +593,7 @@
   },
   {
     "category": "Settings",
-    "displayName": "Address Formats: Countries",
+    "displayName": "Address Configuration: Countries",
     "altName": "country",
     "isTag": false,
     "destination": "/iCore/System_Settings/Addresses/Countries.aspx",
@@ -577,10 +625,18 @@
   },
   {
     "category": "Settings",
-    "displayName": "Fundraising Configuration: Gift Aid (UK)",
+    "displayName": "Fundraising Configuration: Gift Aid (UK) (EMS)",
     "altName": "HMRC gateway contact tax office",
     "isTag": false,
     "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=GiftAidUK",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Fundraising Configuration: Tribute Types (EMS)",
+    "altName": "honor memory recognition IHO IMO",
+    "isTag": false,
+    "destination": "/imis/Setup/Fundraising/TributeType.aspx",
     "isShortcut": false
   },
   {
@@ -593,7 +649,7 @@
   },
   {
     "category": "Settings",
-    "displayName": "Events Configuration: Resource Types",
+    "displayName": "Events Configuration: Resource Types (EMS)",
     "altName": "space speaker staff",
     "isTag": false,
     "destination": "/imis/Setup/Events/ResourceType.aspx",
@@ -696,8 +752,184 @@
     "isShortcut": false
   },
   {
+    "category": "Settings",
+    "displayName": "Finance Configuration: Due To/Due From",
+    "altName": "dtdf",
+    "isTag": false,
+    "destination": "/imis/Setup/Accounting/DueToDueFrom.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Finance Configuration: General Ledger Accounts (EMS)",
+    "altName": "GL",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/Finance/General-ledger-accounts.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Finance Configuration: Pay Central Settings (EMS)",
+    "altName": "GL",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/Finance/Pay-Central-settings.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Finance Configuration: Tax Categories",
+    "altName": "category",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/Finance/TaxCategories.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Finance Configuration: Tax Codes",
+    "altName": "authority",
+    "isTag": false,
+    "destination": "/imis/Setup/Accounting/TaxAuthority.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Finance Configuration: Tax by Zip Code (EMS)",
+    "altName": "postal",
+    "isTag": false,
+    "destination": "/iCore/Contacts/Zip-codes.aspx?mode=Tax",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Finance Configuration: VAT Exception Rules (EMS)",
+    "altName": "value-added added tax",
+    "isTag": false,
+    "destination": "/imis/Setup/Accounting/VATExceptionRules.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Finance Configuration: Terms",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/Finance/Terms.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Finance Configuration: Aging",
+    "altName": "Dunning Terms",
+    "isTag": false,
+    "destination": "/imis/Setup/Accounting/Aging.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "RiSE Configuration: Quick Setup",
+    "altName": "panel source prefix google maps api attachment files types cookies subdomains domains canonical",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=ContentManager.QuickSetup",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "RiSE Configuration: Email Settings (EMS)",
+    "altName": "smtp host port SSL",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=SMTP.EmailSettings",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "RiSE Configuration: Page Builder Configuration",
+    "altName": "attachment publishing server cache duration maintenance mode",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=SMTP.EmailSettings",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "RiSE Configuration: Search Settings",
+    "altName": "keyword",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=Search",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "RiSE Configuration: Indexing Preferences",
+    "altName": "rebuild",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/Indexing_Preferences.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "RiSE Configuration: Process Automation",
+    "altName": "logs pa+",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=ProcessAutomation",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "RiSE Configuration: Workflow Configuration",
+    "altName": "expiration",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=ContentWorkflow",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "RiSE Configuration: Report Formats (EMS)",
+    "altName": "ssrs",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=SSRSFormats",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "RiSE Configuration: Recent History (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=RecentHistory",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Language Translation: General",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=TranslationSettings",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Language Translation: Translation Cultures",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/Setup/SystemConfigPage.aspx?PageName=TranslationSettings",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Advanced Email Configuration",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/System_Settings/Email_Provider_Configuration.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Settings",
+    "displayName": "Change Notifications (EMS)",
+    "altName": "web hooks endpoint headers",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/Template.aspx",
+    "isShortcut": false
+  },
+  {
     "category": "Reports",
-    "displayName": "Report Writer",
+    "displayName": "Report Writer (EMS)",
     "altName": "exago power bi business intelligence",
     "isTag": false,
     "destination": "/imis/reporting/reportviewer.aspx",
@@ -817,7 +1049,7 @@
   },
   {
     "category": "Data",
-    "displayName": "Data Integrity Dashboard",
+    "displayName": "Data Integrity Dashboard (EMS)",
     "altName": "qa quality assurance",
     "isTag": false,
     "destination": "/DataIntegrityDashboard",
@@ -881,7 +1113,7 @@
   },
   {
     "category": "Marketing",
-    "displayName": "Communication Dashboard",
+    "displayName": "Communication Dashboard (EMS)",
     "altName": "",
     "isTag": false,
     "destination": "/StaffCommunicationLanding",
@@ -896,11 +1128,475 @@
     "isShortcut": true
   },
   {
-    "category": "Resource",
-    "displayName": "iMIS Glossary",
+    "category": "Users",
+    "displayName": "Import Contacts (EMS)",
+    "altName": "bulk records",
+    "isTag": false,
+    "destination": "/iCore/Contacts/Contact-importer.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Users",
+    "displayName": "Duplicate Merge Logs (EMS)",
+    "altName": "dupe contact",
+    "isTag": false,
+    "destination": "/iParts/Contact%20Management/DuplicateMerge/DuplicateMergeLogDisplay.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Generate Renewals (EMS)",
     "altName": "",
     "isTag": false,
-    "destination": "https://help.imis.com/enterprise/features/glossary.htm",
+    "destination": "/imis/Setup/Billing/BillGeneration.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Reverse Open Invoices (EMS)",
+    "altName": "refund",
+    "isTag": false,
+    "destination": "/iParts/Commerce/OpenInvoiceReversals/DuesReversals.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Manage Expired Members",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Shared/ManageExpiredMembers.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Membership Automatic Payments: Dashboard",
+    "altName": "autopay",
+    "isTag": false,
+    "destination": "/iCore/Staff_Dashboards/AutoPay/Membership/AutoPay_Membership_Dashboard.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Membership Automatic Payments: Process Payments",
+    "altName": "autopay process payment",
+    "isTag": false,
+    "destination": "/iCore/Membership/AutoPay/Process_automatic_renewal_payments.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Membership Automatic Payments: Review Payments",
+    "altName": "autopay renewal",
+    "isTag": false,
+    "destination": "/iCore/Membership/AutoPay/Automatic_payment_history_for_renewals.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Membership Automatic Payments: Enrollments",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Membership/AutoPay/Automatic_payment_instructions.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Membership: Billing Products",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/Setup/Shared/LegacyBillingItem.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Membership",
+    "displayName": "Membership: Prorating Rules (EMS)",
+    "altName": "pro rate",
+    "isTag": false,
+    "destination": "/iCore/Commerce/Prorating_schedules.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "My Major Donors",
+    "altName": "portfolio",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/MovesManagement/Landing_Page.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Automatic Payments: Dashboard",
+    "altName": "",
+    "isTag": false,
+    "destination": "/AutoPayFundraisingDashboard",
+    "isShortcut": true
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Automatic Payments: Process Recurring Donations",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/AutoPay/Process_recurring_donation_payments.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Automatic Payments: Recurring Donation Payments",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/AutoPay/Automatic_payment_history_for_recurring_donations.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Fundraising Automatic Payments: Enrollments",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/AutoPay/Automatic_payment_instructions.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Fundraising: Issue Receipts (EMS)",
+    "altName": "gift receipts",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/Issue-Receipts-CCO.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Find Issues Receipts (EMS)",
+    "altName": "gift receipts",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/Find-issued-receipts.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Receipt Logs (EMS)",
+    "altName": "gift receipts",
+    "isTag": false,
+    "destination": "/iParts/Fundraising/ReceiptCreator/ReceiptLogDisplay.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Issue Tribute Notifications",
+    "altName": "tributes",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/Tribute_Notifications.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Find Issued Notifications",
+    "altName": "tributes",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/Find_issued_notifications.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Import Donations",
+    "altName": "import gifts",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/Donation_importer.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Premium Sets",
+    "altName": "premiums",
+    "isTag": false,
+    "destination": "/iparts/Fundraising/ConfigurePremiums/ConfigurePremiumsDisplay.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Fundraising",
+    "displayName": "Gift Adjustments Logs (EMS)",
+    "altName": "gift adjustments",
+    "isTag": false,
+    "destination": "/iCore/Fundraising/Gift-adjustment-logs.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Events",
+    "displayName": "Events",
+    "altName": "event search",
+    "isTag": false,
+    "destination": "/StaffFindEvents",
+    "isShortcut": true
+  },
+  {
+    "category": "Events",
+    "displayName": "Add Event",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Events/Manage/Event_Add.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Events",
+    "displayName": "Event Calendar",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Events/Events_Calendar.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Events",
+    "displayName": "Issue Event Confirmations",
+    "altName": "issue confirmations",
+    "isTag": false,
+    "destination": "/iCore/Events/Manage/Issue_event_confirmations.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Events",
+    "displayName": "Manage Event Templates",
+    "altName": "event templates",
+    "isTag": false,
+    "destination": "/iCore/Events/Manage/Manage_templates.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Pricing Groups (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iParts/Internal/Setup/PricingGroup/PricingGroupList.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Commerce",
+    "displayName": "Inventory Receipts (EMS)",
+    "altName": "manage inventory",
+    "isTag": false,
+    "destination": "/imis/setup/commerce/InventoryReceipts.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Advertising",
+    "displayName": "Advertising: Dashboard (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Advertising/Dashboard.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Advertising",
+    "displayName": "Media Orders (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Advertising/Media-order.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Advertising",
+    "displayName": "Advertising Configuration: Media Assets (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Advertising/Media-asset.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Advertising",
+    "displayName": "Advertising Configuration: Sales Representatives (EMS)",
+    "altName": "sales reps",
+    "isTag": false,
+    "destination": "/iCore/Advertising/Sales-representatives.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Advertising",
+    "displayName": "Advertising Configuration: Mapping (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Advertising/Mapping.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Advertising",
+    "displayName": "Advertising Configuration: Production Settings (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Advertising/Production-setup.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Advanced Email Dashboard (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/AdvancedEmailDashboard",
+    "isShortcut": true
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Campaigns: Track Campaigns (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/Template.aspx?ContentCode=CM.SolicitationsList",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Campaigns: Define Campaigns",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/Template.aspx?ContentCode=CM.CampaignList",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Campaigns: Define Inserts",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/Template.aspx?ContentCode=PM.SupplementList",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Campaigns: Record Responses",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/Template.aspx?ContentCode=CM.RecordResponse.ContactList",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Campaigns: View Output",
+    "altName": "campaign outcome",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/BSA/ObjectBrowser.aspx?DocumentPath=%24%2fCommon%2fOutput&ShowHierarchyTree=False",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Campaigns: Import Source Codes",
+    "altName": "appeals",
+    "isTag": false,
+    "destination": "/iCore/Tools/Source_code_importer.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Campaigns: Settings",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/Template.aspx?ContentCode=CM.Setup",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Segmentation: Define Segments (EMS)",
+    "altName": "job list",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/Template.aspx?ContentCode=SM.JobList",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Segmentation Security Groups",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/Template.aspx?ContentCode=SM.Setup",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "RFM: Run Analysis (EMS)",
+    "altName": "analyze",
+    "isTag": false,
+    "destination": "/AsiCommon/Controls/RFM/Default.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "RFM: Security Groups",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/Template.aspx?ContentCode=RFM.Setup",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Process Manager: Projects",
+    "altName": "process projects",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/Template.aspx?ContentCode=OM.OpportunityList",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Process Manager: Tasks",
+    "altName": "process tasks",
+    "isTag": false,
+    "destination": "/iMIS/ContentManagement/Template.aspx?ContentCode=OM.AllOppTaskList",
+    "isShortcut": false
+  },
+  {
+    "category": "Marketing",
+    "displayName": "Process Manager: Settings",
+    "altName": "process settings",
+    "isTag": false,
+    "destination": "/iMIS/OpportunityManagement/Setup.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Finance",
+    "displayName": "Pay Central: Dashboard (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Staff_Dashboards/Pay-Central/Pay-Central.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Finance",
+    "displayName": "Pay Central: Find Payments (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Finance/Payments.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Finance",
+    "displayName": "Pay Central: Automatic Payment Transactions (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/iCore/Finance/Gateways/Gateway-transactions.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Finance",
+    "displayName": "Finance Dashboard (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/FinanceDashboard",
+    "isShortcut": true
+  },
+  {
+    "category": "Finance",
+    "displayName": "Closing Procedures: Credit Invoices",
+    "altName": "credit memos",
+    "isTag": false,
+    "destination": "/imis/Setup/Commerce/CreditInvoice.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Finance",
+    "displayName": "Closing Procedures: Invoice Write-Offs (EMS)",
+    "altName": "",
+    "isTag": false,
+    "destination": "/imis/Setup/Commerce/MassWriteOffs.aspx",
+    "isShortcut": false
+  },
+  {
+    "category": "Finance",
+    "displayName": "Closing Procedures: Export General Ledger Transactions",
+    "altName": "GL export",
+    "isTag": false,
+    "destination": "/imis/Setup/Commerce/GLExport.aspx",
     "isShortcut": false
   },
   {
@@ -933,6 +1629,14 @@
     "altName": "",
     "isTag": true,
     "destination": "https://help.imis.com/enterprise/index.htm?q=",
+    "isShortcut": false
+  },
+  {
+    "category": "Resource",
+    "displayName": "iMIS Glossary",
+    "altName": "",
+    "isTag": false,
+    "destination": "https://help.imis.com/enterprise/features/glossary.htm",
     "isShortcut": false
   }
 ]
