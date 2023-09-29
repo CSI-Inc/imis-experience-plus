@@ -1,3 +1,10 @@
+/* IQA Editor Styles */
+
+#MainPanel table.csi__iep__customsql
+{
+    z-index: 9995;
+}
+
 /* RiSE Content Editor Styles */
 
 #MainPanel.__csi__iep__rise .__csi__iep__addButton
