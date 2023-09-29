@@ -8,8 +8,8 @@ class Settings
 
     private defaultConfig: SettingsModel = <SettingsModel>{
         enableIqa: true,
-        enableRise: false,
-        enableWorkbar: false,
+        enableRise: true,
+        enableWorkbar: true,
         workbarShortcut: Settings.SPACEBAR,
         workbarKbdCtrl: true,
         workbarKbdAlt: false,
