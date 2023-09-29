@@ -72,7 +72,7 @@ class WorkBar
     {
         var config = await this.settings.load();
 
-        if (!config.enableWorkbarv2) return;
+        if (!config.enableWorkbar) return;
 
         var myCombo = `[${config.workbarShortcut}]`;
         if (config.workbarKbdShift) myCombo = "[Shift] + " + myCombo;

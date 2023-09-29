@@ -7,9 +7,9 @@ class Settings
     private origConfig: SettingsModel = <SettingsModel>{};
 
     private defaultConfig: SettingsModel = <SettingsModel>{
-        enableIqav2: true,
-        enableRisev2: false,
-        enableWorkbarv2: false,
+        enableIqa: true,
+        enableRise: false,
+        enableWorkbar: false,
         workbarShortcut: Settings.SPACEBAR,
         workbarKbdCtrl: true,
         workbarKbdAlt: false,
@@ -28,9 +28,9 @@ class Settings
 
             var config = await this.load();
 
-            $('#enable-iqa').prop('checked', config.enableIqav2);
-            $('#enable-rise').prop('checked', config.enableRisev2);
-            $('#enable-workbar').prop('checked', config.enableWorkbarv2);
+            $('#enable-iqa').prop('checked', config.enableIqa);
+            $('#enable-rise').prop('checked', config.enableRise);
+            $('#enable-workbar').prop('checked', config.enableWorkbar);
             $('#workbar-kbd').val(config.workbarShortcut);
             $('#kbd-ctrl').prop('checked', config.workbarKbdCtrl);
             $('#kbd-alt').prop('checked', config.workbarKbdAlt);
@@ -46,9 +46,9 @@ class Settings
             
             $('input').on('change keydown', () =>
             {
-                if (this.origConfig.enableIqav2 !== $('#enable-iqa').prop('checked')
-                || this.origConfig.enableRisev2 !== $('#enable-rise').prop('checked')
-                || this.origConfig.enableWorkbarv2 !== $('#enable-workbar').prop('checked')
+                if (this.origConfig.enableIqa !== $('#enable-iqa').prop('checked')
+                || this.origConfig.enableRise !== $('#enable-rise').prop('checked')
+                || this.origConfig.enableWorkbar !== $('#enable-workbar').prop('checked')
                 || this.origConfig.workbarShortcut !== $('#workbar-kbd').val()
                 || this.origConfig.workbarKbdCtrl !== $('#kbd-ctrl').prop('checked')
                 || this.origConfig.workbarKbdAlt !== $('#kbd-alt').prop('checked')
@@ -133,9 +133,9 @@ class Settings
     public save(): void
     {
         chrome.storage.sync.set(<SettingsModel>{
-            enableIqav2: $('#enable-iqa').prop('checked'),
-            enableRisev2: $('#enable-rise').prop('checked'),
-            enableWorkbarv2: $('#enable-workbar').prop('checked'),
+            enableIqa: $('#enable-iqa').prop('checked'),
+            enableRise: $('#enable-rise').prop('checked'),
+            enableWorkbar: $('#enable-workbar').prop('checked'),
             workbarShortcut: $('#workbar-kbd').val(),
             workbarKbdCtrl: $('#kbd-ctrl').prop('checked'),
             workbarKbdAlt: $('#kbd-alt').prop('checked'),
@@ -150,9 +150,9 @@ class Settings
             chrome.storage.sync.get(this.defaultConfig, settings =>
             {
                 resolve(<SettingsModel>{
-                    enableIqav2: settings.enableIqav2,
-                    enableRisev2: settings.enableRisev2,
-                    enableWorkbarv2: settings.enableWorkbarv2,
+                    enableIqa: settings.enableIqa,
+                    enableRise: settings.enableRise,
+                    enableWorkbar: settings.enableWorkbar,
                     workbarShortcut: settings.workbarShortcut,
                     workbarKbdCtrl: settings.workbarKbdCtrl,
                     workbarKbdAlt: settings.workbarKbdAlt,

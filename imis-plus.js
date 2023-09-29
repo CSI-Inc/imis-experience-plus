@@ -42,9 +42,9 @@ var Settings = /** @class */ (function () {
         this.$ = $;
         this.origConfig = {};
         this.defaultConfig = {
-            enableIqav2: true,
-            enableRisev2: false,
-            enableWorkbarv2: false,
+            enableIqa: true,
+            enableRise: false,
+            enableWorkbar: false,
             workbarShortcut: Settings.SPACEBAR,
             workbarKbdCtrl: true,
             workbarKbdAlt: false,
@@ -63,9 +63,9 @@ var Settings = /** @class */ (function () {
                         return [4 /*yield*/, this.load()];
                     case 1:
                         config = _a.sent();
-                        $('#enable-iqa').prop('checked', config.enableIqav2);
-                        $('#enable-rise').prop('checked', config.enableRisev2);
-                        $('#enable-workbar').prop('checked', config.enableWorkbarv2);
+                        $('#enable-iqa').prop('checked', config.enableIqa);
+                        $('#enable-rise').prop('checked', config.enableRise);
+                        $('#enable-workbar').prop('checked', config.enableWorkbar);
                         $('#workbar-kbd').val(config.workbarShortcut);
                         $('#kbd-ctrl').prop('checked', config.workbarKbdCtrl);
                         $('#kbd-alt').prop('checked', config.workbarKbdAlt);
@@ -76,9 +76,9 @@ var Settings = /** @class */ (function () {
                         this.updateDependentControlState();
                         this.origConfig = config;
                         $('input').on('change keydown', function () {
-                            if (_this.origConfig.enableIqav2 !== $('#enable-iqa').prop('checked')
-                                || _this.origConfig.enableRisev2 !== $('#enable-rise').prop('checked')
-                                || _this.origConfig.enableWorkbarv2 !== $('#enable-workbar').prop('checked')
+                            if (_this.origConfig.enableIqa !== $('#enable-iqa').prop('checked')
+                                || _this.origConfig.enableRise !== $('#enable-rise').prop('checked')
+                                || _this.origConfig.enableWorkbar !== $('#enable-workbar').prop('checked')
                                 || _this.origConfig.workbarShortcut !== $('#workbar-kbd').val()
                                 || _this.origConfig.workbarKbdCtrl !== $('#kbd-ctrl').prop('checked')
                                 || _this.origConfig.workbarKbdAlt !== $('#kbd-alt').prop('checked')
@@ -143,9 +143,9 @@ var Settings = /** @class */ (function () {
     };
     Settings.prototype.save = function () {
         chrome.storage.sync.set({
-            enableIqav2: $('#enable-iqa').prop('checked'),
-            enableRisev2: $('#enable-rise').prop('checked'),
-            enableWorkbarv2: $('#enable-workbar').prop('checked'),
+            enableIqa: $('#enable-iqa').prop('checked'),
+            enableRise: $('#enable-rise').prop('checked'),
+            enableWorkbar: $('#enable-workbar').prop('checked'),
             workbarShortcut: $('#workbar-kbd').val(),
             workbarKbdCtrl: $('#kbd-ctrl').prop('checked'),
             workbarKbdAlt: $('#kbd-alt').prop('checked'),
@@ -159,9 +159,9 @@ var Settings = /** @class */ (function () {
                 return [2 /*return*/, new Promise(function (resolve) {
                         chrome.storage.sync.get(_this.defaultConfig, function (settings) {
                             resolve({
-                                enableIqav2: settings.enableIqav2,
-                                enableRisev2: settings.enableRisev2,
-                                enableWorkbarv2: settings.enableWorkbarv2,
+                                enableIqa: settings.enableIqa,
+                                enableRise: settings.enableRise,
+                                enableWorkbar: settings.enableWorkbar,
                                 workbarShortcut: settings.workbarShortcut,
                                 workbarKbdCtrl: settings.workbarKbdCtrl,
                                 workbarKbdAlt: settings.workbarKbdAlt,
@@ -281,7 +281,7 @@ var IqaExtensions = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.settings.load()];
                     case 1:
                         config = _a.sent();
-                        if (!config.enableIqav2)
+                        if (!config.enableIqa)
                             return [2 /*return*/];
                         if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1) {
                             this.initIqaExtensions();
@@ -490,13 +490,15 @@ var IqaExtensions = /** @class */ (function () {
             }
         });
         // Special case for date pickers and other image buttons
-        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=image]').prev('input[type=text]').css('width', 'calc(100% - 193px)');
-        ft.find('table.Grid tr.GridAlternateRow td:nth-child(5) input[type=image]').prev('input[type=text]').css('width', 'calc(100% - 193px)');
+        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=image], table.Grid tr.GridAlternateRow td:nth-child(5) input[type=image]')
+            .prev('input[type=text]')
+            .css('width', 'calc(100% - 193px)');
+        // Special case for "between"
+        ft.find('table.Grid tr td:nth-child(5) table.GridFilterCalendar td[nowrap] > span > input[type=text]').attr('style', 'width: 100px !important');
         // Find any .RadComboBox items inside the 5th column and set a negative margin
         ft.find('table.Grid tr.GridRow td:nth-child(5) .RadComboBox, table.Grid tr.GridAlternateRow td:nth-child(5) .RadComboBox').css('margin-top', '-4px');
         // Prompt Label column
-        ft.find('table.Grid tr.GridRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
-        ft.find('table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
+        ft.find('table.Grid tr.GridRow td:nth-child(7) input, table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
         if (isImis2017) {
             ft.find('td.PanelTablePrompt').parent().find('td').filter(':empty').remove();
             ft.find('td.PanelTablePrompt').parent().find('td').css('border', '0').css('background-color', 'transparent');
@@ -786,7 +788,7 @@ var RiseExtensions = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.settings.load()];
                     case 1:
                         config = _a.sent();
-                        if (!config.enableRisev2)
+                        if (!config.enableRise)
                             return [2 /*return*/];
                         if (window.location.pathname.indexOf('/ContentManagement/ContentDesigner/ContentRecordEdit.aspx') > -1) {
                             this.$(function () {
@@ -1702,7 +1704,7 @@ var WorkBar = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.settings.load()];
                     case 1:
                         config = _a.sent();
-                        if (!config.enableWorkbarv2)
+                        if (!config.enableWorkbar)
                             return [2 /*return*/];
                         myCombo = "[".concat(config.workbarShortcut, "]");
                         if (config.workbarKbdShift)

@@ -37,7 +37,7 @@ class IqaExtensions
     {
         var config = await this.settings.load();
 
-        if (!config.enableIqav2) return;
+        if (!config.enableIqa) return;
 
         if (window.location.pathname.indexOf('/iMIS/QueryBuilder/Design.aspx') > -1)
         {
@@ -313,15 +313,18 @@ class IqaExtensions
         });
         
         // Special case for date pickers and other image buttons
-        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=image]').prev('input[type=text]').css('width', 'calc(100% - 193px)');
-        ft.find('table.Grid tr.GridAlternateRow td:nth-child(5) input[type=image]').prev('input[type=text]').css('width', 'calc(100% - 193px)');
+        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=image], table.Grid tr.GridAlternateRow td:nth-child(5) input[type=image]')
+            .prev('input[type=text]')
+            .css('width', 'calc(100% - 193px)');
+
+        // Special case for "between"
+        ft.find('table.Grid tr td:nth-child(5) table.GridFilterCalendar td[nowrap] > span > input[type=text]').attr('style', 'width: 100px !important');
 
         // Find any .RadComboBox items inside the 5th column and set a negative margin
         ft.find('table.Grid tr.GridRow td:nth-child(5) .RadComboBox, table.Grid tr.GridAlternateRow td:nth-child(5) .RadComboBox').css('margin-top', '-4px');
 
         // Prompt Label column
-        ft.find('table.Grid tr.GridRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
-        ft.find('table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
+        ft.find('table.Grid tr.GridRow td:nth-child(7) input, table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
 
         if (isImis2017)
         {
