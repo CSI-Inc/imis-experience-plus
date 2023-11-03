@@ -43,8 +43,8 @@ var Settings = /** @class */ (function () {
         this.origConfig = {};
         this.defaultConfig = {
             enableIqa: true,
-            enableRise: false,
-            enableWorkbar: false,
+            enableRise: true,
+            enableWorkbar: true,
             workbarShortcut: Settings.SPACEBAR,
             workbarKbdCtrl: true,
             workbarKbdAlt: false,
