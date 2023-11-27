@@ -483,22 +483,23 @@ var IqaExtensions = /** @class */ (function () {
         ft.find('table.Grid tr.GridHeader td:last-child').css('min-width', '140px');
         ft.find('table.Grid tr.GridHeader td:nth-last-child(2)').css('min-width', '180px');
         ft.find('table.Grid tr.GridHeader td:contains("Function")').parent('tr').find('td:nth-last-child(2)').text('Prompt Label');
-        // Value column - excludes any combo pickers
-        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=text], table.Grid tr.GridAlternateRow td:nth-child(5) input[type=text]').each(function (_, e) {
-            if (_this.$(e).parents('span.rcbInner').length === 0) {
-                _this.$(e).css('width', 'calc(100% - 130px)');
-            }
-        });
-        // Special case for date pickers and other image buttons
-        ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=image], table.Grid tr.GridAlternateRow td:nth-child(5) input[type=image]')
-            .prev('input[type=text]')
-            .css('width', 'calc(100% - 193px)');
-        // Special case for "between"
-        ft.find('table.Grid tr td:nth-child(5) table.GridFilterCalendar td[nowrap] > span > input[type=text]').attr('style', 'width: 100px !important');
+        // Value column - excludes any combo pickers (in EMS we can have select pickers in the value column)
+        if (!isImis2017) {
+            ft.find('table.Grid tr.GridRow td:nth-child(5) input[type=text], table.Grid tr.GridAlternateRow td:nth-child(5) input[type=text]').each(function (_, e) {
+                var _a;
+                if (_this.$(e).parents('span.rcbInner').length === 0) {
+                    var betweenComparison = ((_a = _this.$(e).parents('tr').find('td:nth-child(3) select').val()) === null || _a === void 0 ? void 0 : _a.toString().toLowerCase()) === 'between';
+                    var hasCalendarInput = _this.$(e).parents('tr').find('td:nth-child(5) span.CalendarInput').length;
+                    if (!betweenComparison && !hasCalendarInput) {
+                        _this.$(e).css('width', 'calc(100% - 130px)');
+                    }
+                }
+            });
+        }
+        // Special case for "between" with date pickers in EMS
+        ft.find('table.Grid tr td:nth-child(5) table.GridFilterCalendar td[nowrap] > span > input[type=text]').attr('style', 'width: 110px !important');
         // Find any .RadComboBox items inside the 5th column and set a negative margin
         ft.find('table.Grid tr.GridRow td:nth-child(5) .RadComboBox, table.Grid tr.GridAlternateRow td:nth-child(5) .RadComboBox').css('margin-top', '-4px');
-        // Prompt Label column
-        ft.find('table.Grid tr.GridRow td:nth-child(7) input, table.Grid tr.GridAlternateRow td:nth-child(7) input').css('width', 'calc(100% - 130px)');
         if (isImis2017) {
             ft.find('td.PanelTablePrompt').parent().find('td').filter(':empty').remove();
             ft.find('td.PanelTablePrompt').parent().find('td').css('border', '0').css('background-color', 'transparent');
@@ -506,7 +507,7 @@ var IqaExtensions = /** @class */ (function () {
         }
         queryOptsRow.before(ft.find('tbody > tr').first());
         // Prompt inputs full width
-        ft.find('table.Grid tr td:nth-last-child(2) input[aria-label*=Prompt]').css('width', '100%');
+        ft.find('table.Grid tr td:nth-last-child(2) input').css('width', '100%');
         // Change group button
         ft.find('table.Grid tr td input[type=button][title="Add Filter"]').parents('td').attr('align', '');
         ft.find('table.Grid tr td input[type=button][title="Add Filter"]').changeElementType('a').addClass('btn PrimaryButton').text('Add Group').prepend('<i class="fas fa-fw fa-plus"></i>');
@@ -1381,7 +1382,7 @@ var ConfigManager = /** @class */ (function () {
                         now.setUTCHours(0, 0, 0, 0);
                         return [4 /*yield*/, chrome.storage.local.get([ConfigManager.Chrome_LastUpdatedKey])];
                     case 1:
-                        lastUpdated = (_c.sent()).iep__searchbBar__lastUpdated;
+                        lastUpdated = (_c.sent())[ConfigManager.Chrome_LastUpdatedKey];
                         Utils.log('lastUpdated = ', lastUpdated);
                         if (!(lastUpdated !== undefined)) return [3 /*break*/, 6];
                         Utils.log('lastUpdatedKey in chrome.storage.local');

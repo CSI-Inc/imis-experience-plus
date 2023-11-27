@@ -10,7 +10,7 @@ class ConfigManager
     {
         var now = new Date();
         now.setUTCHours(0, 0, 0, 0);
-        var lastUpdated = (await chrome.storage.local.get([ConfigManager.Chrome_LastUpdatedKey])).iep__searchbBar__lastUpdated;
+        var lastUpdated = (await chrome.storage.local.get([ConfigManager.Chrome_LastUpdatedKey]))[ConfigManager.Chrome_LastUpdatedKey];
         Utils.log('lastUpdated = ', lastUpdated);
         if (lastUpdated !== undefined)
         {
@@ -94,7 +94,7 @@ class ConfigManager
             .on('click', e =>
             {
                 var anchorId = $(e.currentTarget).find('a').attr('id');
-                if (anchorId != "usernameLookup" && anchorId != "eventCodeLookup" 
+                if (anchorId != "usernameLookup" && anchorId != "eventCodeLookup"
                     && $(e.currentTarget).find('.lookupLoader').length == 0)
                 {
                     $(e.currentTarget).find('a').append(this.searchBar.getLoader());
