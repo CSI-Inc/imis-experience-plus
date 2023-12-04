@@ -185,7 +185,7 @@ class IqaExtensions
             backgroundColor: 'white',
             borderBottom: '1px solid #DDD',
             paddingBottom: '1rem',
-            zIndex: '999999'
+            zIndex: '999'
         });
 
         // Remove Table Borders
@@ -385,15 +385,15 @@ class IqaExtensions
             borderBottom: '1px solid #DDD'
         };
         dt.find('table.Grid tr:nth-child(2) td:first-child').css({
-            zIndex: '9990',
+            zIndex: '990',
             ...commonStickyStyles
         });
         dt.find('table.Grid tr:nth-child(2) td:nth-child(2)').css({
-            zIndex: '9992',
+            zIndex: '992',
             ...commonStickyStyles
         });
         dt.find('table.Grid .SectionTitle:contains("Available")').closest('td').css({
-            zIndex: '9991',
+            zIndex: '991',
             ...commonStickyStyles
         });
 
