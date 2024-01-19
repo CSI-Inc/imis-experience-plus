@@ -333,6 +333,9 @@ class IqaExtensions
             ft.find('td.PanelTablePrompt:eq(1)').append(ft.find('td.PanelTablePrompt:eq(1)').parent().find('input[type=text]'));
         }
 
+        // Fix Values column still being too small
+        ft.find('table.Grid tr.GridRow, table.Grid tr.GridAlternateRow').find('td input[type=text]').css('min-width', '150px');
+
         queryOptsRow.before(ft.find('tbody > tr').first());
 
         // Prompt inputs full width
