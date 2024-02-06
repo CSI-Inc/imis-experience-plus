@@ -1629,7 +1629,7 @@ var Sanitizer = /** @class */ (function () {
     // ex: pass in jsonData?.UpdateInformation?.UpdatedOn
     Sanitizer.date = function (data) {
         var _a, _b, _c;
-        return !data ? '' : (_c = (_b = (_a = new Date(data)) === null || _a === void 0 ? void 0 : _a.toISOString()) === null || _b === void 0 ? void 0 : _b.split('T')[0]) !== null && _c !== void 0 ? _c : '';
+        return !data ? '' : (_c = (_b = (_a = new Date(data += 'Z')) === null || _a === void 0 ? void 0 : _a.toISOString()) === null || _b === void 0 ? void 0 : _b.split('T')[0]) !== null && _c !== void 0 ? _c : '';
     };
     // ex: pass in jsonData?.Phones?.$values[2]?.PhoneType
     Sanitizer.phone = function (data) {
