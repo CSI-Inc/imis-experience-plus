@@ -10,7 +10,7 @@ class Sanitizer
     // ex: pass in jsonData?.UpdateInformation?.UpdatedOn
     public static date(data: string): string
     {
-        return !data ? '' : new Date(data)?.toISOString()?.split('T')[0] ?? '';
+        return !data ? '' : new Date(data += 'Z')?.toISOString()?.split('T')[0] ?? '';
     }
     // ex: pass in jsonData?.Phones?.$values[2]?.PhoneType
     public static phone(data: string): string
