@@ -339,7 +339,7 @@ class IqaExtensions
         queryOptsRow.before(ft.find('tbody > tr').first());
 
         // Prompt inputs full width
-        ft.find('table.Grid tr td:nth-last-child(2) input').css('width', '100%');
+        ft.find('table.Grid tr td:nth-last-child(2) input[aria-label*=Prompt]').css('width', '100%');
 
         // Change group button
         ft.find('table.Grid tr td input[type=button][title="Add Filter"]').parents('td').attr('align', '');

@@ -2,7 +2,7 @@
 
 A browser extension to improve the iMIS Staff Site experience.
 
-Latest Version: 1.3.0 (Published on 2023-09-20)
+Latest Version: 1.3.6 (Published on 2024-11-06)
 
 ## Features
 

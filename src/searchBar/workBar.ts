@@ -206,10 +206,13 @@ class WorkBar
         var status = data?.Status?.Description;
         var memberType = data?.AdditionalAttributes?.$values[0].Value;
         var birthDate = Sanitizer.date(data?.BirthDate);
-        var phone0 = data?.Phones?.$values[0]?.Number;
-        var phone0Type = Sanitizer.phone(data?.Phones?.$values[0]?.PhoneType);
-        var phone1 = data?.Phones?.$values[1]?.Number;
-        var phone1Type = Sanitizer.phone(data?.Phones?.$values[1]?.PhoneType);
+
+        var prioritizePhones = data?.Phones?.$values ? this.prioritizePhones(data?.Phones?.$values) : [];
+        var phone0 = prioritizePhones[0]?.Number;
+        var phone0Type = Sanitizer.phone(prioritizePhones[0]?.PhoneType);
+        var phone1 = prioritizePhones[1]?.Number;
+        var phone1Type = Sanitizer.phone(prioritizePhones[1]?.PhoneType);
+
         var email1 = data?.Emails?.$values[0]?.Address;
         var email1IsPrimary = data?.Emails?.$values[0]?.IsPrimary;
         var email1Type = Sanitizer.emailType(data?.Emails?.$values[0]?.EmailType);
@@ -340,6 +343,43 @@ class WorkBar
                 </div>
             </div>
         `;
+    }
+
+    private prioritizePhones($values: any[]): any[]
+    {
+        const prioritizedPhones: any[] = [];
+        const phoneSet = new Set();
+
+        if ($values.length > 0)
+        {
+            // Define the order of priority for phone types
+            const priorities = [/mobile/i, /home/i, /work/i];
+
+            // Find and add phones based on priority
+            for (const priority of priorities)
+            {
+                const phone = $values.find(phone => priority.test(phone.PhoneType));
+                if (phone && !phoneSet.has(phone))
+                {
+                    prioritizedPhones.push(phone);
+                    phoneSet.add(phone);
+                }
+            }
+
+            // Add remaining phones if prioritizedPhones isn't full
+            for (const phone of $values)
+            {
+                if (prioritizedPhones.length >= 2) break;
+                if (!phoneSet.has(phone))
+                {
+                    prioritizedPhones.push(phone);
+                    phoneSet.add(phone);
+                }
+            }
+        }
+
+        // Limit the result to the first two items
+        return prioritizedPhones.slice(0, 2);
     }
 
     private buildProfileFooter(username: string, data: any): string
